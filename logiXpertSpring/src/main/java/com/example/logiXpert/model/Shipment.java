@@ -1,9 +1,15 @@
 package com.example.logiXpert.model;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
+@Entity
 public class Shipment {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, updatable = false)
+    private Integer id;
     private double weight;
     private double price;
     private DeliveryStatus status;
@@ -14,10 +20,24 @@ public class Shipment {
 
     private int senderId;
     private int recipientId;
-    private int courierId;
+
+    @ManyToOne
+    private Courier courier;
+
     private int officeEmployeeId;
     private int officeShipmentId; // Office that processed the shipment
     private int officeDestinationId;
+
+    @ManyToOne
+    private Company company;
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
 
     public Shipment() {
     }
@@ -32,7 +52,7 @@ public class Shipment {
         this.officeEmployeeId = officeEmployeeId;
         this.status = DeliveryStatus.CREATED;
         this.shipmentDate = LocalDate.now();
-        this.courierId = 0; // TODO: implement a function to auto-assign couriers
+        //this.courierId = 0; // TODO: implement a function to auto-assign couriers
         this.officeDestinationId = officeDestinationId;
     }
 
@@ -46,7 +66,17 @@ public class Shipment {
         this.officeEmployeeId = officeEmployeeId;
         this.status = DeliveryStatus.CREATED;
         this.shipmentDate = LocalDate.now();
-        this.courierId = 0; // TODO: implement a function to auto-assign couriers
+        //this.courierId = 0; // TODO: implement a function to auto-assign couriers
         this.deliveryAddress = deliveryAddress;
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+
 }

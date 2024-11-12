@@ -1,19 +1,34 @@
 package com.example.logiXpert.model;
 
+import jakarta.persistence.*;
+
+import java.util.Set;
+
+@Entity
 public class Office {
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, updatable = false)
+    private Integer id;
     private String address;
     private String name;
     private String phone;
 
-    private int companyId;
+    @ManyToOne
+    private Company company;
+
+//    The Office class does not need to maintain a list of employees and couriers.
+//    Instead, rely on querying the Employee class for employees associated with a specific office when needed.
 
     public Office() {}
-    public Office(int id, String address, String name, String phone, int companyId) {
-        this.id = id;
+    public Office(int id, String address, String name, String phone) {
+        this.id = id; // TODO: auto increment ?
         this.address = address;
         this.name = name;
         this.phone = phone;
-        this.companyId = companyId;
+        this.company = new Company();
     }
+
+
 }

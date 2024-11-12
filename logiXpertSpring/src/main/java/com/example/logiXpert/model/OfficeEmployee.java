@@ -1,18 +1,26 @@
 package com.example.logiXpert.model;
 
+import jakarta.persistence.*;
+
+@Entity
 public class OfficeEmployee {
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, updatable = false)
+    private Integer id;
     private String name;
     private double salary;
 
-    private int officeId;
+    @ManyToOne
+    private Office office;
 
     public OfficeEmployee() {}
-    public OfficeEmployee(int id, String name, double salary, int officeId)
+    public OfficeEmployee(int id, String name, double salary)
     {
         this.id = id;
         this.name = name;
         this.salary = salary;
-        this.officeId = officeId;
+        this.office = new Office();
     }
 }
