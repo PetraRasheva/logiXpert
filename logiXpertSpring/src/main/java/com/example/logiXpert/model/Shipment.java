@@ -12,7 +12,10 @@ public class Shipment {
     private Integer id;
     private double weight;
     private double price;
+
+    @Enumerated(EnumType.STRING)
     private DeliveryStatus status;
+    
     private DeliveryType type;
     private String deliveryAddress;
     private LocalDate shipmentDate;
