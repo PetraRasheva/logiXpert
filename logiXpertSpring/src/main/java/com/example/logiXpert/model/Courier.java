@@ -25,9 +25,9 @@ public class Courier {
     private Office office;
 
     public Courier() {}
-    public Courier(int id, String name, double salary, int vehicleId)
+
+    public Courier(String name, double salary, int vehicleId)
     {
-        this.id = id;
         this.name = name;
         this.salary = salary;
         this.vehicleId = vehicleId;
@@ -38,10 +38,6 @@ public class Courier {
 
     public Integer getId() {
         return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {
