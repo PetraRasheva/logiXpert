@@ -14,7 +14,7 @@ public class Company implements Serializable {
     @Column(nullable = false, updatable = false)
     private Integer id;
     private String name;
-    private Long baseCapital;
+    private double baseCapital;
 
     @OneToMany(mappedBy = "company")
     private Set<Office> offices;
@@ -30,7 +30,7 @@ public class Company implements Serializable {
 
     public Company() {}
 
-    public Company(String name, Long baseCapital) {
+    public Company(String name, double baseCapital) {
         this.name = name;
         this.baseCapital = baseCapital;
         this.offices = new HashSet<>();
@@ -43,10 +43,6 @@ public class Company implements Serializable {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -55,11 +51,11 @@ public class Company implements Serializable {
         this.name = name;
     }
 
-    public Long getBaseCapital() {
+    public double getBaseCapital() {
         return baseCapital;
     }
 
-    public void setBaseCapital(Long baseCapital) {
+    public void setBaseCapital(double baseCapital) {
         this.baseCapital = baseCapital;
     }
 

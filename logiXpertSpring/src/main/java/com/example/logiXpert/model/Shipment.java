@@ -13,26 +13,47 @@ public class Shipment {
     private double weight;
     private double price;
 
+    @ManyToOne
+    private Company company;
+
     @Enumerated(EnumType.STRING)
     private DeliveryStatus status;
-    
-    private DeliveryType type;
-    private String deliveryAddress;
+
+    @Enumerated(EnumType.STRING)
+    private DeliveryType deliveryType; // TODO:
+
     private LocalDate shipmentDate;
     private LocalDate deliveryDate;
 
-    private int senderId;
-    private int recipientId;
+    @ManyToOne
+    private Client sender;
+
+    @ManyToOne
+    private Client recipient;
 
     @ManyToOne
     private Courier courier;
 
-    private int officeEmployeeId;
-    private int officeShipmentId; // Office that processed the shipment
-    private int officeDestinationId;
-
     @ManyToOne
-    private Company company;
+    private User owner; //client or employee that registered the shipment
+
+    private String destination;
+
+    public Shipment() {
+    }
+
+    public Shipment(double weight, double price,  Client sender, Client recipient, User owner, DeliveryType type, String destination) {
+        this.weight = weight;
+        this.price = price;
+        this.sender = sender;
+        this.recipient = recipient;
+        this.owner = owner;
+        this.status = DeliveryStatus.CREATED;
+        this.shipmentDate = LocalDate.now();
+        this.courier = new Courier(); // TODO: implement a function to auto-assign couriers
+        this.deliveryType = type;
+        this.destination = destination; // TODO: Handle differentiating office location VS home address
+    }
 
     public Company getCompany() {
         return company;
@@ -42,37 +63,6 @@ public class Shipment {
         this.company = company;
     }
 
-    public Shipment() {
-    }
-
-    //Construct obj with DeliveryType.TO_OFFICE, note the last param
-    public Shipment(double weight, double price, int senderId, int recipientId, int officeShipmentId, int officeEmployeeId, int officeDestinationId) {
-        this.weight = weight;
-        this.price = price;
-        this.senderId = senderId;
-        this.recipientId = recipientId;
-        this.officeShipmentId = officeShipmentId;
-        this.officeEmployeeId = officeEmployeeId;
-        this.status = DeliveryStatus.CREATED;
-        this.shipmentDate = LocalDate.now();
-        //this.courierId = 0; // TODO: implement a function to auto-assign couriers
-        this.officeDestinationId = officeDestinationId;
-    }
-
-    //Construct obj with DeliveryType.TO_ADDRESS
-    public Shipment(double weight, double price, int senderId, int recipientId, int officeShipmentId, int officeEmployeeId, String deliveryAddress) {
-        this.weight = weight;
-        this.price = price;
-        this.senderId = senderId;
-        this.recipientId = recipientId;
-        this.officeShipmentId = officeShipmentId;
-        this.officeEmployeeId = officeEmployeeId;
-        this.status = DeliveryStatus.CREATED;
-        this.shipmentDate = LocalDate.now();
-        //this.courierId = 0; // TODO: implement a function to auto-assign couriers
-        this.deliveryAddress = deliveryAddress;
-    }
-
     public Integer getId() {
         return id;
     }
@@ -80,6 +70,4 @@ public class Shipment {
     public void setId(Integer id) {
         this.id = id;
     }
-
-
 }
