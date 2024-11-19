@@ -1,5 +1,6 @@
 package com.example.logiXpert.service;
 
+import com.example.logiXpert.dto.ShipmentDto;
 import com.example.logiXpert.exception.ShipmentNotFoundException;
 import com.example.logiXpert.model.Shipment;
 import com.example.logiXpert.repository.ShipmentRepository;
@@ -15,12 +16,12 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
     
     @Override
-    public Shipment addShipment(Shipment shipment) {
+    public Shipment addShipment(ShipmentDto shipment) {
         return shipmentRepository.save(shipment);
     }
 
     @Override
-    public Shipment updateShipment(Shipment shipment) {
+    public Shipment updateShipment(ShipmentDto shipment) {
         return shipmentRepository.save(shipment);
     }
 

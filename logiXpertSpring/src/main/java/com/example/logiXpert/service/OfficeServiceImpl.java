@@ -3,7 +3,9 @@ package com.example.logiXpert.service;
 import com.example.logiXpert.exception.OfficeNotFoundException;
 import com.example.logiXpert.model.Office;
 import com.example.logiXpert.repository.OfficeRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class OfficeServiceImpl implements OfficeService {
 
     private final OfficeRepository officeRepository;

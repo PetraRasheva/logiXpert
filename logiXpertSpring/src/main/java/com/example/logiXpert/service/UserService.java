@@ -1,5 +1,8 @@
 package com.example.logiXpert.service;
 
+import com.example.logiXpert.dto.CredentialsDto;
+import com.example.logiXpert.dto.SignUpDto;
+import com.example.logiXpert.dto.UserDto;
 import com.example.logiXpert.model.User;
 
 public interface UserService {
@@ -10,6 +13,10 @@ public interface UserService {
     User getUserById(Integer id);
 
     void deleteUser(Integer id);
+
+    UserDto login(CredentialsDto credentialsDto);
+
+    UserDto signUp(SignUpDto signUpDto);
 
     //TODO:
     //регистрирай/създай пратка
