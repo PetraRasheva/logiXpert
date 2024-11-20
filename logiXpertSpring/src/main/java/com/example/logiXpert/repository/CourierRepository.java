@@ -1,6 +1,4 @@
 package com.example.logiXpert.repository;
-
-import com.example.logiXpert.model.Company;
 import com.example.logiXpert.model.Courier;
 import org.springframework.data.jpa.repository.JpaRepository;
 

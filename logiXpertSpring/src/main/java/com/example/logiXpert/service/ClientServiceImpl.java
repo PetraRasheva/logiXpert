@@ -1,10 +1,11 @@
 package com.example.logiXpert.service;
 
 import com.example.logiXpert.exception.ClientNotFoundException;
-import com.example.logiXpert.exception.CompanyNotFoundException;
 import com.example.logiXpert.model.Client;
 import com.example.logiXpert.repository.ClientRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;

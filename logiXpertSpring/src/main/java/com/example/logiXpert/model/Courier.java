@@ -1,10 +1,14 @@
 package com.example.logiXpert.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 public class Courier {
     @Id
@@ -18,13 +22,11 @@ public class Courier {
     @OneToMany(mappedBy = "courier")
     private Set<Shipment> assignedShipments;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Office office;
-
-    public Courier() {}
 
     public Courier(String name, double salary, int vehicleId)
     {
@@ -36,53 +38,7 @@ public class Courier {
         this.assignedShipments = new HashSet<>();
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getSalary() {
-        return salary;
-    }
-
-    public void setSalary(double salary) {
-        this.salary = salary;
-    }
-
-    public int getVehicleId() {
-        return vehicleId;
-    }
-
-    public void setVehicleId(int vehicleId) {
-        this.vehicleId = vehicleId;
-    }
-
-    public Company getCompany() {
-        return company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
-    }
-
-    public Office getOffice() {
-        return office;
-    }
-
-    public void setOffice(Office office) {
-        this.office = office;
-    }
-
-    public Set<Shipment> getAssignedShipments() {
-        return assignedShipments;
-    }
+    public Courier() {}
 
     public void assignShipment(Shipment shipment) {
         assignedShipments.add(shipment);

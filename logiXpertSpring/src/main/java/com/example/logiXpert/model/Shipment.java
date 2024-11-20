@@ -1,10 +1,12 @@
 package com.example.logiXpert.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDate;
 
 @Entity
+@Data
 public class Shipment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,16 +27,16 @@ public class Shipment {
     private LocalDate shipmentDate;
     private LocalDate deliveryDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Client sender;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Client recipient;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Courier courier;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User owner; //client or employee that registered the shipment
 
     private String destination;
@@ -53,21 +55,5 @@ public class Shipment {
         this.courier = new Courier(); // TODO: implement a function to auto-assign couriers
         this.deliveryType = type;
         this.destination = destination; // TODO: Handle differentiating office location VS home address
-    }
-
-    public Company getCompany() {
-        return company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 }

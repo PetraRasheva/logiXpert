@@ -1,9 +1,14 @@
 package com.example.logiXpert.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 public class Office {
 
@@ -15,14 +20,11 @@ public class Office {
     private String name;
     private String phone;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 
 //    The Office class does not need to maintain a list of employees and couriers.
 //    Instead, rely on querying the Employee class for employees associated with a specific office when needed.
-
-    public Office() {
-    }
 
     public Office(String address, String name, String phone) {
         this.address = address;
@@ -31,5 +33,5 @@ public class Office {
         this.company = new Company();
     }
 
-
+    public Office() {}
 }
