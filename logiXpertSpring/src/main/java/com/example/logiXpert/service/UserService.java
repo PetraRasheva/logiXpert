@@ -3,18 +3,17 @@ package com.example.logiXpert.service;
 import com.example.logiXpert.dto.CredentialsDto;
 import com.example.logiXpert.dto.SignUpDto;
 import com.example.logiXpert.dto.UserDto;
-import com.example.logiXpert.model.User;
 
 public interface UserService {
-    User addUser(User user);
+    UserDto addUser(UserDto user);
 
-    User updateUser(User user);
+    UserDto updateUser(UserDto user);
 
-    User getUserById(Integer id);
+    UserDto getUserById(Integer id);
 
     void deleteUser(Integer id);
 
-    UserDto login(CredentialsDto credentialsDto);
+    UserDto login(CredentialsDto credentials);
 
     UserDto signUp(SignUpDto signUpDto);
 

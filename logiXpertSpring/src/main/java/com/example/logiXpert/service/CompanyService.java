@@ -1,14 +1,13 @@
 package com.example.logiXpert.service;
 
-import com.example.logiXpert.exception.CompanyNotFoundException;
-import com.example.logiXpert.model.Company;
+import com.example.logiXpert.dto.CompanyDto;
 
 public interface CompanyService {
-    Company addCompany(Company company);
+    CompanyDto addCompany(CompanyDto company);
 
-    Company updateCompany(Company company);
+    CompanyDto updateCompany(CompanyDto company);
 
-    Company getCompanyById(Integer id);
+    CompanyDto getCompanyById(Integer id);
 
     void deleteCompany(Integer id);
 

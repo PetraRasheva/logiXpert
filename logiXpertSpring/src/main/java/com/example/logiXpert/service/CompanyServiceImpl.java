@@ -1,8 +1,10 @@
 package com.example.logiXpert.service;
 
+import com.example.logiXpert.dto.CompanyDto;
 import com.example.logiXpert.exception.CompanyNotFoundException;
 import com.example.logiXpert.exception.CourierNotFoundException;
 import com.example.logiXpert.exception.ShipmentNotFoundException;
+import com.example.logiXpert.mapper.CompanyMapper;
 import com.example.logiXpert.model.Company;
 import com.example.logiXpert.model.Courier;
 import com.example.logiXpert.model.Shipment;
@@ -18,28 +20,33 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
     private final CourierRepository courierRepository;
     private final ShipmentRepository shipmentRepository;
+    private final CompanyMapper companyMapper;
 
     @Autowired
-    public CompanyServiceImpl(CompanyRepository companyRepository, CourierRepository courierRepository, ShipmentRepository shipmentRepository) {
+    public CompanyServiceImpl(CompanyRepository companyRepository, CourierRepository courierRepository, ShipmentRepository shipmentRepository, CompanyMapper companyMapper) {
         this.companyRepository = companyRepository;
         this.courierRepository = courierRepository;
         this.shipmentRepository = shipmentRepository;
+        this.companyMapper = companyMapper;
     }
 
     @Override
-    public Company addCompany(Company company) {
-        return companyRepository.save(company);
+    public CompanyDto addCompany(CompanyDto companyDto) {
+        Company company = companyRepository.save(companyMapper.toEntity(companyDto));
+        return companyMapper.toDto(companyRepository.save(company));
     }
 
     @Override
-    public Company updateCompany(Company company) {
-        return companyRepository.save(company);
+    public CompanyDto updateCompany(CompanyDto companyDto) {
+        Company company = companyRepository.save(companyMapper.toEntity(companyDto));
+        return companyMapper.toDto(companyRepository.save(company));
     }
 
     @Override
-    public Company getCompanyById(Integer id) {
-        return companyRepository.findCompanyById(id)
+    public CompanyDto getCompanyById(Integer id) {
+        Company company = companyRepository.findCompanyById(id)
                 .orElseThrow(() -> new CompanyNotFoundException("Company with id " + id + " was not found"));
+        return companyMapper.toDto(company);
     }
 
     @Override
