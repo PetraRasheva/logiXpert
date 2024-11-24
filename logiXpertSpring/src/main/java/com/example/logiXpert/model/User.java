@@ -7,8 +7,6 @@ import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
-@Setter
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User {
@@ -36,11 +34,49 @@ public class User {
 
     public User() {}
 
+    //TODO: DTO obj employee client
+
     public User(String name, String phone, String email, String password) {
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.password = password;
+    }
+
+    private void registerShipment() {
+        //TODO: We need to construct the Shipment depending of the Shipment type
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -51,7 +87,19 @@ public class User {
         this.password = password;
     }
 
-    private void registerShipment() {
-        //TODO: We need to construct the Shipment depending of the Shipment type
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public Set<Shipment> getProcessedShipments() {
+        return processedShipments;
+    }
+
+    public void setProcessedShipments(Set<Shipment> processedShipments) {
+        this.processedShipments = processedShipments;
     }
 }

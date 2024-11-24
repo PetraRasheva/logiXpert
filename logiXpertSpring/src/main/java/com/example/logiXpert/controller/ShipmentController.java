@@ -19,20 +19,20 @@ public class ShipmentController {
     //TODO: Refactor controllers to use Dto models
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<Shipment> getShipmentById (@PathVariable("id") Integer id) {
-        Shipment shipment = shipmentService.getShipmentById(id);
+    public ResponseEntity<ShipmentDto> getShipmentById(@PathVariable("id") Integer id) {
+        ShipmentDto shipment = shipmentService.getShipmentById(id);
         return new ResponseEntity<>(shipment, HttpStatus.OK);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Shipment> addShipment(@RequestBody ShipmentDto shipmentDto) {
-        Shipment newShipment = shipmentService.addShipment(shipmentDto);
+    public ResponseEntity<ShipmentDto> addShipment(@RequestBody ShipmentDto shipment) {
+        ShipmentDto newShipment = shipmentService.addShipment(shipment);
         return new ResponseEntity<>(newShipment, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<Shipment> updateShipment(@RequestBody ShipmentDto shipmentDto) {
-        Shipment updateShipment = shipmentService.updateShipment(shipmentDto);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ShipmentDto> updateShipment(@PathVariable("id") Integer id, @RequestBody ShipmentDto shipment) {
+        ShipmentDto updateShipment = shipmentService.updateShipmentById(id, shipment);
         return new ResponseEntity<>(updateShipment, HttpStatus.CREATED);
     }
 
