@@ -4,11 +4,11 @@ import com.example.logiXpert.dto.ShipmentDto;
 import com.example.logiXpert.model.Shipment;
 
 public interface ShipmentService {
-    Shipment addShipment(ShipmentDto shipment);
+    ShipmentDto addShipment(ShipmentDto shipment);
 
-    Shipment updateShipment(ShipmentDto shipment);
+    ShipmentDto updateShipmentById(Integer id, ShipmentDto shipment);
 
-    Shipment getShipmentById(Integer id);
+    ShipmentDto getShipmentById(Integer id);
 
     void deleteShipment(Integer id);
 }
