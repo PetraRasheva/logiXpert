@@ -1,5 +1,6 @@
 package com.example.logiXpert.controller;
 
+import com.example.logiXpert.dto.AdminDto;
 import com.example.logiXpert.model.Admin;
 import com.example.logiXpert.service.AdminService;
 import org.springframework.http.HttpStatus;
@@ -16,20 +17,20 @@ public class AdminController {
     }
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<Admin> getAdminById (@PathVariable("id") Integer id) {
-        Admin admin = adminService.getAdminById(id);
+    public ResponseEntity<AdminDto> getAdminById(@PathVariable("id") Integer id) {
+        AdminDto admin = adminService.getAdminById(id);
         return new ResponseEntity<>(admin, HttpStatus.OK);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Admin> addAdmin(@RequestBody Admin admin) {
-        Admin newAdmin = adminService.addAdmin(admin);
+    public ResponseEntity<AdminDto> addAdmin(@RequestBody AdminDto admin) {
+        AdminDto newAdmin = adminService.addAdmin(admin);
         return new ResponseEntity<>(newAdmin, HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Admin> updateAdmin(@RequestBody Admin admin) {
-        Admin updateAdmin = adminService.updateAdmin(admin);
+    public ResponseEntity<AdminDto> updateAdmin(@RequestBody AdminDto admin) {
+        AdminDto updateAdmin = adminService.updateAdmin(admin);
         return new ResponseEntity<>(updateAdmin, HttpStatus.CREATED);
     }
 

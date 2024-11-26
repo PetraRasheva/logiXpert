@@ -1,13 +1,14 @@
 package com.example.logiXpert.service;
 
+import com.example.logiXpert.dto.AdminDto;
 import com.example.logiXpert.model.Admin;
 
 public interface AdminService {
-    Admin addAdmin(Admin client);
+    AdminDto addAdmin(AdminDto admin);
 
-    Admin updateAdmin(Admin client);
+    AdminDto updateAdmin(AdminDto admin);
 
-    Admin getAdminById(Integer id);
+    AdminDto getAdminById(Integer id);
 
     void deleteAdmin(Integer id);
 }

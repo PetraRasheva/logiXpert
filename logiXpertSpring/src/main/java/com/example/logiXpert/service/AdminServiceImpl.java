@@ -1,37 +1,49 @@
 package com.example.logiXpert.service;
 
+import com.example.logiXpert.dto.AdminDto;
 import com.example.logiXpert.exception.AdminNotFoundException;
+import com.example.logiXpert.mapper.AdminMapper;
 import com.example.logiXpert.model.Admin;
 import com.example.logiXpert.repository.AdminRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AdminServiceImpl implements AdminService {
     private final AdminRepository adminRepository;
+    private final AdminMapper adminMapper;
 
-    public AdminServiceImpl(AdminRepository adminRepository) {
+    public AdminServiceImpl(AdminRepository adminRepository, AdminMapper adminMapper) {
         this.adminRepository = adminRepository;
-    }
-    @Override
-    public Admin addAdmin(Admin admin) {
-        return adminRepository.save(admin);
+        this.adminMapper = adminMapper;
     }
 
     @Override
-    public Admin updateAdmin(Admin admin) {
-        if (!adminRepository.existsById(admin.getId())) {
-            throw new AdminNotFoundException("Admin with id " + admin.getId() + " was not found");
+    public AdminDto addAdmin(AdminDto adminDto) {
+        Admin admin = adminMapper.toEntity(adminDto);
+        Admin savedAdmin = adminRepository.save(admin);
+        return adminMapper.toDto(savedAdmin);
+    }
+
+    @Override
+    public AdminDto updateAdmin(AdminDto adminDto) {
+        if (!adminRepository.existsById(adminDto.id())) {
+            throw new AdminNotFoundException("Admin with id " + adminDto.id() + " was not found");
         }
-        return adminRepository.save(admin);
+        Admin admin = adminMapper.toEntity(adminDto);
+        Admin updatedAdmin = adminRepository.save(admin);
+        return adminMapper.toDto(updatedAdmin);
     }
 
     @Override
-    public Admin getAdminById(Integer id) {
-        return adminRepository.findAdminById(id).orElseThrow(() -> new AdminNotFoundException("Admin with id " + id + " was not found"));
+    public AdminDto getAdminById(Integer id) {
+        Admin admin = adminRepository.findAdminById(id)
+                .orElseThrow(() -> new AdminNotFoundException("Admin with id " + id + " was not found"));
+        return adminMapper.toDto(admin);
     }
 
-    // Add condition to check if admin exists before deleting
     @Override
+    @Transactional
     public void deleteAdmin(Integer id) {
         if (!adminRepository.existsById(id)) {
             throw new AdminNotFoundException("Admin with id " + id + " was not found");
@@ -39,5 +51,4 @@ public class AdminServiceImpl implements AdminService {
         adminRepository.deleteAdminById(id);
     }
 
-    //TODO: Implement complex requests
 }
