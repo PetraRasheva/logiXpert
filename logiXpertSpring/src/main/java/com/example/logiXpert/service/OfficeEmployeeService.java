@@ -1,13 +1,13 @@
 package com.example.logiXpert.service;
 
-import com.example.logiXpert.model.OfficeEmployee;
+import com.example.logiXpert.dto.OfficeEmployeeDto;
 
 public interface OfficeEmployeeService {
-    OfficeEmployee addOfficeEmployee(OfficeEmployee officeEmployee);
+    OfficeEmployeeDto addOfficeEmployee(OfficeEmployeeDto officeEmployeeDto);
 
-    OfficeEmployee updateOfficeEmployee(OfficeEmployee officeEmployee);
+    OfficeEmployeeDto updateOfficeEmployee(OfficeEmployeeDto officeEmployeeDto);
 
-    OfficeEmployee getOfficeEmployeeById(Integer id);
+    OfficeEmployeeDto getOfficeEmployeeById(Integer id);
 
     void deleteOfficeEmployee(Integer id);
 }
