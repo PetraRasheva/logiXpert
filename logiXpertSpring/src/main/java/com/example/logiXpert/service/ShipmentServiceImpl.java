@@ -20,7 +20,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         this.shipmentRepository = shipmentRepository;
         this.shipmentMapper = shipmentMapper;
     }
-    
+
     @Override
     public ShipmentDto addShipment(ShipmentDto shipmentDto) {
         Shipment shipment = shipmentRepository.save(shipmentMapper.toEntity(shipmentDto));

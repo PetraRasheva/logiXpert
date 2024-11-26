@@ -7,6 +7,7 @@ import com.example.logiXpert.exception.UserException;
 import com.example.logiXpert.mapper.UserMapper;
 import com.example.logiXpert.model.User;
 import com.example.logiXpert.repository.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(UserDto userDto) {
+        if (!userRepository.existsById(userDto.id())) {
+            throw new UserException("User with id " + userDto.id() + " was not found", HttpStatus.NOT_FOUND);
+        }
         User user = userRepository.save(userMapper.toEntity(userDto));
         return userMapper.toDto(user);
     }
@@ -53,32 +57,46 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Integer id) {
+        if (!userRepository.existsById(id)) {
+            throw new UserException("User with id " + id + " was not found", HttpStatus.NOT_FOUND);
+        }
         userRepository.deleteUserById(id);
     }
 
     @Override
-    public UserDto login(CredentialsDto credentialsDto) {
-       User user = userRepository.findUserByEmail(credentialsDto.email()).orElseThrow(() -> new UserException("UserDto " + credentialsDto.email() + " was not found", HttpStatus.NOT_FOUND));
-       if (credentialsDto.password().equals(user.getPassword())) { // TODO: implement password encoder
-           return userMapper.toDto(user);
-       }
-       throw new UserException("UserDto " + credentialsDto.email() + " has invalid password", HttpStatus.BAD_REQUEST);
+    public UserDto login(@Valid CredentialsDto credentialsDto) {
+        User user = userRepository.findUserByEmail(credentialsDto.email())
+                .orElseThrow(() -> new UserException("User with email " + credentialsDto.email() + " was not found", HttpStatus.NOT_FOUND));
+
+        // TODO: Replace with password encoder
+        if (!credentialsDto.password().equals(user.getPassword())) {
+            throw new UserException("Invalid password for email " + credentialsDto.email(), HttpStatus.BAD_REQUEST);
+        }
+        return userMapper.toDto(user);
     }
 
     @Override
-    public UserDto signUp(SignUpDto signUpDto) {
-        Optional<User> user = userRepository.findUserByEmail(signUpDto.email());
-
-        if(user.isPresent()){
-            throw new UserException("UserDto " + signUpDto.email() + " has already been registered", HttpStatus.BAD_REQUEST);
+    public UserDto signUp(@Valid SignUpDto signUpDto) {
+        // Проверка за вече съществуващ потребител
+        if (userRepository.findUserByEmail(signUpDto.email()).isPresent()) {
+            throw new UserException("User with email " + signUpDto.email() + " has already been registered", HttpStatus.BAD_REQUEST);
         }
 
+        // Създаване на нов потребител от DTO-то
         User newUser = userMapper.signUpToUser(signUpDto);
-        //newUser.setPassword(passwordEncoder.encode(signUpDto.password())); // TODO: use encode
+
+        // Хеширане на паролата
+        // TODO: Uncomment this after adding PasswordEncoder bean
+        // newUser.setPassword(passwordEncoder.encode(signUpDto.password()));
+
+        // Засега оставяме паролата в обикновен текст (неправилно в продукционна среда)
         newUser.setPassword(signUpDto.password());
+
+        // Запис в базата данни
         User savedUser = userRepository.save(newUser);
 
-        return null;
+        // Връщане на UserDto
+        return userMapper.toDto(savedUser);
     }
 
     //TODO: Implement complex requests

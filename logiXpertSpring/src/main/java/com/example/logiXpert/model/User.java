@@ -9,13 +9,10 @@ import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class User {
+public class User extends BaseEntity{
     //TODO: should inherit User details when security is implemented
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)
-    private Integer id;
     private String name;
     private String phone;
 
@@ -46,15 +43,6 @@ public class User {
     private void registerShipment() {
         //TODO: We need to construct the Shipment depending of the Shipment type
     }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }

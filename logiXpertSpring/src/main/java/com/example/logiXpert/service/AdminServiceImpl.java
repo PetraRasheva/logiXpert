@@ -19,6 +19,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Admin updateAdmin(Admin admin) {
+        if (!adminRepository.existsById(admin.getId())) {
+            throw new AdminNotFoundException("Admin with id " + admin.getId() + " was not found");
+        }
         return adminRepository.save(admin);
     }
 
@@ -27,8 +30,12 @@ public class AdminServiceImpl implements AdminService {
         return adminRepository.findAdminById(id).orElseThrow(() -> new AdminNotFoundException("Admin with id " + id + " was not found"));
     }
 
+    // Add condition to check if admin exists before deleting
     @Override
     public void deleteAdmin(Integer id) {
+        if (!adminRepository.existsById(id)) {
+            throw new AdminNotFoundException("Admin with id " + id + " was not found");
+        }
         adminRepository.deleteAdminById(id);
     }
 
