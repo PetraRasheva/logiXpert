@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/shipment")
 public class ShipmentController {
@@ -40,5 +42,11 @@ public class ShipmentController {
     public ResponseEntity<?> deleteShipment(@PathVariable("id") Integer id) {
         shipmentService.deleteShipment(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<ShipmentDto>> getAllShipments() {
+        List<ShipmentDto> shipments = shipmentService.getAllShipments();
+        return new ResponseEntity<>(shipments, HttpStatus.OK);
     }
 }
