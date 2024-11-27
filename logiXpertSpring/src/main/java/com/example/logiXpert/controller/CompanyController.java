@@ -28,9 +28,9 @@ public class CompanyController {
         return new ResponseEntity<>(newCompany, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<CompanyDto> updateCompanyById(@PathVariable("id") Integer id, @RequestBody CompanyDto company) {
-        CompanyDto updateCompany = companyService.updateCompanyById(id, company);
+    @PutMapping("/update")
+    public ResponseEntity<CompanyDto> updateCompany(@RequestBody CompanyDto company) {
+        CompanyDto updateCompany = companyService.updateCompany(company);
         return new ResponseEntity<>(updateCompany, HttpStatus.CREATED);
     }
 

@@ -5,7 +5,7 @@ import com.example.logiXpert.dto.CompanyDto;
 public interface CompanyService {
     CompanyDto addCompany(CompanyDto company);
 
-    CompanyDto updateCompanyById(Integer id, CompanyDto company);
+    CompanyDto updateCompany(CompanyDto company);
 
     CompanyDto getCompanyById(Integer id);
 
