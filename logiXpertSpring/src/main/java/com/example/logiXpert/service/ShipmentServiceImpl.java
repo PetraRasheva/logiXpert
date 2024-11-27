@@ -1,8 +1,9 @@
 package com.example.logiXpert.service;
 
-import com.example.logiXpert.dto.CompanyDto;
+import com.example.logiXpert.dto.GetShipmentDto;
 import com.example.logiXpert.dto.ShipmentDto;
 import com.example.logiXpert.exception.ShipmentNotFoundException;
+import com.example.logiXpert.mapper.GetShipmentMapper;
 import com.example.logiXpert.mapper.ShipmentMapper;
 import com.example.logiXpert.model.Shipment;
 import com.example.logiXpert.repository.ShipmentRepository;
@@ -16,11 +17,13 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     private final ShipmentRepository shipmentRepository;
     private final ShipmentMapper shipmentMapper;
+    private final GetShipmentMapper getShipmentMapper;
 
     @Autowired
-    public ShipmentServiceImpl(ShipmentRepository shipmentRepository, ShipmentMapper shipmentMapper) {
+    public ShipmentServiceImpl(ShipmentRepository shipmentRepository, ShipmentMapper shipmentMapper, GetShipmentMapper getShipmentMapper) {
         this.shipmentRepository = shipmentRepository;
         this.shipmentMapper = shipmentMapper;
+        this.getShipmentMapper = getShipmentMapper;
     }
 
     @Override
@@ -30,10 +33,10 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
-    public ShipmentDto updateShipmentById(Integer id, ShipmentDto shipmentDto) {
+    public GetShipmentDto updateShipment(ShipmentDto shipmentDto) {
         Shipment updateShipment = shipmentMapper.toEntity(shipmentDto);
-        Shipment shipment = shipmentRepository.findShipmentById(id)
-                .orElseThrow(() -> new ShipmentNotFoundException("Shipment with id " + id + " was not found"));
+        Shipment shipment = shipmentRepository.findShipmentById(shipmentDto.id())
+                .orElseThrow(() -> new ShipmentNotFoundException("Shipment with id " + shipmentDto.id() + " was not found"));
         shipment.setShipmentDate(updateShipment.getShipmentDate());
         shipment.setDeliveryDate(updateShipment.getDeliveryDate());
         shipment.setDestination(updateShipment.getDestination());
@@ -43,14 +46,14 @@ public class ShipmentServiceImpl implements ShipmentService {
         shipment.setDeliveryStatus(updateShipment.getDeliveryStatus());
         // Hope there is a better approach
         Shipment updatedShipment = shipmentRepository.save(shipment);
-        return shipmentMapper.toDto(updatedShipment);
+        return getShipmentMapper.toDto(updatedShipment);
     }
 
     @Override
-    public ShipmentDto getShipmentById(Integer id) {
+    public GetShipmentDto getShipmentById(Integer id) {
         Shipment shipment = shipmentRepository.findShipmentById(id)
                 .orElseThrow(() -> new ShipmentNotFoundException("Shipment with id " + id + " was not found"));
-        return shipmentMapper.toDto(shipment);
+        return getShipmentMapper.toDto(shipment);
     }
 
     @Override

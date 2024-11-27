@@ -1,5 +1,6 @@
 package com.example.logiXpert.service;
 
+import com.example.logiXpert.dto.GetShipmentDto;
 import com.example.logiXpert.dto.ShipmentDto;
 import com.example.logiXpert.model.Shipment;
 
@@ -8,9 +9,9 @@ import java.util.List;
 public interface ShipmentService {
     ShipmentDto addShipment(ShipmentDto shipment);
 
-    ShipmentDto updateShipmentById(Integer id, ShipmentDto shipment);
+    GetShipmentDto updateShipment(ShipmentDto shipment);
 
-    ShipmentDto getShipmentById(Integer id);
+    GetShipmentDto getShipmentById(Integer id);
 
     void deleteShipment(Integer id);
 

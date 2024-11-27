@@ -8,5 +8,5 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 
 public record ShipmentDto(int id, double weight, double price, DeliveryStatus deliveryStatus, DeliveryType deliveryType,
-                          @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime shipmentDate, String destination) {
+                          @JsonFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime shipmentDate, String destination) {
 }

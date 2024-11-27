@@ -1,5 +1,6 @@
 package com.example.logiXpert.controller;
 
+import com.example.logiXpert.dto.GetShipmentDto;
 import com.example.logiXpert.dto.ShipmentDto;
 import com.example.logiXpert.model.Shipment;
 import com.example.logiXpert.service.ShipmentService;
@@ -21,8 +22,8 @@ public class ShipmentController {
     //TODO: Refactor controllers to use Dto models
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<ShipmentDto> getShipmentById(@PathVariable("id") Integer id) {
-        ShipmentDto shipment = shipmentService.getShipmentById(id);
+    public ResponseEntity<GetShipmentDto> getShipmentById(@PathVariable("id") Integer id) {
+        GetShipmentDto shipment = shipmentService.getShipmentById(id);
         return new ResponseEntity<>(shipment, HttpStatus.OK);
     }
 
@@ -32,9 +33,9 @@ public class ShipmentController {
         return new ResponseEntity<>(newShipment, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<ShipmentDto> updateShipment(@PathVariable("id") Integer id, @RequestBody ShipmentDto shipment) {
-        ShipmentDto updateShipment = shipmentService.updateShipmentById(id, shipment);
+    @PutMapping("/update")
+    public ResponseEntity<GetShipmentDto> updateShipment(@RequestBody ShipmentDto shipment) {
+        GetShipmentDto updateShipment = shipmentService.updateShipment(shipment);
         return new ResponseEntity<>(updateShipment, HttpStatus.CREATED);
     }
 
