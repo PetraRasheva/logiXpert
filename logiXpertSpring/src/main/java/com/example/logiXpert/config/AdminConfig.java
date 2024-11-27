@@ -16,11 +16,12 @@ public class AdminConfig {
         return args -> {
             if (adminRepository.findByEmail("peter@ibm.com") == null) {
                 AdminDto adminDto = new AdminDto(
-                        null,
+                        1,
                         "Peter Ivanov",
                         "peter@ibm.com",
                         "1234567890",
                         "Ndssd_32534"
+                        
                 );
                 Admin admin = adminMapper.toEntity(adminDto);
                 adminRepository.save(admin);
