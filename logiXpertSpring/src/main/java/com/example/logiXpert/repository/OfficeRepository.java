@@ -9,5 +9,6 @@ import java.util.Optional;
 public interface OfficeRepository extends JpaRepository<Office, Integer> {
     void deleteOfficeById(Integer id);
     Optional<Office> findOfficeById(Integer id);
+    Optional<Office> findByName(String name);
 
 }

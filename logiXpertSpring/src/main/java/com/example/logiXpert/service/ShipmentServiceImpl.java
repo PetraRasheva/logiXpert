@@ -9,6 +9,8 @@ import com.example.logiXpert.repository.ShipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
 
@@ -20,7 +22,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         this.shipmentRepository = shipmentRepository;
         this.shipmentMapper = shipmentMapper;
     }
-    
+
     @Override
     public ShipmentDto addShipment(ShipmentDto shipmentDto) {
         Shipment shipment = shipmentRepository.save(shipmentMapper.toEntity(shipmentDto));
@@ -54,6 +56,12 @@ public class ShipmentServiceImpl implements ShipmentService {
     @Override
     public void deleteShipment(Integer id) {
         shipmentRepository.deleteShipmentById(id);
+    }
+
+    @Override
+    public List<ShipmentDto> getAllShipments() {
+        List<Shipment> shipments = shipmentRepository.findAll();
+        return shipments.stream().map(shipmentMapper::toDto).toList();
     }
 
     //TODO: Implement complex requests

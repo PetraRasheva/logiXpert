@@ -6,14 +6,38 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
-@Getter
-@NoArgsConstructor
-@Entity
-public class OfficeEmployee extends User{
 
-    private String name;
+@Entity
+public class OfficeEmployee extends User {
+
     private double salary;
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+
+    public Office getOffice() {
+        return office;
+    }
+
+    public void setOffice(Office office) {
+        this.office = office;
+    }
+
+    public OfficeEmployee() {
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Office office;
@@ -21,8 +45,8 @@ public class OfficeEmployee extends User{
     @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 
-    public OfficeEmployee(String name, String phone, String email, String password, double salary) {
-        //super(name, phone, email, password, Role.EMPLOYEE);
+    public OfficeEmployee(String phone, String email, String password, double salary) {
+        //super(phone, email, password);
         this.salary = salary;
     }
 
