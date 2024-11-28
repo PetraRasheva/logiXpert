@@ -5,11 +5,14 @@ import com.example.logiXpert.dto.ShipmentDto;
 import com.example.logiXpert.exception.ShipmentNotFoundException;
 import com.example.logiXpert.mapper.GetShipmentMapper;
 import com.example.logiXpert.mapper.ShipmentMapper;
+import com.example.logiXpert.model.Company;
 import com.example.logiXpert.model.Shipment;
+import com.example.logiXpert.repository.CompanyRepository;
 import com.example.logiXpert.repository.ShipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -18,18 +21,35 @@ public class ShipmentServiceImpl implements ShipmentService {
     private final ShipmentRepository shipmentRepository;
     private final ShipmentMapper shipmentMapper;
     private final GetShipmentMapper getShipmentMapper;
+    private final CompanyRepository companyRepository;
 
     @Autowired
-    public ShipmentServiceImpl(ShipmentRepository shipmentRepository, ShipmentMapper shipmentMapper, GetShipmentMapper getShipmentMapper) {
+    public ShipmentServiceImpl(ShipmentRepository shipmentRepository, ShipmentMapper shipmentMapper, GetShipmentMapper getShipmentMapper, CompanyRepository companyRepository) {
         this.shipmentRepository = shipmentRepository;
         this.shipmentMapper = shipmentMapper;
         this.getShipmentMapper = getShipmentMapper;
+        this.companyRepository = companyRepository;
+    }
+
+    public double calculateTotalRevenue(Integer companyId, LocalDateTime startDate, LocalDateTime endDate) {
+        List<Shipment> shipments = shipmentRepository.findShipmentsByCompanyAndDateRange(companyId, startDate, endDate);
+        return shipments.stream()
+                .mapToDouble(Shipment::getPrice)
+                .sum();
     }
 
     @Override
     public ShipmentDto addShipment(ShipmentDto shipmentDto) {
-        Shipment shipment = shipmentRepository.save(shipmentMapper.toEntity(shipmentDto));
-        return shipmentMapper.toDto(shipment);
+        Shipment shipment = shipmentMapper.toEntity(shipmentDto);
+
+        Company company = companyRepository.findById(shipmentDto.companyId())
+                .orElseThrow(() -> new IllegalArgumentException("Company with ID " + shipmentDto.companyId() + " not found"));
+
+        shipment.setCompany(company);
+        company.setBaseCapital(company.getBaseCapital() + shipment.getPrice());
+        companyRepository.save(company);
+        Shipment savedShipment = shipmentRepository.save(shipment);
+        return shipmentMapper.toDto(savedShipment);
     }
 
     @Override
@@ -66,6 +86,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         List<Shipment> shipments = shipmentRepository.findAll();
         return shipments.stream().map(shipmentMapper::toDto).toList();
     }
+
 
     //TODO: Implement complex requests
 }
