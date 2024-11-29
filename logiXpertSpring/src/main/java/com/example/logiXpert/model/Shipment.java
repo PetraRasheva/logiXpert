@@ -7,11 +7,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-public class Shipment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, updatable = false)
-    private Integer id;
+public class Shipment extends BaseEntity {
+
     private double weight;
     private double price;
 
@@ -55,14 +52,6 @@ public class Shipment {
         this.courier = new Courier(); // TODO: implement a function to auto-assign couriers
         this.deliveryType = type;
         this.destination = destination; // TODO: Handle differentiating office location VS home address
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public double getWeight() {

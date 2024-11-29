@@ -8,15 +8,7 @@ import lombok.Setter;
 import java.util.Set;
 
 @Entity
-public class Office {
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
+public class Office extends BaseEntity {
     public String getAddress() {
         return address;
     }
@@ -49,10 +41,6 @@ public class Office {
         this.company = company;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, updatable = false)
-    private Integer id;
     private String address;
     private String name;
     private String phone;

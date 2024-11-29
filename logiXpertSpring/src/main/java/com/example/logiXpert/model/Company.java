@@ -8,12 +8,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "company")
-public class Company implements Serializable {
+public class Company extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, updatable = false)
-    private Integer id;
     private String name;
     private double baseCapital;
 
@@ -31,10 +27,6 @@ public class Company implements Serializable {
 
     public Company() {}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public Company(String name, double baseCapital) {
         this.name = name;
         this.baseCapital = baseCapital;
@@ -42,10 +34,6 @@ public class Company implements Serializable {
         this.couriers = new HashSet<>();
         this.officeEmployees = new HashSet<>();
         this.shipments = new HashSet<>();
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public String getName() {
@@ -99,7 +87,6 @@ public class Company implements Serializable {
     @Override
     public String toString() {
         return "Company{" +
-                "id=" + id +
                 ", name='" + name + '\'' +
                 ", baseCapital=" + baseCapital +
                 '}';

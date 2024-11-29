@@ -5,12 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Courier {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, updatable = false)
-    private Integer id;
-    private String name;
+public class Courier extends User {
+
     private double salary;
     private int vehicleId;
 
@@ -25,7 +21,6 @@ public class Courier {
 
     public Courier(String name, double salary, int vehicleId)
     {
-        this.name = name;
         this.salary = salary;
         this.vehicleId = vehicleId;
         this.office = new Office();
@@ -41,22 +36,6 @@ public class Courier {
 
     public void unassignShipment(Shipment shipment) {
         assignedShipments.remove(shipment);
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public double getSalary() {
