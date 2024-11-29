@@ -31,6 +31,10 @@ public class Company implements Serializable {
 
     public Company() {}
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public Company(String name, double baseCapital) {
         this.name = name;
         this.baseCapital = baseCapital;

@@ -8,6 +8,7 @@ import com.example.logiXpert.repository.OfficeRepository;
 import com.example.logiXpert.repository.CompanyRepository;
 import com.example.logiXpert.service.OfficeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -68,6 +69,7 @@ public class OfficeServiceImpl implements OfficeService {
     }
 
     @Override
+    @Transactional
     public void deleteOffice(Integer id) {
         if (!officeRepository.existsById(id)) {
             throw new OfficeNotFoundException("Office with id " + id + " was not found");
