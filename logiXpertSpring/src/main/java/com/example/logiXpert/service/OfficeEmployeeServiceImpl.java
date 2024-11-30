@@ -1,6 +1,7 @@
 package com.example.logiXpert.service;
 
 import com.example.logiXpert.dto.OfficeEmployeeDto;
+import com.example.logiXpert.dto.OfficeEmployeeRegistrationDto;
 import com.example.logiXpert.exception.CompanyNotFoundException;
 import com.example.logiXpert.exception.OfficeEmployeeNotFoundException;
 import com.example.logiXpert.mapper.OfficeEmployeeMapper;
@@ -49,12 +50,12 @@ public class OfficeEmployeeServiceImpl implements OfficeEmployeeService {
         employee.setPassword(passwordEncoder.encode(registrationDto.password()));
 
         employee.setOffice(
-                officeRepository.findById(officeEmployeeDto.id())
+                officeRepository.findById(registrationDto.id())
                         .orElseThrow(() -> new OfficeEmployeeNotFoundException("Office not found"))
         );
 
         employee.setCompany(
-                companyRepository.findById(officeEmployeeDto.id())
+                companyRepository.findById(registrationDto.id())
                         .orElseThrow(() -> new CompanyNotFoundException("Company not found"))
         );
 

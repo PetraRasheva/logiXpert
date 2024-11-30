@@ -1,11 +1,9 @@
 package com.example.logiXpert.controller;
 
-import com.example.logiXpert.dto.AdminDto;
-import com.example.logiXpert.dto.GetAdminDto;
-import com.example.logiXpert.dto.OfficeEmployeeDto;
-import com.example.logiXpert.dto.OfficeEmployeeRegistrationDto;
+import com.example.logiXpert.dto.*;
 import com.example.logiXpert.model.Admin;
 import com.example.logiXpert.service.AdminService;
+import com.example.logiXpert.service.CourierService;
 import com.example.logiXpert.service.OfficeEmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +19,13 @@ public class AdminController {
     private final AdminService adminService;
     private final OfficeEmployeeService officeEmployeeService;
 
-    AdminController(AdminService adminService, OfficeEmployeeService officeEmployeeService) {
+    private final CourierService courierService;
+
+    AdminController(AdminService adminService, OfficeEmployeeService officeEmployeeService, CourierService courierService) {
         this.adminService = adminService;
         this.officeEmployeeService = officeEmployeeService;
+        this.courierService = courierService;
+
     }
 
 
@@ -51,13 +53,17 @@ public class AdminController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/hire-office-employee")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/add-employee")
     public ResponseEntity<OfficeEmployeeDto> addOfficeEmployee(@RequestBody OfficeEmployeeRegistrationDto registrationDto) {
         OfficeEmployeeDto newOfficeEmployee = officeEmployeeService.addOfficeEmployee(registrationDto);
         return new ResponseEntity<>(newOfficeEmployee, HttpStatus.CREATED);
     }
 
+    @PostMapping("/add-courier")
+    public ResponseEntity<CourierDto> addCourier(@RequestBody CourierDto courierDto) {
+        CourierDto newCourier = courierService.addCourier(courierDto);
+        return new ResponseEntity<>(newCourier, HttpStatus.CREATED);
+    }
 
     @GetMapping("/debug-roles")
     public ResponseEntity<?> debugRoles() {

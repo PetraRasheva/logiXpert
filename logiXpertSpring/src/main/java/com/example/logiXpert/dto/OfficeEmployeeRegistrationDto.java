@@ -1,6 +1,7 @@
 package com.example.logiXpert.dto;
 
 public record OfficeEmployeeRegistrationDto(
+        int id,
         String name,
         String phone,
         String email,

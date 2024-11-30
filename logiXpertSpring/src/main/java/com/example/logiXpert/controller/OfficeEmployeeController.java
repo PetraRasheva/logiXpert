@@ -24,12 +24,12 @@ public class OfficeEmployeeController {
         return new ResponseEntity<>(officeEmployee, HttpStatus.OK);
     }
 
-    @PostMapping("/hire-office-employee")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<OfficeEmployeeDto> addOfficeEmployee(@RequestBody OfficeEmployeeRegistrationDto registrationDto) {
-        OfficeEmployeeDto newOfficeEmployee = officeEmployeeService.addOfficeEmployee(registrationDto);
-        return new ResponseEntity<>(newOfficeEmployee, HttpStatus.CREATED);
-    }
+//    @PostMapping("/hire-office-employee")
+//    @PreAuthorize("hasAuthority('ADMIN')")
+//    public ResponseEntity<OfficeEmployeeDto> addOfficeEmployee(@RequestBody OfficeEmployeeRegistrationDto registrationDto) {
+//        OfficeEmployeeDto newOfficeEmployee = officeEmployeeService.addOfficeEmployee(registrationDto);
+//        return new ResponseEntity<>(newOfficeEmployee, HttpStatus.CREATED);
+//    }
     @PutMapping("/update")
     public ResponseEntity<OfficeEmployeeDto> updateOfficeEmployee(@RequestBody OfficeEmployeeDto officeEmployeeDto) {
         OfficeEmployeeDto updatedOfficeEmployee = officeEmployeeService.updateOfficeEmployee(officeEmployeeDto);
