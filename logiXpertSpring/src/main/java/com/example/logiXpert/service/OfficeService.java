@@ -1,13 +1,13 @@
 package com.example.logiXpert.service;
 
-import com.example.logiXpert.model.Office;
+import com.example.logiXpert.dto.OfficeDto;
 
 public interface OfficeService {
-    Office addOffice(Office office);
+    OfficeDto addOffice(OfficeDto officeDto);
 
-    Office updateOffice(Office office);
+    OfficeDto updateOffice(OfficeDto officeDto);
 
-    Office getOfficeById(Integer id);
+    OfficeDto getOfficeById(Integer id);
 
     void deleteOffice(Integer id);
 }

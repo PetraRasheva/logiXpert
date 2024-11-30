@@ -1,13 +1,13 @@
 package com.example.logiXpert.service;
 
-import com.example.logiXpert.model.Courier;
+import com.example.logiXpert.dto.CourierDto;
 
 public interface CourierService {
-    Courier addCourier(Courier courier);
+    CourierDto addCourier(CourierDto courierDto);
 
-    Courier updateCourier(Courier courier);
+    CourierDto updateCourier(CourierDto courierDto);
 
-    Courier getCourierById(Integer id);
+    CourierDto getCourierById(Integer id);
 
     void deleteCourier(Integer id);
 }

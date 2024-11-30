@@ -18,5 +18,5 @@ public interface ShipmentService {
 
     List<ShipmentDto> getAllShipments();
 
-    double calculateTotalRevenue(Integer companyId, LocalDateTime startDate, LocalDateTime endDate);
+    double calculateTotalRevenueForPeriod(Integer companyId, LocalDateTime startDate, LocalDateTime endDate);
 }

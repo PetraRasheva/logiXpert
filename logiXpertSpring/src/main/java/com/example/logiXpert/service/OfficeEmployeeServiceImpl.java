@@ -1,7 +1,7 @@
 package com.example.logiXpert.service;
 
 import com.example.logiXpert.dto.OfficeEmployeeDto;
-import com.example.logiXpert.dto.OfficeEmployeeRegistrationDto;
+import com.example.logiXpert.exception.CompanyNotFoundException;
 import com.example.logiXpert.exception.OfficeEmployeeNotFoundException;
 import com.example.logiXpert.mapper.OfficeEmployeeMapper;
 import com.example.logiXpert.model.ERole;
@@ -49,13 +49,13 @@ public class OfficeEmployeeServiceImpl implements OfficeEmployeeService {
         employee.setPassword(passwordEncoder.encode(registrationDto.password()));
 
         employee.setOffice(
-                officeRepository.findByName(registrationDto.officeName())
+                officeRepository.findById(officeEmployeeDto.id())
                         .orElseThrow(() -> new OfficeEmployeeNotFoundException("Office not found"))
         );
 
         employee.setCompany(
-                companyRepository.findByName(registrationDto.companyName())
-                        .orElseThrow(() -> new OfficeEmployeeNotFoundException("Company not found"))
+                companyRepository.findById(officeEmployeeDto.id())
+                        .orElseThrow(() -> new CompanyNotFoundException("Company not found"))
         );
 
         Role role = roleRepository.findByName(ERole.valueOf(registrationDto.role()))

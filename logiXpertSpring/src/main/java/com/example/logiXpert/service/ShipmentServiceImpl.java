@@ -5,7 +5,9 @@ import com.example.logiXpert.dto.ShipmentDto;
 import com.example.logiXpert.exception.ShipmentNotFoundException;
 import com.example.logiXpert.mapper.GetShipmentMapper;
 import com.example.logiXpert.mapper.ShipmentMapper;
+import com.example.logiXpert.model.Client;
 import com.example.logiXpert.model.Company;
+import com.example.logiXpert.model.DeliveryStatus;
 import com.example.logiXpert.model.Shipment;
 import com.example.logiXpert.repository.CompanyRepository;
 import com.example.logiXpert.repository.ShipmentRepository;
@@ -31,7 +33,8 @@ public class ShipmentServiceImpl implements ShipmentService {
         this.companyRepository = companyRepository;
     }
 
-    public double calculateTotalRevenue(Integer companyId, LocalDateTime startDate, LocalDateTime endDate) {
+    @Override
+    public double calculateTotalRevenueForPeriod(Integer companyId, LocalDateTime startDate, LocalDateTime endDate) {
         List<Shipment> shipments = shipmentRepository.findShipmentsByCompanyAndDateRange(companyId, startDate, endDate);
         return shipments.stream()
                 .mapToDouble(Shipment::getPrice)
@@ -42,14 +45,23 @@ public class ShipmentServiceImpl implements ShipmentService {
     public ShipmentDto addShipment(ShipmentDto shipmentDto) {
         Shipment shipment = shipmentMapper.toEntity(shipmentDto);
 
+        // SET STATUS
+        shipment.setDeliveryStatus(DeliveryStatus.CREATED);
+
+        calculateTotalRevenue(shipment, shipmentDto);
+
+        Shipment savedShipment = shipmentRepository.save(shipment);
+        return shipmentMapper.toDto(savedShipment);
+    }
+
+    private void calculateTotalRevenue(Shipment shipment, ShipmentDto shipmentDto) {
         Company company = companyRepository.findById(shipmentDto.companyId())
                 .orElseThrow(() -> new IllegalArgumentException("Company with ID " + shipmentDto.companyId() + " not found"));
 
         shipment.setCompany(company);
         company.setBaseCapital(company.getBaseCapital() + shipment.getPrice());
+
         companyRepository.save(company);
-        Shipment savedShipment = shipmentRepository.save(shipment);
-        return shipmentMapper.toDto(savedShipment);
     }
 
     @Override

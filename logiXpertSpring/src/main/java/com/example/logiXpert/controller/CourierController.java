@@ -1,6 +1,6 @@
 package com.example.logiXpert.controller;
 
-import com.example.logiXpert.model.Courier;
+import com.example.logiXpert.dto.CourierDto;
 import com.example.logiXpert.service.CourierService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,26 +17,26 @@ public class CourierController {
     }
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<Courier> getCourierById(@PathVariable("id") Integer id) {
-        Courier courier = courierService.getCourierById(id);
+    public ResponseEntity<CourierDto> getCourierById(@PathVariable("id") Integer id) {
+        CourierDto courier = courierService.getCourierById(id);
         return new ResponseEntity<>(courier, HttpStatus.OK);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Courier> addCourier(@RequestBody Courier courier) {
-        Courier newCourier = courierService.addCourier(courier);
+    public ResponseEntity<CourierDto> addCourier(@RequestBody CourierDto courierDto) {
+        CourierDto newCourier = courierService.addCourier(courierDto);
         return new ResponseEntity<>(newCourier, HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Courier> updateCourier(@RequestBody Courier courier) {
-        Courier updateCourier = courierService.updateCourier(courier);
-        return new ResponseEntity<>(updateCourier, HttpStatus.CREATED);
+    public ResponseEntity<CourierDto> updateCourier(@RequestBody CourierDto courierDto) {
+        CourierDto updatedCourier = courierService.updateCourier(courierDto);
+        return new ResponseEntity<>(updatedCourier, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteCourier(@PathVariable("id") Integer id) {
+    public ResponseEntity<Void> deleteCourier(@PathVariable("id") Integer id) {
         courierService.deleteCourier(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
