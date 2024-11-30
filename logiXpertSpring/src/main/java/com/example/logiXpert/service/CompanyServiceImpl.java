@@ -67,17 +67,15 @@ public class CompanyServiceImpl implements CompanyService {
         Shipment shipment = shipmentRepository.findShipmentById(shipmentId).orElseThrow(() -> new ShipmentNotFoundException("Shipment with id " + shipmentId + " was not found"));;
         Courier courier = courierRepository.findCourierById(courierId).orElseThrow(() -> new CourierNotFoundException("Courier with id " + courierId + " was not found"));;
 
-        // Remove shipment from all other couriers
         courierRepository.findAll().forEach(c -> {
             if (c.getAssignedShipments().contains(shipment)) {
                 c.unassignShipment(shipment);
-                courierRepository.save(c); // Save changes
+                courierRepository.save(c);
             }
         });
 
-        // Assign shipment to the target courier
         courier.assignShipment(shipment);
-        courierRepository.save(courier);  // Persist assignment
+        courierRepository.save(courier);
         System.out.println("Assigned shipment " + shipmentId + " to courier " + courierId);
     }
 }

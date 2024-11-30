@@ -18,25 +18,25 @@ public class ClientController {
 
     @GetMapping("/find/{id}")
     public ResponseEntity<ClientDto> getClientById(@PathVariable("id") Integer id) {
-        ClientDto clientDto = clientService.getClientById(id); // Извиква сервиз с DTO
-        return new ResponseEntity<>(clientDto, HttpStatus.OK); // Връща DTO
+        ClientDto clientDto = clientService.getClientById(id);
+        return new ResponseEntity<>(clientDto, HttpStatus.OK);
     }
 
     @PostMapping("/add")
     public ResponseEntity<ClientDto> addClient(@RequestBody ClientDto clientDto) {
-        ClientDto newClient = clientService.addClient(clientDto); // Използва DTO
-        return new ResponseEntity<>(newClient, HttpStatus.CREATED); // Връща DTO
+        ClientDto newClient = clientService.addClient(clientDto);
+        return new ResponseEntity<>(newClient, HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
     public ResponseEntity<ClientDto> updateClient(@RequestBody ClientDto clientDto) {
-        ClientDto updatedClient = clientService.updateClient(clientDto); // Използва DTO
-        return new ResponseEntity<>(updatedClient, HttpStatus.OK); // Връща DTO
+        ClientDto updatedClient = clientService.updateClient(clientDto);
+        return new ResponseEntity<>(updatedClient, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteClient(@PathVariable("id") Integer id) {
-        clientService.deleteClient(id); // Извиква сервиз за изтриване
-        return new ResponseEntity<>(HttpStatus.OK); // Връща само статус
+        clientService.deleteClient(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

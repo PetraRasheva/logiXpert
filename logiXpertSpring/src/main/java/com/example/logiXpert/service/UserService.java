@@ -3,6 +3,8 @@ package com.example.logiXpert.service;
 import com.example.logiXpert.dto.CredentialsDto;
 import com.example.logiXpert.dto.SignUpDto;
 import com.example.logiXpert.dto.UserDto;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public interface UserService {
     UserDto addUser(UserDto user);

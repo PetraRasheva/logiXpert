@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.util.Set;
+
 public record UserDto(
         int id,
         @NotBlank(message = "Name is required")
@@ -18,7 +20,6 @@ public record UserDto(
         @NotBlank(message = "Email is required")
         String email,
         @NotBlank(message = "Password is required")
-        String password,
-        Role role
+        String password
 ) {
 }

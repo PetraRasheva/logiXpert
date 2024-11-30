@@ -1,14 +1,19 @@
 package com.example.logiXpert.service;
 
 import com.example.logiXpert.dto.OfficeEmployeeDto;
+import com.example.logiXpert.dto.OfficeEmployeeRegistrationDto;
 import com.example.logiXpert.exception.OfficeEmployeeNotFoundException;
 import com.example.logiXpert.mapper.OfficeEmployeeMapper;
+import com.example.logiXpert.model.ERole;
 import com.example.logiXpert.model.OfficeEmployee;
+import com.example.logiXpert.model.Role;
 import com.example.logiXpert.repository.CompanyRepository;
 import com.example.logiXpert.repository.OfficeEmployeeRepository;
 import com.example.logiXpert.repository.OfficeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.example.logiXpert.repository.RoleRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class OfficeEmployeeServiceImpl implements OfficeEmployeeService {
@@ -17,36 +22,49 @@ public class OfficeEmployeeServiceImpl implements OfficeEmployeeService {
     private final OfficeRepository officeRepository;
     private final CompanyRepository companyRepository;
     private final OfficeEmployeeMapper officeEmployeeMapper;
+    private final RoleRepository roleRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
     public OfficeEmployeeServiceImpl(
             OfficeEmployeeRepository officeEmployeeRepository,
             OfficeRepository officeRepository,
-            CompanyRepository companyRepository, OfficeEmployeeMapper officeEmployeeMapper) {
+            CompanyRepository companyRepository,
+            OfficeEmployeeMapper officeEmployeeMapper,
+            RoleRepository roleRepository,
+            PasswordEncoder passwordEncoder) {
         this.officeEmployeeRepository = officeEmployeeRepository;
         this.officeRepository = officeRepository;
         this.companyRepository = companyRepository;
         this.officeEmployeeMapper = officeEmployeeMapper;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public OfficeEmployeeDto addOfficeEmployee(OfficeEmployeeDto officeEmployeeDto) {
+    public OfficeEmployeeDto addOfficeEmployee(OfficeEmployeeRegistrationDto registrationDto) {
 
-        OfficeEmployee employee = officeEmployeeMapper.toEntity(officeEmployeeDto);
+        OfficeEmployee employee = officeEmployeeMapper.toEntity(registrationDto);
+        employee.setPassword(passwordEncoder.encode(registrationDto.password()));
 
         employee.setOffice(
-                officeRepository.findByName(officeEmployeeDto.officeName())
+                officeRepository.findByName(registrationDto.officeName())
                         .orElseThrow(() -> new OfficeEmployeeNotFoundException("Office not found"))
         );
 
         employee.setCompany(
-                companyRepository.findByName(officeEmployeeDto.companyName())
+                companyRepository.findByName(registrationDto.companyName())
                         .orElseThrow(() -> new OfficeEmployeeNotFoundException("Company not found"))
         );
 
+        Role role = roleRepository.findByName(ERole.valueOf(registrationDto.role()))
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        employee.getRoles().add(role);
         OfficeEmployee savedEmployee = officeEmployeeRepository.save(employee);
         return officeEmployeeMapper.toDto(savedEmployee);
     }
-
     @Override
     public OfficeEmployeeDto updateOfficeEmployee(OfficeEmployeeDto officeEmployeeDto) {
         OfficeEmployee existingEmployee = officeEmployeeRepository.findById(officeEmployeeDto.id())

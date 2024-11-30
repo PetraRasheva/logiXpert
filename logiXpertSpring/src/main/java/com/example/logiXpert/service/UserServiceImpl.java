@@ -5,37 +5,48 @@ import com.example.logiXpert.dto.SignUpDto;
 import com.example.logiXpert.dto.UserDto;
 import com.example.logiXpert.exception.UserException;
 import com.example.logiXpert.mapper.UserMapper;
+import com.example.logiXpert.model.Client;
+import com.example.logiXpert.model.ERole;
+import com.example.logiXpert.model.Role;
 import com.example.logiXpert.model.User;
+import com.example.logiXpert.repository.ClientRepository;
 import com.example.logiXpert.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.example.logiXpert.repository.RoleRepository;
 
-import java.util.Optional;
+
+import java.util.Set;
 
 // TODO: Enable spring security and use encrypted password
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
-    //private final PasswordEncoder passwordEncoder;
 
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
+    private final ClientRepository clientRepository;
     private final UserMapper userMapper;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
+                           UserMapper userMapper, PasswordEncoder passwordEncoder, ClientRepository clientRepository) {
         this.userRepository = userRepository;
-        //this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
+        this.clientRepository = clientRepository;
     }
 
     @Override
     public UserDto addUser(UserDto userDto) {
-        //TODO: Is it a good approach ? TRIED IT AND DOESN t WORK, .User cannot be cast to.Admin
-//        if(user.getRole() == Role.ADMIN){
-//           adminRepository.save(user);
-//        }
         User user = userRepository.save(userMapper.toEntity(userDto));
         return userMapper.toDto(user);
     }
@@ -51,7 +62,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(Integer id) {
-        User user = userRepository.findUserById(id).orElseThrow(() -> new UserException("UserDto with id " + id + " was not found", HttpStatus.NOT_FOUND));
+        User user = userRepository.findUserById(id)
+                .orElseThrow(() -> new UserException("UserDto with id " + id + " was not found", HttpStatus.NOT_FOUND));
         return userMapper.toDto(user);
     }
 
@@ -63,41 +75,42 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteUserById(id);
     }
 
+    public boolean hasRole(User user, ERole role) {
+        return user.getRoles().stream()
+                .anyMatch(r -> r.getName().equals(role));
+    }
+
     @Override
     public UserDto login(@Valid CredentialsDto credentialsDto) {
         User user = userRepository.findUserByEmail(credentialsDto.email())
                 .orElseThrow(() -> new UserException("User with email " + credentialsDto.email() + " was not found", HttpStatus.NOT_FOUND));
 
-        // TODO: Replace with password encoder
-        if (!credentialsDto.password().equals(user.getPassword())) {
+        if (!passwordEncoder.matches(credentialsDto.password(), user.getPassword())) {
             throw new UserException("Invalid password for email " + credentialsDto.email(), HttpStatus.BAD_REQUEST);
         }
+
         return userMapper.toDto(user);
     }
 
     @Override
-    public UserDto signUp(@Valid SignUpDto signUpDto) {
-        // Проверка за вече съществуващ потребител
-        if (userRepository.findUserByEmail(signUpDto.email()).isPresent()) {
-            throw new UserException("User with email " + signUpDto.email() + " has already been registered", HttpStatus.BAD_REQUEST);
+    public UserDto signUp(SignUpDto signUpDto) {
+        if (userRepository.existsUserByEmail(signUpDto.email())) {
+            throw new UserException("Email already exists", HttpStatus.BAD_REQUEST);
         }
 
-        // Създаване на нов потребител от DTO-то
-        User newUser = userMapper.signUpToUser(signUpDto);
+        Role clientRole = roleRepository.findByName(ERole.CLIENT)
+                .orElseThrow(() -> new RuntimeException("Error: Role CLIENT is not found."));
 
-        // Хеширане на паролата
-        // TODO: Uncomment this after adding PasswordEncoder bean
-        // newUser.setPassword(passwordEncoder.encode(signUpDto.password()));
+        Client newClient = new Client(
+                signUpDto.name(),
+                signUpDto.phone(),
+                signUpDto.email(),
+                passwordEncoder.encode(signUpDto.password())
+        );
 
-        // Засега оставяме паролата в обикновен текст (неправилно в продукционна среда)
-        newUser.setPassword(signUpDto.password());
+        newClient.getRoles().add(clientRole);
 
-        // Запис в базата данни
-        User savedUser = userRepository.save(newUser);
-
-        // Връщане на UserDto
-        return userMapper.toDto(savedUser);
+        Client savedClient = clientRepository.save(newClient);
+        return userMapper.toDto(savedClient);
     }
-
-    //TODO: Implement complex requests
 }

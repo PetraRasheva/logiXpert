@@ -45,9 +45,11 @@ public class OfficeEmployee extends User {
     @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 
-    public OfficeEmployee(String phone, String email, String password, double salary) {
-        //super(phone, email, password);
+    public OfficeEmployee(String name, String phone, String email, String password, double salary, Office office, Company company) {
+        super(name, phone, email, password);
         this.salary = salary;
+        this.office = office;
+        this.company = company;
     }
 
     // base entity for the id inherited by the user

@@ -8,6 +8,6 @@ public class Client extends User {
     }
 
     public Client(String name, String phone, String email, String password) {
-        //super(name, phone, email, password, Role.CLIENT);
+        super(name, phone, email, password);
     }
 }

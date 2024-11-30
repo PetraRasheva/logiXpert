@@ -25,9 +25,9 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ClientDto addClient(ClientDto clientDto) {
-        Client client = clientMapper.toEntity(clientDto); // DTO -> Entity
+        Client client = clientMapper.toEntity(clientDto);
         Client savedClient = clientRepository.save(client);
-        return clientMapper.toDto(savedClient); // Entity -> DTO
+        return clientMapper.toDto(savedClient);
     }
 
     @Override
@@ -35,16 +35,16 @@ public class ClientServiceImpl implements ClientService {
         if (!clientRepository.existsById(clientDto.id())) {
             throw new ClientNotFoundException("Client with id " + clientDto.id() + " was not found");
         }
-        Client client = clientMapper.toEntity(clientDto); // DTO -> Entity
+        Client client = clientMapper.toEntity(clientDto);
         Client updatedClient = clientRepository.save(client);
-        return clientMapper.toDto(updatedClient); // Entity -> DTO
+        return clientMapper.toDto(updatedClient);
     }
 
     @Override
     public ClientDto getClientById(Integer id) {
         Client client = clientRepository.findClientById(id)
                 .orElseThrow(() -> new ClientNotFoundException("Client with id " + id + " was not found"));
-        return clientMapper.toDto(client); // Entity -> DTO
+        return clientMapper.toDto(client);
     }
 
     @Override
