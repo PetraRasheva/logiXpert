@@ -1,6 +1,7 @@
 package com.example.logiXpert.service;
 
 import com.example.logiXpert.dto.OfficeDto;
+import com.example.logiXpert.exception.CompanyNotFoundException;
 import com.example.logiXpert.exception.OfficeNotFoundException;
 import com.example.logiXpert.mapper.OfficeMapper;
 import com.example.logiXpert.model.Office;
@@ -34,7 +35,7 @@ public class OfficeServiceImpl implements OfficeService {
 
         office.setCompany(
                 companyRepository.findByName(officeDto.companyName())
-                        .orElseThrow(() -> new OfficeNotFoundException("Company not found"))
+                        .orElseThrow(() -> new CompanyNotFoundException("Company not found"))
         );
 
         Office savedOffice = officeRepository.save(office);
@@ -48,12 +49,10 @@ public class OfficeServiceImpl implements OfficeService {
 
         existingOffice.setName(officeDto.name());
         existingOffice.setAddress(officeDto.address());
-        existingOffice.setOpenHours(officeDto.openHours());
-
-//        existingOffice.setCompany(
-//                companyRepository.findByName(officeDto.companyName())
-//                        .orElseThrow(() -> new OfficeNotFoundException("Company not found"))
-//        );
+        existingOffice.setCompany(
+                companyRepository.findByName(officeDto.companyName())
+                        .orElseThrow(() -> new OfficeNotFoundException("Company not found"))
+        );
 
         Office updatedOffice = officeRepository.save(existingOffice);
 

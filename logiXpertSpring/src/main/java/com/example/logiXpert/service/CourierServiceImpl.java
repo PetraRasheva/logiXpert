@@ -35,7 +35,7 @@ public class CourierServiceImpl implements CourierService {
         Courier courier = courierMapper.toEntity(courierDto);
 
         courier.setOffice(
-                officeRepository.findByName(courierDtoDto.officeName())
+                officeRepository.findByName(courierDto.officeName())
                         .orElseThrow(() -> new CourierNotFoundException("Office not found"))
         );
 

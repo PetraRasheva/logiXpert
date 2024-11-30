@@ -5,6 +5,7 @@ import com.example.logiXpert.dto.ShipmentDto;
 import com.example.logiXpert.exception.ShipmentNotFoundException;
 import com.example.logiXpert.mapper.GetShipmentMapper;
 import com.example.logiXpert.mapper.ShipmentMapper;
+import com.example.logiXpert.model.Client;
 import com.example.logiXpert.model.Company;
 import com.example.logiXpert.model.DeliveryStatus;
 import com.example.logiXpert.model.Shipment;

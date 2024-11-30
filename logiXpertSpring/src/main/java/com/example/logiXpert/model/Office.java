@@ -9,6 +9,26 @@ import java.util.Set;
 
 @Entity
 public class Office extends BaseEntity {
+
+    private String address;
+    private String name;
+    private String phone;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Company company;
+
+//    The Office class does not need to maintain a list of employees and couriers.
+//    Instead, rely on querying the Employee class for employees associated with a specific office when needed.
+
+    public Office(String address, String name, String phone) {
+        this.address = address;
+        this.name = name;
+        this.phone = phone;
+        this.company = new Company();
+    }
+
+    public Office() {}
+
     public String getAddress() {
         return address;
     }
@@ -40,23 +60,4 @@ public class Office extends BaseEntity {
     public void setCompany(Company company) {
         this.company = company;
     }
-
-    private String address;
-    private String name;
-    private String phone;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Company company;
-
-//    The Office class does not need to maintain a list of employees and couriers.
-//    Instead, rely on querying the Employee class for employees associated with a specific office when needed.
-
-    public Office(String address, String name, String phone) {
-        this.address = address;
-        this.name = name;
-        this.phone = phone;
-        this.company = new Company();
-    }
-
-    public Office() {}
 }

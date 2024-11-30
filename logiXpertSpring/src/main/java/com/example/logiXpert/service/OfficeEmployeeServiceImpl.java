@@ -1,6 +1,7 @@
 package com.example.logiXpert.service;
 
 import com.example.logiXpert.dto.OfficeEmployeeDto;
+import com.example.logiXpert.exception.CompanyNotFoundException;
 import com.example.logiXpert.exception.OfficeEmployeeNotFoundException;
 import com.example.logiXpert.mapper.OfficeEmployeeMapper;
 import com.example.logiXpert.model.OfficeEmployee;
@@ -34,13 +35,13 @@ public class OfficeEmployeeServiceImpl implements OfficeEmployeeService {
         OfficeEmployee employee = officeEmployeeMapper.toEntity(officeEmployeeDto);
 
         employee.setOffice(
-                officeRepository.findByName(officeEmployeeDto.officeName())
+                officeRepository.findById(officeEmployeeDto.id())
                         .orElseThrow(() -> new OfficeEmployeeNotFoundException("Office not found"))
         );
 
         employee.setCompany(
-                companyRepository.findByName(officeEmployeeDto.companyName())
-                        .orElseThrow(() -> new OfficeEmployeeNotFoundException("Company not found"))
+                companyRepository.findById(officeEmployeeDto.id())
+                        .orElseThrow(() -> new CompanyNotFoundException("Company not found"))
         );
 
         OfficeEmployee savedEmployee = officeEmployeeRepository.save(employee);
