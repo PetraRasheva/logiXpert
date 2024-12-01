@@ -5,7 +5,7 @@
         <p class="text-sm lg:text-base text-primaryText mb-6 text-left">You can log into your account by entering the information below</p>
 
         <!-- Sign In Form -->
-        <form class="w-full">
+        <form  (ngSubmit)="login()" class="w-full">
 
             <!-- Email -->
             <div class="mb-4">
@@ -19,7 +19,15 @@
                         </svg>
                       </div>
                       
-                    <input type="email" id="input-group-1" class="bg-gray-50 border border-gray-300 text-primaryText text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 pl-10" placeholder="e-mail">
+                      <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      [(ngModel)]="credentials.email"
+                      class="bg-gray-50 border border-gray-300 text-primaryText text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 pl-10"
+                      placeholder="e-mail"
+                      required
+                    />
                 </div>
             </div>
 
@@ -35,7 +43,15 @@
                             </g>
                         </svg>
                     </div> 
-                    <input type="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3" placeholder="password">
+                    <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    [(ngModel)]="credentials.password"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3"
+                    placeholder="password"
+                    required
+                  />
                 </div>
             </div>
 

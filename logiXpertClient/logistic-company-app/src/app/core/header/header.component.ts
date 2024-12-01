@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-header',
@@ -8,6 +9,26 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
+
+  constructor(private userService: UserService) {}
+
+
+  logout(): void {
+    this.userService.logout().subscribe({
+      next: (response) => {
+        console.log(response); 
+        localStorage.clear(); 
+        window.location.reload();
+      },
+      error: (err) => {
+        console.error("Logout failed:", err);
+      },
+    });
+  }
+
+  ngOnInit(): void {
+
+  }
 
 }

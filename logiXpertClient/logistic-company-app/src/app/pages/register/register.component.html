@@ -4,12 +4,14 @@
         <h1 class="text-4xl lg:text-6xl font-medium text-primaryText mb-8 text-left">Create your LogiXpert account</h1>
         <p class="text-sm lg:text-base text-primaryText mb-6 text-left">Feel the difference in service</p>
 
+        
         <!-- Sign In Form -->
-        <form class="w-full">
+         <!-- [formGroup]="loginForm" -->
+        <form  (ngSubmit)="register()" class="w-full">
 
              <!-- Name -->
              <div class="mb-4">
-                <label for="input-group-2" class="block mb-2 text-base font-medium text-primaryText">Name</label>
+                <label for="name" class="block mb-2 text-base font-medium text-primaryText">Name</label>
                 <div class="relative">
 
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -28,13 +30,13 @@
                         </svg>
                       </div>
                       
-                    <input type="email" id="input-group-2" class="bg-gray-50 border border-gray-300 text-primaryText text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 pl-10" placeholder="name">
+                    <input type="text" id="name" [(ngModel)]="signUpData.name" name="firstName" class="bg-gray-50 border border-gray-300 text-primaryText text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 pl-10" placeholder="name">
                 </div>
             </div>
 
             <!-- Email -->
             <div class="mb-4">
-                <label for="input-group-3" class="block mb-2 text-base font-medium text-primaryText">E-mail</label>
+                <label for="email" class="block mb-2 text-base font-medium text-primaryText">E-mail</label>
                 <div class="relative">
 
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -44,7 +46,7 @@
                         </svg>
                       </div>
                       
-                    <input type="email" id="input-group-3" class="bg-gray-50 border border-gray-300 text-primaryText text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 pl-10" placeholder="e-mail">
+                    <input type="email" id="email" [(ngModel)]="signUpData.email" name="email" class="bg-gray-50 border border-gray-300 text-primaryText text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 pl-10" placeholder="e-mail" required>
                 </div>
             </div>
 
@@ -60,13 +62,13 @@
                             </g>
                         </svg>
                     </div> 
-                    <input type="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3" placeholder="password">
+                    <input type="password" id="password" [(ngModel)]="signUpData.password" name="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3" placeholder="password" required>
                 </div>
             </div>
 
              <!-- Phone -->
              <div class="mb-4">
-                <label for="input-group-5" class="block mb-2 text-base font-medium text-primaryText">Phone</label>
+                <label for="phone" class="block mb-2 text-base font-medium text-primaryText">Phone</label>
                 <div class="relative">
 
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
@@ -80,7 +82,7 @@
                         </svg>
                       </div>
                       
-                    <input type="email" id="input-group-5" class="bg-gray-50 border border-gray-300 text-primaryText text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 pl-10" placeholder="phone">
+                    <input type="text" id="phone" [(ngModel)]="signUpData.phone" name="phone" class="bg-gray-50 border border-gray-300 text-primaryText text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 pl-10" placeholder="phone" required>
                 </div>
             </div>
 
