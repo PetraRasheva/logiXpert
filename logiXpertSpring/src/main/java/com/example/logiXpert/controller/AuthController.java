@@ -24,6 +24,9 @@ import org.springframework.http.HttpStatus;
 
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -59,12 +62,24 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(false)
                 .path("/")
-                .maxAge(24 * 60 * 60) // Валидност 1 ден
+                .maxAge(24 * 60 * 60)
                 .build();
 
         response.addHeader("Set-Cookie", jwtCookie.toString());
 
-        return ResponseEntity.ok(new JwtResponse(jwt));
+
+        List<String> roles = user.getRoles().stream()
+                .map(role -> role.getName().name())
+                .toList();
+        
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("id", user.getId());
+        responseBody.put("email", user.getEmail());
+        responseBody.put("name", user.getName());
+        responseBody.put("phone", user.getPhone());
+        responseBody.put("roles", roles);
+
+        return ResponseEntity.ok(responseBody);
     }
 
     @PostMapping("/register")
