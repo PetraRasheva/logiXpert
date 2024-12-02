@@ -1,5 +1,6 @@
 package com.example.logiXpert.controller;
 
+import com.example.logiXpert.dto.GetAllShipmentDto;
 import com.example.logiXpert.dto.GetShipmentDto;
 import com.example.logiXpert.dto.ShipmentDto;
 import com.example.logiXpert.model.Shipment;
@@ -20,8 +21,6 @@ public class ShipmentController {
     public ShipmentController(ShipmentService shipmentService) {
         this.shipmentService = shipmentService;
     }
-
-    //TODO: Refactor controllers to use Dto models
 
     @GetMapping("/find/{id}")
     public ResponseEntity<GetShipmentDto> getShipmentById(@PathVariable("id") Integer id) {
@@ -48,8 +47,8 @@ public class ShipmentController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ShipmentDto>> getAllShipments() {
-        List<ShipmentDto> shipments = shipmentService.getAllShipments();
+    public ResponseEntity<List<GetAllShipmentDto>> getAllShipments() {
+        List<GetAllShipmentDto> shipments = shipmentService.getAllShipments();
         return new ResponseEntity<>(shipments, HttpStatus.OK);
     }
 

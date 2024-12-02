@@ -1,7 +1,7 @@
 package com.example.logiXpert.controller;
 
+import com.example.logiXpert.dto.GetUserDto;
 import com.example.logiXpert.dto.UserDto;
-import com.example.logiXpert.model.User;
 import com.example.logiXpert.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -18,15 +18,15 @@ public class UserController {
     }
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<UserDto> getUserById (@PathVariable("id") Integer id) {
-        UserDto user = userService.getUserById(id);
+    public ResponseEntity<GetUserDto> getUserById (@PathVariable("id") Integer id) {
+        GetUserDto user = userService.getUserById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping("/add")
     public ResponseEntity<UserDto> addUser(@Valid @RequestBody UserDto user) {
         UserDto newUser = userService.addUser(user);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(newUser);
     }
 
     @PutMapping("/update")

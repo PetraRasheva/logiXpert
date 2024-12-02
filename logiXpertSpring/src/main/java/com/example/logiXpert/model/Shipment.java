@@ -55,11 +55,11 @@ public class Shipment extends BaseEntity {
         this.courier = new Courier(); // TODO: implement a function to auto-assign couriers
         this.deliveryType = type;
         this.destination = destination; // TODO: Handle differentiating office location VS home address
-        this.trackingNumber = generateTrackingNumber();
     }
 
-    private String generateTrackingNumber() {
-        return "SHP-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    @PrePersist
+    private void generateTrackingNumber() {
+        this.trackingNumber = "SHP-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }
 
     public double getProfit() {

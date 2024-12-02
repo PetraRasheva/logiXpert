@@ -1,6 +1,7 @@
 package com.example.logiXpert.service;
 
 import com.example.logiXpert.dto.CredentialsDto;
+import com.example.logiXpert.dto.GetUserDto;
 import com.example.logiXpert.dto.SignUpDto;
 import com.example.logiXpert.dto.UserDto;
 import com.example.logiXpert.exception.UserException;
@@ -14,17 +15,9 @@ import com.example.logiXpert.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.logiXpert.repository.RoleRepository;
-
-
-import java.util.Set;
-
-// TODO: Enable spring security and use encrypted password
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -61,10 +54,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserById(Integer id) {
+    public GetUserDto getUserById(Integer id) {
         User user = userRepository.findUserById(id)
                 .orElseThrow(() -> new UserException("UserDto with id " + id + " was not found", HttpStatus.NOT_FOUND));
-        return userMapper.toDto(user);
+        return userMapper.toGetUserDto(user);
     }
 
     @Override

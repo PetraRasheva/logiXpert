@@ -1,6 +1,7 @@
 package com.example.logiXpert.service;
 
 import com.example.logiXpert.dto.CredentialsDto;
+import com.example.logiXpert.dto.GetUserDto;
 import com.example.logiXpert.dto.SignUpDto;
 import com.example.logiXpert.dto.UserDto;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +12,7 @@ public interface UserService {
 
     UserDto updateUser(UserDto user);
 
-    UserDto getUserById(Integer id);
+    GetUserDto getUserById(Integer id);
 
     void deleteUser(Integer id);
 
