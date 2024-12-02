@@ -10,6 +10,7 @@ import com.example.logiXpert.repository.RoleRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -17,6 +18,7 @@ import java.util.Optional;
 @Configuration
 public class AdminConfig {
 
+    @Order(2)
     @Bean
     CommandLineRunner commandLineRunner(
             AdminRepository adminRepository,
