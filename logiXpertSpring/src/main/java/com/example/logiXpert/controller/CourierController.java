@@ -22,11 +22,11 @@ public class CourierController {
         return new ResponseEntity<>(courier, HttpStatus.OK);
     }
 
-//    @PostMapping("/add")
-//    public ResponseEntity<CourierDto> addCourier(@RequestBody CourierDto courierDto) {
-//        CourierDto newCourier = courierService.addCourier(courierDto);
-//        return new ResponseEntity<>(newCourier, HttpStatus.CREATED);
-//    }
+    @PostMapping("/add")
+    public ResponseEntity<CourierDto> addCourier(@RequestBody CourierDto courierDto) {
+        CourierDto newCourier = courierService.addCourier(courierDto);
+        return new ResponseEntity<>(newCourier, HttpStatus.CREATED);
+    }
 
     @PutMapping("/update")
     public ResponseEntity<CourierDto> updateCourier(@RequestBody CourierDto courierDto) {

@@ -1,11 +1,11 @@
 package com.example.logiXpert.service;
 
 import com.example.logiXpert.dto.OfficeEmployeeDto;
-import com.example.logiXpert.dto.OfficeEmployeeRegistrationDto;
+import com.example.logiXpert.dto.RegisterOfficeEmployeeDto;
 
 public interface OfficeEmployeeService {
 
-    OfficeEmployeeDto addOfficeEmployee(OfficeEmployeeRegistrationDto registrationDto);
+    OfficeEmployeeDto addOfficeEmployee(RegisterOfficeEmployeeDto registrationDto);
 
     OfficeEmployeeDto updateOfficeEmployee(OfficeEmployeeDto officeEmployeeDto);
 

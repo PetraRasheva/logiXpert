@@ -1,7 +1,6 @@
 package com.example.logiXpert.controller;
 
 import com.example.logiXpert.dto.*;
-import com.example.logiXpert.model.Admin;
 import com.example.logiXpert.service.AdminService;
 import com.example.logiXpert.service.CourierService;
 import com.example.logiXpert.service.OfficeEmployeeService;
@@ -54,7 +53,7 @@ public class AdminController {
     }
 
     @PostMapping("/add-employee")
-    public ResponseEntity<OfficeEmployeeDto> addOfficeEmployee(@RequestBody OfficeEmployeeRegistrationDto registrationDto) {
+    public ResponseEntity<OfficeEmployeeDto> addOfficeEmployee(@RequestBody RegisterOfficeEmployeeDto registrationDto) {
         OfficeEmployeeDto newOfficeEmployee = officeEmployeeService.addOfficeEmployee(registrationDto);
         return new ResponseEntity<>(newOfficeEmployee, HttpStatus.CREATED);
     }

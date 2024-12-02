@@ -1,7 +1,7 @@
 package com.example.logiXpert.mapper;
 
 import com.example.logiXpert.dto.OfficeEmployeeDto;
-import com.example.logiXpert.dto.OfficeEmployeeRegistrationDto;
+import com.example.logiXpert.dto.RegisterOfficeEmployeeDto;
 import com.example.logiXpert.model.OfficeEmployee;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,11 +15,10 @@ public interface OfficeEmployeeMapper {
     OfficeEmployeeDto toDto(OfficeEmployee officeEmployee);
 
     @Mapping(target = "office", ignore = true)
-    @Mapping(target = "company", ignore = true)
     @Mapping(target = "roles", ignore = true)
     OfficeEmployee toEntity(OfficeEmployeeDto officeEmployeeDto);
 
-    default OfficeEmployee toEntity(OfficeEmployeeRegistrationDto registrationDto) {
+    default OfficeEmployee toEntity(RegisterOfficeEmployeeDto registrationDto) {
         OfficeEmployee employee = new OfficeEmployee();
         employee.setName(registrationDto.name());
         employee.setPhone(registrationDto.phone());

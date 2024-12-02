@@ -1,8 +1,7 @@
 package com.example.logiXpert.service;
 
 import com.example.logiXpert.dto.OfficeEmployeeDto;
-import com.example.logiXpert.dto.OfficeEmployeeRegistrationDto;
-import com.example.logiXpert.exception.CompanyNotFoundException;
+import com.example.logiXpert.dto.RegisterOfficeEmployeeDto;
 import com.example.logiXpert.exception.OfficeEmployeeNotFoundException;
 import com.example.logiXpert.mapper.OfficeEmployeeMapper;
 import com.example.logiXpert.model.ERole;
@@ -21,7 +20,6 @@ public class OfficeEmployeeServiceImpl implements OfficeEmployeeService {
 
     private final OfficeEmployeeRepository officeEmployeeRepository;
     private final OfficeRepository officeRepository;
-    private final CompanyRepository companyRepository;
     private final OfficeEmployeeMapper officeEmployeeMapper;
     private final RoleRepository roleRepository;
 
@@ -37,29 +35,28 @@ public class OfficeEmployeeServiceImpl implements OfficeEmployeeService {
             PasswordEncoder passwordEncoder) {
         this.officeEmployeeRepository = officeEmployeeRepository;
         this.officeRepository = officeRepository;
-        this.companyRepository = companyRepository;
         this.officeEmployeeMapper = officeEmployeeMapper;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public OfficeEmployeeDto addOfficeEmployee(OfficeEmployeeRegistrationDto registrationDto) {
+    public OfficeEmployeeDto addOfficeEmployee(RegisterOfficeEmployeeDto registrationDto) {
 
         OfficeEmployee employee = officeEmployeeMapper.toEntity(registrationDto);
         employee.setPassword(passwordEncoder.encode(registrationDto.password()));
 
         employee.setOffice(
-                officeRepository.findById(registrationDto.id())
+                officeRepository.findByName(registrationDto.officeName())
                         .orElseThrow(() -> new OfficeEmployeeNotFoundException("Office not found"))
         );
 
         employee.setCompany(
-                companyRepository.findById(registrationDto.id())
-                        .orElseThrow(() -> new CompanyNotFoundException("Company not found"))
+                employee.getOffice().getCompany()
         );
 
-        Role role = roleRepository.findByName(ERole.valueOf(registrationDto.role()))
+
+        Role role = roleRepository.findByName(ERole.OFFICE_EMPLOYEE)
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
         employee.getRoles().add(role);
@@ -74,16 +71,6 @@ public class OfficeEmployeeServiceImpl implements OfficeEmployeeService {
         existingEmployee.setName(officeEmployeeDto.name());
         existingEmployee.setPhone(officeEmployeeDto.phone());
         existingEmployee.setSalary(officeEmployeeDto.salary());
-
-//        existingEmployee.setOffice(
-//                officeRepository.findByName(officeEmployeeDto.officeName())
-//                        .orElseThrow(() -> new OfficeEmployeeNotFoundException("Office not found"))
-//        );
-//
-//        existingEmployee.setCompany(
-//                companyRepository.findByName(officeEmployeeDto.companyName())
-//                        .orElseThrow(() -> new OfficeEmployeeNotFoundException("Company not found"))
-//        );
 
         OfficeEmployee updatedEmployee = officeEmployeeRepository.save(existingEmployee);
 
