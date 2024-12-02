@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
 public class Role {
     @Id
@@ -18,6 +17,11 @@ public class Role {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true)
     private ERole name;
+
+    public Role() {}
+    public Role(ERole name) {
+        this.name = name;
+    }
 
     public int getId() {
         return id;
