@@ -1,16 +1,19 @@
 package com.example.logiXpert.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
-@Data
 public class Shipment extends BaseEntity {
 
     private double weight;
     private double price;
+    private double profit;
+
+    @Column(nullable = false, unique = true)
+    private String trackingNumber;
 
     @ManyToOne
     private Company company;
@@ -28,7 +31,7 @@ public class Shipment extends BaseEntity {
     private Client sender;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Client reciever;
+    private Client receiver;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Courier courier;
@@ -45,13 +48,34 @@ public class Shipment extends BaseEntity {
         this.weight = weight;
         this.price = price;
         this.sender = sender;
-        this.reciever = recipient;
+        this.receiver = recipient;
         this.owner = owner;
         this.deliveryStatus = deliveryStatus;
         this.shipmentDate = LocalDateTime.now();
         this.courier = new Courier(); // TODO: implement a function to auto-assign couriers
         this.deliveryType = type;
         this.destination = destination; // TODO: Handle differentiating office location VS home address
+        this.trackingNumber = generateTrackingNumber();
+    }
+
+    private String generateTrackingNumber() {
+        return "SHP-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    }
+
+    public double getProfit() {
+        return profit;
+    }
+
+    public void setProfit(double profit) {
+        this.profit = profit;
+    }
+
+    public String getTrackingNumber() {
+        return trackingNumber;
+    }
+
+    public void setTrackingNumber(String trackingNumber) {
+        this.trackingNumber = trackingNumber;
     }
 
     public double getWeight() {
@@ -118,12 +142,12 @@ public class Shipment extends BaseEntity {
         this.sender = sender;
     }
 
-    public Client getReciever() {
-        return reciever;
+    public Client getReceiver() {
+        return receiver;
     }
 
-    public void setReciever(Client reciever) {
-        this.reciever = reciever;
+    public void setReceiver(Client receiver) {
+        this.receiver = receiver;
     }
 
     public Courier getCourier() {
