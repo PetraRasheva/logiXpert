@@ -111,6 +111,14 @@ public class ShipmentServiceImpl implements ShipmentService {
         return shipments.stream().map(shipmentMapper::toGetAllDto).toList();
     }
 
+    public List<Shipment> getShipmentsSentByClient(int clientId) {
+        return shipmentRepository.findAllBySenderId(clientId);
+    }
+
+    public List<Shipment> getShipmentsReceivedByClient(int clientId) {
+        return shipmentRepository.findAllByReceiverId(clientId);
+    }
+
 
     private void calculateTotalRevenue(Shipment shipment, Company company) {
         shipment.setCompany(company);

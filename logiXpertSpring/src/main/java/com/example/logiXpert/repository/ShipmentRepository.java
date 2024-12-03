@@ -1,6 +1,5 @@
 package com.example.logiXpert.repository;
 
-import com.example.logiXpert.model.Company;
 import com.example.logiXpert.model.Shipment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +19,6 @@ public interface ShipmentRepository extends JpaRepository<Shipment, Integer> {
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate);
 
+    List<Shipment> findAllBySenderId(int senderId);
+    List<Shipment> findAllByReceiverId(int receiverId);
 }

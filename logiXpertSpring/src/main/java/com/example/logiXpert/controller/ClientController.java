@@ -1,10 +1,13 @@
 package com.example.logiXpert.controller;
 
 import com.example.logiXpert.dto.ClientDto;
+import com.example.logiXpert.dto.GetAllShipmentDto;
 import com.example.logiXpert.service.ClientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/client")
@@ -38,5 +41,17 @@ public class ClientController {
     public ResponseEntity<?> deleteClient(@PathVariable("id") Integer id) {
         clientService.deleteClient(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{clientId}/sent-shipments")
+    public ResponseEntity<List<GetAllShipmentDto>> getSentShipments(@PathVariable int clientId) {
+        List<GetAllShipmentDto> shipments = clientService.getSentShipments(clientId);
+        return ResponseEntity.ok(shipments);
+    }
+
+    @GetMapping("/{clientId}/received-shipments")
+    public ResponseEntity<List<GetAllShipmentDto>> getReceivedShipments(@PathVariable int clientId) {
+        List<GetAllShipmentDto> shipments = clientService.getReceivedShipments(clientId);
+        return ResponseEntity.ok(shipments);
     }
 }

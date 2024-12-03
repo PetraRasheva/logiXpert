@@ -19,6 +19,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.logiXpert.repository.RoleRepository;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -105,5 +109,20 @@ public class UserServiceImpl implements UserService {
 
         Client savedClient = clientRepository.save(newClient);
         return userMapper.toDto(savedClient);
+    }
+
+    @Override
+    public List<GetUserDto> getAllWithRoles(Set<ERole> roles) {
+        List<User> employees = userRepository.findAllByRoles(roles);
+        List<GetUserDto> employeeDtos = employees.stream()
+                .map(user -> new GetUserDto(
+                        user.getName(),
+                        user.getPhone(),
+                        user.getEmail(),
+                        user.getRoles().stream()
+                                .map(Role::getName)
+                                .collect(Collectors.toSet())
+                )).toList();
+        return employeeDtos;
     }
 }

@@ -1,6 +1,9 @@
 package com.example.logiXpert.service;
 
 import com.example.logiXpert.dto.CompanyDto;
+import com.example.logiXpert.dto.GetUserDto;
+
+import java.util.List;
 
 public interface CompanyService {
     CompanyDto addCompany(CompanyDto company);
@@ -11,5 +14,5 @@ public interface CompanyService {
 
     void deleteCompany(Integer id);
 
-    void assignShipmentToCourier(int shipmentId, int courierId);
+    List<GetUserDto> getAllEmployees();
 }

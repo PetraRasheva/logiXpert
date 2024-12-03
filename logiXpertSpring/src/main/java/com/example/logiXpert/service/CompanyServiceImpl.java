@@ -1,33 +1,28 @@
 package com.example.logiXpert.service;
 
 import com.example.logiXpert.dto.CompanyDto;
+import com.example.logiXpert.dto.GetUserDto;
 import com.example.logiXpert.exception.CompanyNotFoundException;
-import com.example.logiXpert.exception.CourierNotFoundException;
-import com.example.logiXpert.exception.ShipmentNotFoundException;
 import com.example.logiXpert.mapper.CompanyMapper;
-import com.example.logiXpert.model.Company;
-import com.example.logiXpert.model.Courier;
-import com.example.logiXpert.model.Shipment;
+import com.example.logiXpert.model.*;
 import com.example.logiXpert.repository.CompanyRepository;
-import com.example.logiXpert.repository.CourierRepository;
-import com.example.logiXpert.repository.ShipmentRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
-    private final CourierRepository courierRepository;
-    private final ShipmentRepository shipmentRepository;
     private final CompanyMapper companyMapper;
+    private final UserService userService;
 
     @Autowired
-    public CompanyServiceImpl(CompanyRepository companyRepository, CourierRepository courierRepository, ShipmentRepository shipmentRepository, CompanyMapper companyMapper) {
+    public CompanyServiceImpl(CompanyRepository companyRepository, CompanyMapper companyMapper, UserService userService) {
         this.companyRepository = companyRepository;
-        this.courierRepository = courierRepository;
-        this.shipmentRepository = shipmentRepository;
         this.companyMapper = companyMapper;
+        this.userService = userService;
     }
 
     @Override
@@ -61,21 +56,11 @@ public class CompanyServiceImpl implements CompanyService {
 
     //TODO: Implement complex requests
 
+    //TODO: Courier should assign select which unassigned shipments to assign to himself
+
     @Override
-    @Transactional
-    public void assignShipmentToCourier(int shipmentId, int courierId) {
-        Shipment shipment = shipmentRepository.findShipmentById(shipmentId).orElseThrow(() -> new ShipmentNotFoundException("Shipment with id " + shipmentId + " was not found"));;
-        Courier courier = courierRepository.findCourierById(courierId).orElseThrow(() -> new CourierNotFoundException("Courier with id " + courierId + " was not found"));;
-
-        courierRepository.findAll().forEach(c -> {
-            if (c.getAssignedShipments().contains(shipment)) {
-                c.unassignShipment(shipment);
-                courierRepository.save(c);
-            }
-        });
-
-        courier.assignShipment(shipment);
-        courierRepository.save(courier);
-        System.out.println("Assigned shipment " + shipmentId + " to courier " + courierId);
+    public List<GetUserDto> getAllEmployees() {
+        Set<ERole> roles = Set.of(ERole.COURIER, ERole.OFFICE_EMPLOYEE);
+        return userService.getAllWithRoles(roles);
     }
 }
