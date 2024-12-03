@@ -6,8 +6,7 @@
 
         
         <!-- Sign In Form -->
-         <!-- [formGroup]="loginForm" -->
-        <form  (ngSubmit)="register()" class="w-full">
+        <form [formGroup]="registerForm" (ngSubmit)="register()" class="w-full">
 
              <!-- Name -->
              <div class="mb-4">
@@ -30,8 +29,12 @@
                         </svg>
                       </div>
                       
-                    <input type="text" id="name" [(ngModel)]="signUpData.name" name="firstName" class="bg-gray-50 border border-gray-300 text-primaryText text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 pl-10" placeholder="name">
+                    <input type="text" id="name" formControlName="name" name="name" class="bg-gray-50 border border-gray-300 text-primaryText text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 pl-10" placeholder="name">
                 </div>
+                <div *ngIf="formSubmitted && registerForm.controls['name'].invalid">
+                    <small class="text-red-500" *ngIf="registerForm.get('name')?.errors?.['required']">Name is required.</small>
+                    <small class="text-red-500" *ngIf="registerForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters long.</small>
+                  </div>
             </div>
 
             <!-- Email -->
@@ -46,25 +49,119 @@
                         </svg>
                       </div>
                       
-                    <input type="email" id="email" [(ngModel)]="signUpData.email" name="email" class="bg-gray-50 border border-gray-300 text-primaryText text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 pl-10" placeholder="e-mail" required>
+                    <input type="email" id="email" formControlName="email" name="email" class="bg-gray-50 border border-gray-300 text-primaryText text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 pl-10" placeholder="e-mail" required>
                 </div>
+                <div *ngIf="formSubmitted && registerForm.controls['email'].invalid">
+                    <small class="text-red-500" *ngIf="registerForm.get('email')?.errors?.['required']">Email is required.</small>
+                    <small class="text-red-500" *ngIf="registerForm.get('email')?.errors?.['email']">Invalid email format.</small>
+                  </div>
             </div>
 
             <!-- Password -->
             <div class="mb-6">
                 <label for="password" class="block mb-2 text-base font-medium text-gray-900">Password</label>
                 <div class="relative">
-                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="w-5 h-5 text-gray-500" fill="currentColor">
-                            <g id="lock">
-                                <path d="M25,13V9c0-4.971-4.029-9-9-9c-4.971,0-9,4.029-9,9v4c-1.657,0-3,1.343-3,3v3v1v2v1c0,4.971,4.029,9,9,9h6   c4.971,0,9-4.029,9-9v-1v-2v-1v-3C28,14.342,26.656,13,25,13z M9,9c0-3.866,3.134-7,7-7c3.866,0,7,3.134,7,7v4h-2V9.002   c0-2.762-2.238-5-5-5c-2.762,0-5,2.238-5,5V13H9V9z M20,9v0.003V13h-8V9.002V9c0-2.209,1.791-4,4-4C18.209,5,20,6.791,20,9z M26,19   v1v2v1c0,3.859-3.141,7-7,7h-6c-3.859,0-7-3.141-7-7v-1v-2v-1v-3c0-0.552,0.448-1,1-1c0.667,0,1.333,0,2,0h14c0.666,0,1.332,0,2,0   c0.551,0,1,0.448,1,1V19z" fill="#333333"/>
-                                <path d="M16,19c-1.104,0-2,0.895-2,2c0,0.607,0.333,1.76,0.667,2.672c0.272,0.742,0.614,1.326,1.333,1.326   c0.782,0,1.061-0.578,1.334-1.316C17.672,22.768,18,21.609,18,21C18,19.895,17.104,19,16,19z" fill="#333333"/>
-                            </g>
-                        </svg>
-                    </div> 
-                    <input type="password" id="password" [(ngModel)]="signUpData.password" name="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3" placeholder="password" required>
+                  <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="w-5 h-5 text-gray-500" fill="currentColor">
+                      <g id="lock">
+                        <path d="M25,13V9c0-4.971-4.029-9-9-9c-4.971,0-9,4.029-9,9v4c-1.657,0-3,1.343-3,3v3v1v2v1c0,4.971,4.029,9,9,9h6   c4.971,0,9-4.029,9-9v-1v-2v-1v-3C28,14.342,26.656,13,25,13z M9,9c0-3.866,3.134-7,7-7c3.866,0,7,3.134,7,7v4h-2V9.002   c0-2.762-2.238-5-5-5c-2.762,0-5,2.238-5,5V13H9V9z M20,9v0.003V13h-8V9.002V9c0-2.209,1.791-4,4-4C18.209,5,20,6.791,20,9z M26,19   v1v2v1c0,3.859-3.141,7-7,7h-6c-3.859,0-7-3.141-7-7v-1v-2v-1v-3c0-0.552,0.448-1,1-1c0.667,0,1.333,0,2,0h14c0.666,0,1.332,0,2,0   c0.551,0,1,0.448,1,1V19z" fill="#333333"/>
+                        <path d="M16,19c-1.104,0-2,0.895-2,2c0,0.607,0.333,1.76,0.667,2.672c0.272,0.742,0.614,1.326,1.333,1.326   c0.782,0,1.061-0.578,1.334-1.316C17.672,22.768,18,21.609,18,21C18,19.895,17.104,19,16,19z" fill="#333333"/>
+                      </g>
+                    </svg>
+                  </div>
+                  <input
+                    [type]="showPassword ? 'text' : 'password'"
+                    id="password"
+                    formControlName="password"
+                    name="password"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3"
+                    placeholder="Password"
+                    required
+                  />
+
+                  <button
+                  type="button"
+                  (click)="togglePasswordVisibility()"
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+                >
+                  <!-- Видимо око -->
+                  <svg
+                  *ngIf="showPassword"
+                  xmlns="http://www.w3.org/2000/svg"
+                  version="1.1"
+                  viewBox="0 0 32 32"
+                  class="w-5 h-5 text-gray-500"
+                >
+                  <g>
+                    <g>
+                      <path
+                        d="M16,28c-2.1376953,0-4.2255859-0.4257813-6.2050781-1.2651367 c-0.5078125-0.215332-0.7460938-0.8022461-0.5302734-1.3110352c0.2167969-0.5092773,0.8027344-0.7451172,1.3115234-0.5297852 C12.3066406,25.6279297,14.1318359,26,16,26c6.0048828,0,11.4316406-3.9116211,13.9238281-10 c-0.9228516-2.2514648-2.296875-4.2861328-3.9882813-5.9023438c-0.3994141-0.3818359-0.4140625-1.0146484-0.0322266-1.4140625 c0.3818359-0.3989258,1.0146484-0.4135742,1.4130859-0.0322266c1.9931641,1.9047852,3.5898438,4.3217773,4.6171875,6.9892578 c0.0888672,0.2314453,0.0888672,0.4873047,0,0.71875C29.2099609,23.4306641,22.9560547,28,16,28z"
+                      ></path>
+                    </g>
+                    <g>
+                      <path
+                        d="M7.5908203,25.4086914c-0.1914063,0-0.3847656-0.0546875-0.5556641-0.1694336 c-3.0839844-2.0664063-5.5585938-5.2197266-6.96875-8.8798828c-0.0888672-0.2314453-0.0888672-0.4873047,0-0.71875 C2.7900391,8.5693359,9.0439453,4,16,4c3.1699219,0,6.2695313,0.9545898,8.9648438,2.7607422 c0.4589844,0.3071289,0.5810547,0.9282227,0.2744141,1.387207c-0.3085938,0.4594727-0.9296875,0.581543-1.3876953,0.2739258 C21.4863281,6.8374023,18.7714844,6,16,6C9.9951172,6,4.5683594,9.9116211,2.0761719,16 c1.2822266,3.1254883,3.4277344,5.8061523,6.0722656,7.578125c0.4589844,0.3071289,0.5810547,0.9282227,0.2744141,1.387207 C8.2294922,25.253418,7.9130859,25.4086914,7.5908203,25.4086914z"
+                      ></path>
+                    </g>
+                    <g>
+                      <path
+                        d="M3,30c-0.2558594,0-0.5117188-0.0976563-0.7070313-0.2929688 c-0.390625-0.390625-0.390625-1.0234375,0-1.4140625l26-26 c0.390625-0.390625,1.0234375-0.390625,1.4140625,0s0.390625,1.0234375,0,1.4140625l-26,26 C3.5117188,29.9023438,3.2558594,30,3,30z"
+                      ></path>
+                    </g>
+                    <g>
+                      <path
+                        d="M14.258728,21.741272C14.8100586,21.9082642,15.394165,22,16,22c3.3137207,0,6-2.6862793,6-6 c0-0.605835-0.0917358-1.1899414-0.258728-1.741272L14.258728,21.741272z"
+                      ></path>
+                      <path
+                        d="M20.2426758,11.7573242C19.1568604,10.6715698,17.6568604,10,16,10c-3.3137207,0-6,2.6862793-6,6 c0,1.6568604,0.6715698,3.1568604,1.7573853,4.2426147L20.2426758,11.7573242z"
+                      ></path>
+                    </g>
+                  </g>
+                </svg>
+                
+                  <!-- Скрито око -->
+                  <svg
+                    *ngIf="!showPassword"
+                    xmlns="http://www.w3.org/2000/svg"
+                    enable-background="new 0 0 50 50"
+                    height="50px"
+                    viewBox="0 0 50 50"
+                    class="w-5 h-5 text-gray-500"
+                  >
+                    <rect fill="none" height="50" width="50" />
+                    <path
+                      d="M48,25c0,0-10.297,12-23,12S2,25,2,25s10.297-12,23-12S48,25,48,25z"
+                      fill="none"
+                      stroke="#000000"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-miterlimit="10"
+                      stroke-width="2"
+                    />
+                    <path
+                      d="M33.154,14.615C34.923,16.567,36,19.157,36,22c0,6.076-4.924,11-11,11s-11-4.924-11-11c0-2.833,1.07-5.416,2.829-7.365"
+                      fill="none"
+                      stroke="#000000"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-miterlimit="10"
+                      stroke-width="2"
+                    />
+                    <circle cx="25" cy="22" r="5" />
+                  </svg>
+                </button>
                 </div>
-            </div>
+
+                <div *ngIf="formSubmitted && registerForm.get('password')?.errors as errors">
+                  <small class="text-red-500" *ngIf="errors['backend']">
+                    {{ errors['backend'] }}
+                  </small>
+                  <small class="text-red-500" *ngIf="errors['minlength']">
+                    Password must be at least {{ registerForm.get('password')?.errors?.['minlength']?.requiredLength }} characters.
+                  </small>
+                </div>
+
+              </div>
 
              <!-- Phone -->
              <div class="mb-4">
@@ -82,8 +179,12 @@
                         </svg>
                       </div>
                       
-                    <input type="text" id="phone" [(ngModel)]="signUpData.phone" name="phone" class="bg-gray-50 border border-gray-300 text-primaryText text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 pl-10" placeholder="phone" required>
+                    <input type="text" id="phone" formControlName="phone" name="phone" class="bg-gray-50 border border-gray-300 text-primaryText text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 pl-10" placeholder="phone" required>
                 </div>
+                <div *ngIf="formSubmitted && registerForm.controls['email'].invalid">
+                    <small class="text-red-500" *ngIf="registerForm.get('phone')?.errors?.['required']">Phone is required.</small>
+                    <small class="text-red-500" *ngIf="registerForm.get('phone')?.errors?.['pattern']"> Phone number must be between 10 and 15 digits.</small>
+                  </div>
             </div>
 
             <div class="flex items-start mt-7 mb-7">

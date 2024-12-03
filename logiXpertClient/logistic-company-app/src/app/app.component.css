@@ -17,3 +17,58 @@
 .mt-auto {
     margin-top: auto;
 }
+
+.welcome-message {
+    color: #fff;
+    background-color: #38a169; 
+    padding: 10px 20px;
+    border-radius: 5px;
+    position: fixed;
+    top: 100px; 
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1050;
+    animation: slideIn 0.5s ease-out, fadeOut 2.5s ease-out 2s; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+
+  .error-message {
+    color: #fff;
+    background-color: #e40000; 
+    padding: 10px 20px;
+    border-radius: 5px;
+    position: fixed;
+    top: 100px; 
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1050;
+    animation: slideIn 0.5s ease-out, fadeOut 2.5s ease-out 2s; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  @keyframes slideIn {
+    from {
+      top: 80px;
+      opacity: 0;
+    }
+    to {
+      top: 100px;
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }

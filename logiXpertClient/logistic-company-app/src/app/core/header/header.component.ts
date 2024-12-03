@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { UserService } from '../../services/user.service';
+import { MessageService } from '../../services/message.service';
 
 @Component({
   selector: 'app-header',
@@ -11,22 +12,22 @@ import { UserService } from '../../services/user.service';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor(private userService: UserService) {}
-
+  constructor(private userService: UserService, private router: Router, private messageService: MessageService) {}
 
   logout(): void {
     this.userService.logout().subscribe({
-      next: (response) => {
-        console.log(response); 
-        localStorage.clear(); 
-        window.location.reload();
+      next: () => {
+        this.messageService.setMessage('Successfully logged out.', 'success');
+        this.router.navigate(['/home']);
       },
       error: (err) => {
-        console.error("Logout failed:", err);
+        const errorMessage = err.error?.message || 'An error occurred during logout.';
+        this.messageService.setMessage(errorMessage, 'error');
+  
+        console.error('Logout failed:', err);
       },
     });
   }
-
   ngOnInit(): void {
 
   }
