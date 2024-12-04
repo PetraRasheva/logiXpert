@@ -1,1 +1,79 @@
-<p>profile works!</p>
+<div class="text-center mt-10">
+    <h1 class="text-4xl lg:text-6xl font-medium text-primaryText mb-8 text-center">My profile</h1>
+  </div>
+<div *ngIf="showElement" @slideFade>
+<div class="flex justify-center items-start mt-16 gap-8">
+    <!-- Edit Form -->
+    <div class="bg-white shadow-md rounded-lg p-6 w-4/12">
+      <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+        <!-- Name Field -->
+        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Full Name
+        </label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Your Name"
+        />
+        <!-- Phone Field -->
+        <label for="phone" class="block mt-4 mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Phone Number
+        </label>
+        <input
+          type="text"
+          id="phone"
+          formControlName="phone"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="+359..."
+        />
+        <!-- Email Field -->
+        <label for="email" class="block mt-4 mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Email
+        </label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="example@domain.com"
+        />
+        <!-- Save Button -->
+        <button
+          type="submit"
+          class="mt-6 w-full text-white bg-btn hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800"
+        >
+          Save
+        </button>
+      </form>
+    </div>
+
+        <!-- Card -->
+        <div class="card bg-white shadow-lg rounded-lg overflow-hidden max-w-72">
+            <!-- Header with Waves -->
+            <div class="card-header relative h-14">
+              <div class="waves-container relative w-full h-full">
+                <div class="wave wave1 absolute w-[650px] h-[650px] bg-gradient-to-bl from-blue-400 to-blue-600 rounded-full top-[-330%] left-1/2 opacity-100 animate-spin-slow"></div>
+                <div class="wave wave2 absolute w-[650px] h-[650px] bg-gradient-to-bl from-blue-400 to-blue-600 rounded-[46%] top-[-332%] left-[48%] opacity-50 animate-spin-medium"></div>
+                <div class="wave wave3 absolute w-[650px] h-[650px] bg-gradient-to-bl from-blue-400 to-blue-600 rounded-[40%] top-[-328%] left-[52%] opacity-20 animate-spin-fast"></div>
+              </div>
+              <div
+                class="profile-img flex items-center justify-center bg-blue-600 text-white font-bold text-6xl w-36 h-36 rounded-full absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <h2>{{ initials }}</h2>
+              </div>
+            
+            </div>
+            <!-- Card Body -->
+            <div class="card-body text-center mt-14 px-5">
+              <h2 class="text-xl font-semibold text-gray-800 capitalize">{{ profileForm.value.name }}</h2>
+              <p class="text-base text-gray-950">
+                email: {{ profileForm.value.email }}
+              </p>
+              <p class="text-base text-gray-600">
+                phone: {{ profileForm.value.phone }}
+                </p>
+            </div>
+          </div>
+  </div>
+</div>
