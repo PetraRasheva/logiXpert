@@ -34,14 +34,16 @@ public class ClientServiceImpl implements ClientService {
         return clientMapper.toDto(savedClient);
     }
 
-    @Override
+    @Transactional
     public ClientDto updateClient(ClientDto clientDto) {
-        if (!clientRepository.existsById(clientDto.id())) {
-            throw new ClientNotFoundException("Client with id " + clientDto.id() + " was not found");
-        }
-        Client client = clientMapper.toEntity(clientDto);
-        Client updatedClient = clientRepository.save(client);
-        return clientMapper.toDto(updatedClient);
+        Client existingClient = clientRepository.findById(clientDto.id())
+                .orElseThrow(() -> new ClientNotFoundException("Client not found"));
+
+        existingClient.setName(clientDto.name());
+        existingClient.setPhone(clientDto.phone());
+        existingClient.setEmail(clientDto.email());
+
+        return clientMapper.toDto(existingClient);
     }
 
     @Override

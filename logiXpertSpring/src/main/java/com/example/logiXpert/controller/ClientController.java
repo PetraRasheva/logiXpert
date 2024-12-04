@@ -3,6 +3,7 @@ package com.example.logiXpert.controller;
 import com.example.logiXpert.dto.ClientDto;
 import com.example.logiXpert.dto.GetAllShipmentDto;
 import com.example.logiXpert.service.ClientService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ public class ClientController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<ClientDto> updateClient(@RequestBody ClientDto clientDto) {
+    public ResponseEntity<ClientDto> updateClient(@Valid @RequestBody ClientDto clientDto) {
         ClientDto updatedClient = clientService.updateClient(clientDto);
         return new ResponseEntity<>(updatedClient, HttpStatus.OK);
     }

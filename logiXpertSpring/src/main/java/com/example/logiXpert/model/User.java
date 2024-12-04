@@ -12,7 +12,7 @@ import java.util.Set;
 public class User extends BaseEntity{
     //TODO: should inherit User details when security is implemented
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private String name;
     private String phone;
 
