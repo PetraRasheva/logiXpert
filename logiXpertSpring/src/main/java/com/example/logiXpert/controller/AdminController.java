@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class AdminController {
     private final AdminService adminService;
     private final OfficeEmployeeService officeEmployeeService;
@@ -27,18 +26,17 @@ public class AdminController {
 
     }
 
-
     @GetMapping("/find/{id}")
     public ResponseEntity<GetAdminDto> getAdminById(@PathVariable("id") Integer id) {
         GetAdminDto admin = adminService.getAdminById(id);
         return new ResponseEntity<>(admin, HttpStatus.OK);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<AdminDto> addAdmin(@RequestBody AdminDto admin) {
-        AdminDto newAdmin = adminService.addAdmin(admin);
-        return new ResponseEntity<>(newAdmin, HttpStatus.CREATED);
-    }
+//    @PostMapping("/add")
+//    public ResponseEntity<AdminDto> addAdmin(@RequestBody AdminDto admin) {
+//        AdminDto newAdmin = adminService.addAdmin(admin);
+//        return new ResponseEntity<>(newAdmin, HttpStatus.CREATED);
+//    }
 
     @PutMapping("/update")
     public ResponseEntity<GetAdminDto> updateAdmin(@RequestBody AdminDto admin) {

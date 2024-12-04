@@ -38,8 +38,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/admin/hire-office-employee").hasAuthority("ADMIN")
+                        .requestMatchers("/admin/**", "/company/**", "/office/**").hasAuthority("ADMIN")
+                        .requestMatchers("/client/**").hasAuthority("CLIENT")
+                        .requestMatchers("/employee/**").hasAuthority("OFFICE_EMPLOYEE")
+                        .requestMatchers("/courier/**").hasAuthority("COURIER")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter(jwtUtils, userDetailsServiceImpl),
