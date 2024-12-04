@@ -1,9 +1,11 @@
+
 <div class="mt-5 flex justify-center">
     <div class="w-full max-w-screen-md px-6">
+      <div *ngIf="showElement" @slideFade>
         <!-- Header -->
         <h1 class="text-4xl lg:text-6xl font-medium text-primaryText mb-8 text-left">Log in</h1>
         <p class="text-sm lg:text-base text-primaryText mb-6 text-left">You can log into your account by entering the information below</p>
-
+  
         <!-- Sign In Form -->
         <form [formGroup]="loginForm" (ngSubmit)="login()" class="w-full">
 
@@ -144,7 +146,13 @@
         <div class="flex justify-center mt-4 mb-7">
             <label for="remember2" class="text-sm font-medium text-gray-900 dark:text-gray-300">Don't have an account? <a href="register" class="text-blue-600 hover:underline dark:text-blue-500">Sign up</a>.</label>
         </div>
+      </div>
 
-        <img src="./assets/images/logos/blueMainLogo.png" alt="LogiXpert Logo" class="absolute right-14 bottom-10 lg:bottom-12 lg:-left-44 w-full  md:max-w-screen-lg opacity-5 z-[-1]">
+      <img
+      src="./assets/images/logos/blueMainLogo.png"
+      alt="LogiXpert Logo"
+      class="absolute right-14 bottom-10 lg:bottom-12 lg:-left-44 w-full md:max-w-screen-lg z-[-1] opacity-5"
+      @slideInFromLeft
+    />
     </div>
 </div>

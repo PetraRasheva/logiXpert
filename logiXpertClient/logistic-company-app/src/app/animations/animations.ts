@@ -47,3 +47,13 @@ export const slideInAnimation = trigger('slideIn', [
     animate('0.5s ease-out')
   ])
 ]);
+
+export const slideInFromLeft = trigger('slideInFromLeft', [
+  transition(':enter', [
+    style({ transform: 'translateX(-100%)', opacity: 0.8 }), 
+    animate(
+      '1.2s ease-out', 
+      style({ transform: 'translateX(0)', opacity: 0.06 }) 
+    )
+  ])
+]);

@@ -12,6 +12,11 @@ module.exports = {
         btn: "#1f3372",
         footer: "#f4f4f4"
       },
+      animation: {
+        'spin-slow': 'spin 12s linear infinite',
+        'spin-medium': 'spin 16s linear infinite',
+        'spin-fast': 'spin 20s linear infinite',
+      },
     },
   },
   plugins: [
