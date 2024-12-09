@@ -116,6 +116,7 @@ public class UserServiceImpl implements UserService {
         List<User> employees = userRepository.findAllByRoles(roles);
         List<GetUserDto> employeeDtos = employees.stream()
                 .map(user -> new GetUserDto(
+                        user.getId(),
                         user.getName(),
                         user.getPhone(),
                         user.getEmail(),
