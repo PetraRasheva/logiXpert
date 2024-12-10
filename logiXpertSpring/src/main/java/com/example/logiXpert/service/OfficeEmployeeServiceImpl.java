@@ -5,11 +5,13 @@ import com.example.logiXpert.dto.RegisterOfficeEmployeeDto;
 import com.example.logiXpert.exception.OfficeEmployeeNotFoundException;
 import com.example.logiXpert.mapper.OfficeEmployeeMapper;
 import com.example.logiXpert.model.ERole;
+import com.example.logiXpert.model.Office;
 import com.example.logiXpert.model.OfficeEmployee;
 import com.example.logiXpert.model.Role;
 import com.example.logiXpert.repository.CompanyRepository;
 import com.example.logiXpert.repository.OfficeEmployeeRepository;
 import com.example.logiXpert.repository.OfficeRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.logiXpert.repository.RoleRepository;
@@ -63,18 +65,48 @@ public class OfficeEmployeeServiceImpl implements OfficeEmployeeService {
         OfficeEmployee savedEmployee = officeEmployeeRepository.save(employee);
         return officeEmployeeMapper.toDto(savedEmployee);
     }
+
     @Override
     public OfficeEmployeeDto updateOfficeEmployee(OfficeEmployeeDto officeEmployeeDto) {
         OfficeEmployee existingEmployee = officeEmployeeRepository.findById(officeEmployeeDto.id())
-                .orElseThrow(() -> new OfficeEmployeeNotFoundException("OfficeEmployee with id " + officeEmployeeDto.id() + " was not found"));
+                .orElseThrow(() -> new OfficeEmployeeNotFoundException("OfficeEmployee not found"));
 
-        existingEmployee.setName(officeEmployeeDto.name());
-        existingEmployee.setPhone(officeEmployeeDto.phone());
-        existingEmployee.setSalary(officeEmployeeDto.salary());
+        OfficeEmployee updatedEmployee = officeEmployeeMapper.toEntity(officeEmployeeDto);
 
-        OfficeEmployee updatedEmployee = officeEmployeeRepository.save(existingEmployee);
+        updatedEmployee.setPassword(existingEmployee.getPassword());
+        updatedEmployee.setSalary(existingEmployee.getSalary());
+        updatedEmployee.setRoles(existingEmployee.getRoles());
+        updatedEmployee.setOffice(existingEmployee.getOffice());
+        updatedEmployee.setCompany(existingEmployee.getCompany());
 
-        return officeEmployeeMapper.toDto(updatedEmployee);
+        OfficeEmployee savedEmployee = officeEmployeeRepository.save(updatedEmployee);
+
+        return officeEmployeeMapper.toDto(savedEmployee);
+    }
+
+    @Override
+    @Transactional
+    public OfficeEmployeeDto updateOfficeEmployeeByAdmin(OfficeEmployeeDto officeEmployeeDto) {
+        OfficeEmployee existingEmployee = officeEmployeeRepository.findById(officeEmployeeDto.id())
+                .orElseThrow(() -> new OfficeEmployeeNotFoundException("OfficeEmployee not found"));
+
+        OfficeEmployee updatedEmployee = officeEmployeeMapper.toEntity(officeEmployeeDto);
+
+        updatedEmployee.setPassword(existingEmployee.getPassword());
+        updatedEmployee.setRoles(existingEmployee.getRoles());
+        updatedEmployee.setCompany(existingEmployee.getCompany());
+
+        if (officeEmployeeDto.officeName() != null) {
+            Office office = officeRepository.findByName(officeEmployeeDto.officeName())
+                    .orElseThrow(() -> new RuntimeException("Office not found with name: " + officeEmployeeDto.officeName()));
+            updatedEmployee.setOffice(office);
+        } else {
+            updatedEmployee.setOffice(existingEmployee.getOffice());
+        }
+
+        OfficeEmployee savedEmployee = officeEmployeeRepository.save(updatedEmployee);
+
+        return officeEmployeeMapper.toDto(savedEmployee);
     }
 
     @Override

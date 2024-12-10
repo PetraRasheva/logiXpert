@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+
+.card{
+  width: 400px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1);
+}
+
+.card .card-header{
+  height: 150px;
+  position: relative;
+}
+
+.card .card-header .waves-container{
+  height: 100%;
+}
+
+.card .card-header .waves-container .wave{
+  position: absolute;
+  width: 650px; height: 650px;
+  background-image: linear-gradient(to bottom left, #8aafff, #5B86E5);
+  transform: translateX(-50%);
+}
+
+.card .card-header .waves-container .wave1{
+    border-radius: 50%;
+    top: -330%; left: 50%;
+    animation: spin 12s linear infinite;
+}
+
+.card .card-header .waves-container .wave2{
+  border-radius: 46%;
+  top: -332%; left: 48%;
+  opacity: 0.5;
+  animation: spin 16s linear infinite;
+}
+
+.card .card-header .waves-container .wave3{
+  border-radius: 40%;
+  top: -328%; left: 52%;
+  opacity: 0.2;
+  animation: spin 16s linear infinite;
+}
+
+@keyframes spin{
+  to{
+    transform: translateX(-50%) rotate(360deg);
+  }
+}
+
+.card .card-header .profile-img{
+  margin: 0 auto;
+  width: 150px; height: 150px;
+  object-fit:cover; 
+  background-color: #1f3372;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+
+.card .card-body{
+    margin-top: 100px;
+    text-align: center;
+    padding: 0 20px;
+  }
+  
+  .card .card-body h2{
+    text-transform: capitalize;
+    color: rgb(82,82,82);
+  }
+  
+  .card .card-body p{
+    font-size: 18px;
+    line-height: 1.8;
+    color: rgba(28, 26, 26, 0.6);
+    margin-top: 0%;
+    margin: 3px;
+    margin-bottom: 5px;
+  }
+  

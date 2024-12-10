@@ -1,10 +1,13 @@
 package com.example.logiXpert.controller;
 
 import com.example.logiXpert.dto.CompanyDto;
+import com.example.logiXpert.dto.GetUserDto;
 import com.example.logiXpert.service.CompanyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/company")
@@ -38,5 +41,12 @@ public class CompanyController {
     public ResponseEntity<?> deleteCompany(@PathVariable("id") Integer id) {
         companyService.deleteCompany(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/employees")
+    public ResponseEntity<List<GetUserDto>> getAllEmployees() {
+        // get couriers + office employees
+        List<GetUserDto> employees = companyService.getAllEmployees();
+        return new ResponseEntity<>(employees, HttpStatus.OK);
     }
 }

@@ -3,6 +3,7 @@ package com.example.logiXpert.service;
 import com.example.logiXpert.dto.GetAllShipmentDto;
 import com.example.logiXpert.dto.GetShipmentDto;
 import com.example.logiXpert.dto.ShipmentDto;
+import com.example.logiXpert.model.Shipment;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,4 +22,8 @@ public interface ShipmentService {
     double calculateTotalRevenueForPeriod(Integer companyId, LocalDateTime startDate, LocalDateTime endDate);
 
     List<GetAllShipmentDto> getNotDeliveredShipments();
+    
+    List<Shipment> getShipmentsSentByClient(int clientId);
+
+    List<Shipment> getShipmentsReceivedByClient(int clientId);
 }

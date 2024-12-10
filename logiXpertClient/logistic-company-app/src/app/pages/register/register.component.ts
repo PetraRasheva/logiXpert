@@ -7,6 +7,7 @@ import { ErrorHandlerService } from '../../services/error-handler.service';
 import { emailValidator } from '../../utils/email-validator';
 import { passwordValidator } from '../../utils/password-validator';
 import { MessageService } from '../../services/message.service';
+import { slideFade, slideInFromLeft } from '../../animations/animations';
 
 @Component({
   selector: 'app-register',
@@ -14,11 +15,17 @@ import { MessageService } from '../../services/message.service';
   imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
+  animations: [slideFade, slideInFromLeft]
 })
 export class RegisterComponent {
   registerForm: FormGroup;
   formSubmitted = false;
   showPassword = false; 
+  showElement = false;
+
+  ngOnInit(): void {
+    this.showElement = true;
+}
   
   constructor(private formBuilder: FormBuilder, private userService: UserService, private router: Router, private errorHandler: ErrorHandlerService, private messageService: MessageService) {
     this.registerForm = this.formBuilder.group({

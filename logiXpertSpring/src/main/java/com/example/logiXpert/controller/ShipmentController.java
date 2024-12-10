@@ -8,6 +8,7 @@ import com.example.logiXpert.service.ShipmentService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/shipment")
+@PreAuthorize("!hasAuthority('CLIENT')")
 public class ShipmentController {
     private final ShipmentService shipmentService;
 
@@ -29,6 +31,7 @@ public class ShipmentController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("!hasAuthority('COURIER')")
     public ResponseEntity<ShipmentDto> addShipment(@RequestBody ShipmentDto shipment) {
         ShipmentDto newShipment = shipmentService.addShipment(shipment);
         return new ResponseEntity<>(newShipment, HttpStatus.CREATED);
@@ -41,6 +44,7 @@ public class ShipmentController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('OFFICE_EMPLOYEE')")
     public ResponseEntity<?> deleteShipment(@PathVariable("id") Integer id) {
         shipmentService.deleteShipment(id);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -53,6 +57,7 @@ public class ShipmentController {
     }
 
     @GetMapping("/revenue")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Double> getRevenue(
             @RequestParam("companyId") Integer companyId,
             @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,

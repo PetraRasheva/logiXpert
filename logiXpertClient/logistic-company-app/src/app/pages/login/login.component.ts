@@ -5,6 +5,7 @@ import { UserService } from '../../services/user.service';
 import { ErrorHandlerService } from '../../services/error-handler.service';
 import { CommonModule } from '@angular/common';
 import { MessageService } from '../../services/message.service';
+import { slideFade, slideInFromLeft } from '../../animations/animations';
 
 @Component({
   selector: 'app-login',
@@ -12,11 +13,18 @@ import { MessageService } from '../../services/message.service';
   imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
+  animations: [slideFade, slideInFromLeft]
 })
+
 export class LoginComponent {
   loginForm: FormGroup;
   formSubmitted = false;
   showPassword = false; 
+  showElement = false;
+
+  ngOnInit(): void {
+    this.showElement = true;
+}
 
   errorMessage: string | null = null; 
 

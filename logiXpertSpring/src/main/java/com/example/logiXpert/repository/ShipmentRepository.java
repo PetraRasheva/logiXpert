@@ -21,4 +21,6 @@ public interface ShipmentRepository extends JpaRepository<Shipment, Integer> {
 
     @Query("SELECT s FROM Shipment s WHERE s.deliveryStatus = 'CREATED' OR s.deliveryStatus = 'TRANSIT'")
     List<Shipment> findShipmentsNotDelivered();
+    List<Shipment> findAllBySenderId(int senderId);
+    List<Shipment> findAllByReceiverId(int receiverId);
 }
