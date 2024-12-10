@@ -35,12 +35,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+
+//                .csrf(csrf -> csrf.disable())
+//                .authorizeHttpRequests(authz -> authz
+//                        .requestMatchers("/api/auth/").permitAll()
+//                        .requestMatchers("/admin/").hasAuthority("ADMIN")
+//                        .requestMatchers("/admin/hire-office-employee").hasAuthority("ADMIN")
+//                        .anyRequest().authenticated()
+//                )
+
+                .csrf(csrf -> csrf.disable()) // Изключва CSRF
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/admin/hire-office-employee").hasAuthority("ADMIN")
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll() // Разрешава всички заявки
                 )
                 .addFilterBefore(jwtAuthenticationFilter(jwtUtils, userDetailsServiceImpl),
                         UsernamePasswordAuthenticationFilter.class)

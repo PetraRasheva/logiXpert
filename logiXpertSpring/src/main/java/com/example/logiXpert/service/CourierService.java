@@ -1,9 +1,10 @@
 package com.example.logiXpert.service;
 
 import com.example.logiXpert.dto.CourierDto;
+import com.example.logiXpert.dto.RegisterCourierDto;
 
 public interface CourierService {
-    CourierDto addCourier(CourierDto courierDto);
+    CourierDto addCourier(RegisterCourierDto registrationDto);
 
     CourierDto updateCourier(CourierDto courierDto);
 

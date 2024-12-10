@@ -3,13 +3,12 @@ package com.example.logiXpert.service;
 import com.example.logiXpert.dto.ClientDto;
 import com.example.logiXpert.exception.ClientNotFoundException;
 import com.example.logiXpert.mapper.ClientMapper;
-import com.example.logiXpert.mapper.UserMapper;
 import com.example.logiXpert.model.Client;
 import com.example.logiXpert.repository.ClientRepository;
-import com.example.logiXpert.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class ClientServiceImpl implements ClientService {
@@ -31,13 +30,16 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional
     public ClientDto updateClient(ClientDto clientDto) {
-        if (!clientRepository.existsById(clientDto.id())) {
-            throw new ClientNotFoundException("Client with id " + clientDto.id() + " was not found");
-        }
-        Client client = clientMapper.toEntity(clientDto);
-        Client updatedClient = clientRepository.save(client);
-        return clientMapper.toDto(updatedClient);
+        Client existingClient = clientRepository.findById(clientDto.id())
+                .orElseThrow(() -> new ClientNotFoundException("Client not found"));
+
+        existingClient.setName(clientDto.name());
+        existingClient.setPhone(clientDto.phone());
+        existingClient.setEmail(clientDto.email());
+
+        return clientMapper.toDto(existingClient);
     }
 
     @Override
@@ -54,5 +56,11 @@ public class ClientServiceImpl implements ClientService {
             throw new ClientNotFoundException("Client with id " + id + " was not found");
         }
         clientRepository.deleteClientById(id);
+    }
+
+    @Override
+    public List<ClientDto> getAllClients() {
+        List<Client> clients = clientRepository.findAll();
+        return clients.stream().map(clientMapper::toDto).toList();
     }
 }

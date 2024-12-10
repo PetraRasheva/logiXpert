@@ -1,6 +1,7 @@
 package com.example.logiXpert.controller;
 
 import com.example.logiXpert.dto.CourierDto;
+import com.example.logiXpert.dto.RegisterCourierDto;
 import com.example.logiXpert.service.CourierService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,15 +24,15 @@ public class CourierController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<CourierDto> addCourier(@RequestBody CourierDto courierDto) {
-        CourierDto newCourier = courierService.addCourier(courierDto);
+    public ResponseEntity<CourierDto> addCourier(@RequestBody RegisterCourierDto registrationDto) {
+        CourierDto newCourier = courierService.addCourier(registrationDto);
         return new ResponseEntity<>(newCourier, HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
     public ResponseEntity<CourierDto> updateCourier(@RequestBody CourierDto courierDto) {
         CourierDto updatedCourier = courierService.updateCourier(courierDto);
-        return new ResponseEntity<>(updatedCourier, HttpStatus.CREATED);
+        return new ResponseEntity<>(updatedCourier, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

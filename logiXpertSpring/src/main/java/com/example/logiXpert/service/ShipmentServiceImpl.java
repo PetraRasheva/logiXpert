@@ -112,6 +112,14 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
 
+    @Override
+    public List<GetAllShipmentDto> getNotDeliveredShipments() {
+        List<Shipment> shipments = shipmentRepository.findShipmentsNotDelivered();
+        return shipments.stream()
+                .map(shipmentMapper::toGetAllDto)
+                .toList();
+    }
+
     private void calculateTotalRevenue(Shipment shipment, Company company) {
         shipment.setCompany(company);
         company.setBaseCapital(company.getBaseCapital() + shipment.getPrice());

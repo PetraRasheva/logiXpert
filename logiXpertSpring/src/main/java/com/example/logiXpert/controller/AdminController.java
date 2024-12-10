@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin")
-@PreAuthorize("hasAuthority('ADMIN')")
+//@PreAuthorize("hasAuthority('ADMIN')")
 public class AdminController {
     private final AdminService adminService;
     private final OfficeEmployeeService officeEmployeeService;
@@ -59,8 +59,8 @@ public class AdminController {
     }
 
     @PostMapping("/add-courier")
-    public ResponseEntity<CourierDto> addCourier(@RequestBody CourierDto courierDto) {
-        CourierDto newCourier = courierService.addCourier(courierDto);
+    public ResponseEntity<CourierDto> addCourier(@RequestBody RegisterCourierDto registrationDto) {
+        CourierDto newCourier = courierService.addCourier(registrationDto);
         return new ResponseEntity<>(newCourier, HttpStatus.CREATED);
     }
 

@@ -1,14 +1,18 @@
 package com.example.logiXpert.service;
 
 import com.example.logiXpert.dto.CourierDto;
+import com.example.logiXpert.dto.RegisterCourierDto;
 import com.example.logiXpert.exception.CourierNotFoundException;
 import com.example.logiXpert.mapper.CourierMapper;
 import com.example.logiXpert.model.Courier;
+import com.example.logiXpert.model.ERole;
+import com.example.logiXpert.model.Role;
 import com.example.logiXpert.repository.CourierRepository;
 import com.example.logiXpert.repository.CompanyRepository;
 import com.example.logiXpert.repository.OfficeRepository;
-import com.example.logiXpert.service.CourierService;
+import com.example.logiXpert.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,33 +21,45 @@ public class CourierServiceImpl implements CourierService {
     private final CourierRepository courierRepository;
     private final CourierMapper courierMapper;
     private final OfficeRepository officeRepository;
-    private final CompanyRepository companyRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public CourierServiceImpl(
-            CourierRepository courierRepository, OfficeRepository officeRepository,
-            CompanyRepository companyRepository, CourierMapper courierMapper) {
+            CourierRepository courierRepository,
+            OfficeRepository officeRepository,
+            CompanyRepository companyRepository,
+            CourierMapper courierMapper,
+            RoleRepository roleRepository,
+            PasswordEncoder passwordEncoder) {
 
         this.courierRepository = courierRepository;
         this.officeRepository = officeRepository;
-        this.companyRepository = companyRepository;
         this.courierMapper = courierMapper;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public CourierDto addCourier(CourierDto courierDto) {
-        Courier courier = courierMapper.toEntity(courierDto);
+    public CourierDto addCourier(RegisterCourierDto registrationDto) {
+        Courier courier = courierMapper.toEntity(registrationDto);
+
+        courier.setPassword(passwordEncoder.encode(registrationDto.password()));
 
         courier.setOffice(
-                officeRepository.findByName(courierDto.officeName())
+                officeRepository.findByName(registrationDto.officeName())
                         .orElseThrow(() -> new CourierNotFoundException("Office not found"))
         );
 
         courier.setCompany(
-                companyRepository.findByName(courierDto.companyName())
-                        .orElseThrow(() -> new CourierNotFoundException("Company not found"))
+                courier.getOffice().getCompany()
         );
 
+
+        Role role = roleRepository.findByName(ERole.COURIER)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        courier.getRoles().add(role);
         Courier savedCourier = courierRepository.save(courier);
         return courierMapper.toDto(savedCourier);
     }
@@ -57,7 +73,6 @@ public class CourierServiceImpl implements CourierService {
         existingCourier.setName(courierDto.name());
         existingCourier.setPhone(courierDto.phone());
         existingCourier.setSalary(courierDto.salary());
-        existingCourier.setEmail(courierDto.email());
         existingCourier.setVehicleId(courierDto.vehicleId());
 
 //        existingCourier.setOffice(

@@ -60,4 +60,10 @@ public class ShipmentController {
         double revenue = shipmentService.calculateTotalRevenueForPeriod(companyId, startDate, endDate);
         return ResponseEntity.ok(revenue);
     }
+
+    @GetMapping("/not-delivered")
+    public ResponseEntity<List<GetAllShipmentDto>> getNotDeliveredShipments() {
+        List<GetAllShipmentDto> shipments = shipmentService.getNotDeliveredShipments();
+        return new ResponseEntity<>(shipments, HttpStatus.OK);
+    }
 }
