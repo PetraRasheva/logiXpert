@@ -21,9 +21,6 @@ public class Shipment extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
-    @Enumerated(EnumType.STRING)
-    private DeliveryType deliveryType; // TODO:
-
     private LocalDateTime shipmentDate;
     private LocalDateTime deliveryDate;
 
@@ -39,12 +36,13 @@ public class Shipment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private User owner; //client or employee that registered the shipment
 
+    private String source;
     private String destination;
 
     public Shipment() {
     }
 
-    public Shipment(double weight, double price,  Client sender, Client recipient, User owner, DeliveryType type, String destination, DeliveryStatus deliveryStatus) {
+    public Shipment(double weight, double price,  Client sender, Client recipient, User owner, String source, String destination, DeliveryStatus deliveryStatus) {
         this.weight = weight;
         this.price = price;
         this.sender = sender;
@@ -52,14 +50,21 @@ public class Shipment extends BaseEntity {
         this.owner = owner;
         this.deliveryStatus = deliveryStatus;
         this.shipmentDate = LocalDateTime.now();
-        this.courier = new Courier(); // TODO: implement a function to auto-assign couriers
-        this.deliveryType = type;
-        this.destination = destination; // TODO: Handle differentiating office location VS home address
+        this.source = source;
+        this.destination = destination;
     }
 
     @PrePersist
     private void generateTrackingNumber() {
         this.trackingNumber = "SHP-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 
     public double getProfit() {
@@ -72,10 +77,6 @@ public class Shipment extends BaseEntity {
 
     public String getTrackingNumber() {
         return trackingNumber;
-    }
-
-    public void setTrackingNumber(String trackingNumber) {
-        this.trackingNumber = trackingNumber;
     }
 
     public double getWeight() {
@@ -108,14 +109,6 @@ public class Shipment extends BaseEntity {
 
     public void setDeliveryStatus(DeliveryStatus deliveryStatus) {
         this.deliveryStatus = deliveryStatus;
-    }
-
-    public DeliveryType getDeliveryType() {
-        return deliveryType;
-    }
-
-    public void setDeliveryType(DeliveryType deliveryType) {
-        this.deliveryType = deliveryType;
     }
 
     public LocalDateTime getShipmentDate() {

@@ -3,12 +3,12 @@ package com.example.logiXpert.service;
 import com.example.logiXpert.dto.CourierDto;
 import com.example.logiXpert.dto.RegisterCourierDto;
 import com.example.logiXpert.exception.CourierNotFoundException;
+import com.example.logiXpert.exception.OfficeEmployeeNotFoundException;
 import com.example.logiXpert.mapper.CourierMapper;
 import com.example.logiXpert.model.Courier;
 import com.example.logiXpert.model.ERole;
 import com.example.logiXpert.model.Role;
 import com.example.logiXpert.repository.CourierRepository;
-import com.example.logiXpert.repository.CompanyRepository;
 import com.example.logiXpert.repository.OfficeRepository;
 import com.example.logiXpert.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,6 @@ public class CourierServiceImpl implements CourierService {
     public CourierServiceImpl(
             CourierRepository courierRepository,
             OfficeRepository officeRepository,
-            CompanyRepository companyRepository,
             CourierMapper courierMapper,
             RoleRepository roleRepository,
             PasswordEncoder passwordEncoder) {
@@ -42,8 +41,8 @@ public class CourierServiceImpl implements CourierService {
 
     @Override
     public CourierDto addCourier(RegisterCourierDto registrationDto) {
-        Courier courier = courierMapper.toEntity(registrationDto);
 
+        Courier courier = courierMapper.toEntity(registrationDto);
         courier.setPassword(passwordEncoder.encode(registrationDto.password()));
 
         courier.setOffice(
@@ -72,23 +71,11 @@ public class CourierServiceImpl implements CourierService {
 
         existingCourier.setName(courierDto.name());
         existingCourier.setPhone(courierDto.phone());
-        existingCourier.setSalary(courierDto.salary());
-        existingCourier.setVehicleId(courierDto.vehicleId());
-
-//        existingCourier.setOffice(
-//                officeRepository.findByName(courierDto.officeName())
-//                        .orElseThrow(() -> new CourierNotFoundException("Office not found"))
-//        );
-//
-//        existingCourier.setCompany(
-//                companyRepository.findByName(courierDto.companyName())
-//                        .orElseThrow(() -> new CourierNotFoundException("Company not found"))
-//        );
-
+        existingCourier.setEmail(courierDto.email());
+        //existingCourier.setPassword(courierDto.password());
 
         Courier updatedCourier = courierRepository.save(existingCourier);
         return courierMapper.toDto(updatedCourier);
-
     }
 
     @Override
@@ -108,6 +95,26 @@ public class CourierServiceImpl implements CourierService {
         courierRepository.deleteCourierById(id);
     }
 
-    //TODO: Implement complex requests
+    @Override
+    public CourierDto updateCourierByAdmin(CourierDto courierDto) {
+        Courier existingCourier = courierRepository.findById(courierDto.id())
+                .orElseThrow(() -> new CourierNotFoundException("Courier with id " + courierDto.id() + " was not found"));
+
+        existingCourier.setSalary(courierDto.salary());
+        existingCourier.setVehicleId(courierDto.vehicleId());
+
+        existingCourier.setOffice(
+                officeRepository.findByName(courierDto.officeName())
+                        .orElseThrow(() -> new OfficeEmployeeNotFoundException("Office not found"))
+        );
+
+        existingCourier.setCompany(
+                existingCourier.getOffice().getCompany()
+        );
+
+        Courier updatedCourier = courierRepository.save(existingCourier);
+        return courierMapper.toDto(updatedCourier);
+
+    }
 }
 

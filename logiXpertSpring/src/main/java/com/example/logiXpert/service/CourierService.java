@@ -11,4 +11,6 @@ public interface CourierService {
     CourierDto getCourierById(Integer id);
 
     void deleteCourier(Integer id);
+
+    CourierDto updateCourierByAdmin(CourierDto courierDto);
 }

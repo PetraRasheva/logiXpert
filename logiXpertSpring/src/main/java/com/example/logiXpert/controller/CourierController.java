@@ -5,10 +5,12 @@ import com.example.logiXpert.dto.RegisterCourierDto;
 import com.example.logiXpert.service.CourierService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/courier")
+@PreAuthorize("hasAuthority('ADMIN')")
 public class CourierController {
 
     private final CourierService courierService;
@@ -30,8 +32,16 @@ public class CourierController {
     }
 
     @PutMapping("/update")
+    @PreAuthorize("hasAuthority('COURIER')")
     public ResponseEntity<CourierDto> updateCourier(@RequestBody CourierDto courierDto) {
         CourierDto updatedCourier = courierService.updateCourier(courierDto);
+        return new ResponseEntity<>(updatedCourier, HttpStatus.OK);
+    }
+
+    // Endpoint for admins to update courier-specific properties
+    @PutMapping("/update-admin")
+    public ResponseEntity<CourierDto> updateOfficeEmployeeByAdmin(@RequestBody CourierDto courierDto) {
+        CourierDto updatedCourier = courierService.updateCourierByAdmin(courierDto);
         return new ResponseEntity<>(updatedCourier, HttpStatus.OK);
     }
 

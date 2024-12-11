@@ -1,19 +1,15 @@
 package com.example.logiXpert.service;
 
-import com.example.logiXpert.dto.GetAllShipmentDto;
-import com.example.logiXpert.dto.GetShipmentDto;
-import com.example.logiXpert.dto.ShipmentDto;
+import com.example.logiXpert.dto.*;
 import com.example.logiXpert.exception.CompanyNotFoundException;
+import com.example.logiXpert.exception.CourierNotFoundException;
 import com.example.logiXpert.exception.ShipmentNotFoundException;
 import com.example.logiXpert.exception.UserNotFoundException;
 import com.example.logiXpert.mapper.ClientMapper;
 import com.example.logiXpert.mapper.GetShipmentMapper;
 import com.example.logiXpert.mapper.ShipmentMapper;
 import com.example.logiXpert.model.*;
-import com.example.logiXpert.repository.ClientRepository;
-import com.example.logiXpert.repository.CompanyRepository;
-import com.example.logiXpert.repository.ShipmentRepository;
-import com.example.logiXpert.repository.UserRepository;
+import com.example.logiXpert.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +27,10 @@ public class ShipmentServiceImpl implements ShipmentService {
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
     private final UserRepository userRepository;
+    private final CourierRepository courierRepository;
 
     @Autowired
-    public ShipmentServiceImpl(ShipmentRepository shipmentRepository, ShipmentMapper shipmentMapper, GetShipmentMapper getShipmentMapper, CompanyRepository companyRepository, ClientRepository clientRepository, ClientMapper clientMapper, UserRepository userRepository) {
+    public ShipmentServiceImpl(ShipmentRepository shipmentRepository, ShipmentMapper shipmentMapper, GetShipmentMapper getShipmentMapper, CompanyRepository companyRepository, ClientRepository clientRepository, ClientMapper clientMapper, UserRepository userRepository, CourierRepository courierRepository) {
         this.shipmentRepository = shipmentRepository;
         this.shipmentMapper = shipmentMapper;
         this.getShipmentMapper = getShipmentMapper;
@@ -41,6 +38,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         this.clientRepository = clientRepository;
         this.clientMapper = clientMapper;
         this.userRepository = userRepository;
+        this.courierRepository = courierRepository;
     }
 
     @Override
@@ -74,19 +72,19 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     @Override
     public GetShipmentDto updateShipment(ShipmentDto shipmentDto) {
-        Shipment updateShipment = shipmentMapper.toEntity(shipmentDto);
-
-        setSender(updateShipment, shipmentDto);
-        setReceiver(updateShipment, shipmentDto);
-
         Shipment shipment = shipmentRepository.findShipmentById(shipmentDto.id())
                 .orElseThrow(() -> new ShipmentNotFoundException("Shipment with id " + shipmentDto.id() + " was not found"));
 
-        User owner = userRepository.findById(shipmentDto.ownerId())
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + shipmentDto.ownerId() + " not found"));
+        if (shipmentDto.ownerId() != null) {
+            User owner = userRepository.findById(shipmentDto.ownerId())
+                    .orElseThrow(() -> new UserNotFoundException("User with ID " + shipmentDto.ownerId() + " not found"));
+            shipment.setOwner(owner);
+        }
 
-        shipment.setOwner(owner);
-        shipment.setDeliveryStatus(DeliveryStatus.CREATED);
+        setSender(shipment, shipmentDto);
+        setReceiver(shipment, shipmentDto);
+
+        shipment.setProfit(shipmentDto.profit());
 
         Shipment updatedShipment = shipmentRepository.save(shipment);
 
@@ -119,6 +117,43 @@ public class ShipmentServiceImpl implements ShipmentService {
         return shipmentRepository.findAllByReceiverId(clientId);
     }
 
+    @Override
+    public GetShipmentDto getShipmentByTrackingNumber(String trackingNum) {
+        Shipment shipment = shipmentRepository.findShipmentByTrackingNumber(trackingNum)
+                .orElseThrow(() -> new ShipmentNotFoundException("Shipment with tracking number " + trackingNum + " was not found"));
+        return getShipmentMapper.toDto(shipment);
+    }
+
+    @Override
+    public GetShipmentDto updateShipmentStatus(UpdateStatusShipmentDto uShipment) {
+        Shipment shipment = shipmentRepository.findShipmentById(uShipment.id())
+                .orElseThrow(() -> new ShipmentNotFoundException("Shipment with id " + uShipment.id() + " was not found"));
+
+        shipment.setDeliveryStatus(uShipment.deliveryStatus());
+        if(uShipment.deliveryStatus() == DeliveryStatus.DELIVERED) {
+            shipment.setDeliveryDate(LocalDateTime.now());
+        }
+        Shipment updatedShipment = shipmentRepository.save(shipment);
+        return getShipmentMapper.toDto(updatedShipment);
+    }
+
+    @Override
+    public GetShipmentDto assignShipmentToCourier(Integer courierId, Integer shipmentId) {
+        Shipment shipment = shipmentRepository.findShipmentById(shipmentId)
+                .orElseThrow(() -> new ShipmentNotFoundException("Shipment with id " + shipmentId + " was not found"));
+
+        // Check if shipment is already assigned
+        if (shipment.getCourier() != null) {
+            throw new IllegalStateException("Shipment is already assigned to a courier");
+        }
+
+        Courier courier = courierRepository.findCourierById(courierId)
+                        .orElseThrow(() -> new CourierNotFoundException(("Courier with id " + courierId + " was not found")));
+
+        shipment.setCourier(courier);
+        Shipment updatedShipment = shipmentRepository.save(shipment);
+        return getShipmentMapper.toDto(updatedShipment);
+    }
 
     @Override
     public List<GetAllShipmentDto> getNotDeliveredShipments() {
@@ -154,6 +189,4 @@ public class ShipmentServiceImpl implements ShipmentService {
             shipment.setReceiver(clientMapper.toEntity(shipmentDto.receiver()));
         }
     }
-
-    //TODO: Implement complex requests
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/employee")
+@PreAuthorize("hasAuthority('ADMIN')")
 public class OfficeEmployeeController {
 
     private final OfficeEmployeeService officeEmployeeService;
@@ -26,26 +27,24 @@ public class OfficeEmployeeController {
     }
 
     @PostMapping("/add")
-    //@PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<OfficeEmployeeDto> addOfficeEmployee(@RequestBody RegisterOfficeEmployeeDto registrationDto) {
         OfficeEmployeeDto newOfficeEmployee = officeEmployeeService.addOfficeEmployee(registrationDto);
         return new ResponseEntity<>(newOfficeEmployee, HttpStatus.CREATED);
     }
     @PutMapping("/update")
+    @PreAuthorize("hasAuthority('OFFICE_EMPLOYEE')")
     public ResponseEntity<OfficeEmployeeDto> updateOfficeEmployee(@Valid @RequestBody OfficeEmployeeDto officeEmployeeDto) {
         OfficeEmployeeDto updatedOfficeEmployee = officeEmployeeService.updateOfficeEmployee(officeEmployeeDto);
         return new ResponseEntity<>(updatedOfficeEmployee, HttpStatus.OK);
     }
 
     @PutMapping("/admin/update")
-    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<OfficeEmployeeDto> adminUpdateOfficeEmployee(@Valid @RequestBody OfficeEmployeeDto officeEmployeeDto) {
         OfficeEmployeeDto updatedEmployee = officeEmployeeService.updateOfficeEmployeeByAdmin(officeEmployeeDto);
         return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
     }
 
     @DeleteMapping("/admin/delete/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteOfficeEmployee(@PathVariable("id") Integer id) {
         officeEmployeeService.deleteOfficeEmployee(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

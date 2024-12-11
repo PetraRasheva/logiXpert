@@ -1,12 +1,22 @@
 package com.example.logiXpert.dto;
 
-import com.example.logiXpert.model.DeliveryType;
+import com.example.logiXpert.model.DeliveryStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
 
-public record ShipmentDto(int id, double weight, double price, DeliveryType deliveryType,
-                          @JsonFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime shipmentDate, String destination, int companyId,
-                          ClientDto sender, ClientDto receiver, int ownerId
-) {
-}
+public record ShipmentDto(
+        Integer id,
+        double weight,
+        double price,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+        LocalDateTime shipmentDate,
+        String source,
+        String destination,
+        Integer companyId,
+        ClientDto sender,
+        ClientDto receiver,
+        Integer ownerId,
+        double profit,
+        DeliveryStatus deliveryStatus
+) {}

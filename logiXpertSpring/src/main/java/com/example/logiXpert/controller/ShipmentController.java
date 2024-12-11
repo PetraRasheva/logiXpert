@@ -3,7 +3,7 @@ package com.example.logiXpert.controller;
 import com.example.logiXpert.dto.GetAllShipmentDto;
 import com.example.logiXpert.dto.GetShipmentDto;
 import com.example.logiXpert.dto.ShipmentDto;
-import com.example.logiXpert.model.Shipment;
+import com.example.logiXpert.dto.UpdateStatusShipmentDto;
 import com.example.logiXpert.service.ShipmentService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/shipment")
-@PreAuthorize("!hasAuthority('CLIENT')")
+//@PreAuthorize("!hasAuthority('CLIENT')")
 public class ShipmentController {
     private final ShipmentService shipmentService;
 
@@ -44,7 +44,7 @@ public class ShipmentController {
     }
 
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('OFFICE_EMPLOYEE')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('OFFICE_EMPLOYEE')")
     public ResponseEntity<?> deleteShipment(@PathVariable("id") Integer id) {
         shipmentService.deleteShipment(id);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -70,5 +70,27 @@ public class ShipmentController {
     public ResponseEntity<List<GetAllShipmentDto>> getNotDeliveredShipments() {
         List<GetAllShipmentDto> shipments = shipmentService.getNotDeliveredShipments();
         return new ResponseEntity<>(shipments, HttpStatus.OK);
+    }
+
+    @GetMapping("/track/{trackingNum}")
+    public ResponseEntity<GetShipmentDto> getShipmentByTrackingNumber(@PathVariable("trackingNum") String trackingNum) {
+        GetShipmentDto shipment = shipmentService.getShipmentByTrackingNumber(trackingNum);
+        return new ResponseEntity<>(shipment, HttpStatus.OK);
+    }
+
+    @PutMapping("/update-status")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<GetShipmentDto> updateShipmentStatus(@RequestBody UpdateStatusShipmentDto uShipment) {
+        GetShipmentDto updateShipment = shipmentService.updateShipmentStatus(uShipment);
+        return new ResponseEntity<>(updateShipment, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{shipmentId}/assign-courier/{courierId}")
+    //@PreAuthorize("hasAuthority('COURIER')")
+    public ResponseEntity<GetShipmentDto> assignShipmentToCourier(
+            @PathVariable("courierId") Integer courierId,
+            @PathVariable("shipmentId") Integer shipmentId) {
+        GetShipmentDto updatedShipment = shipmentService.assignShipmentToCourier(courierId, shipmentId);
+        return new ResponseEntity<>(updatedShipment, HttpStatus.OK);
     }
 }
