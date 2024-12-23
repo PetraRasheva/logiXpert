@@ -77,4 +77,13 @@ export class UserService {
     const userJson = localStorage.getItem(this.USER_KEY);
     return userJson ? JSON.parse(userJson) : null;
   }
+
+  getUserRole(): string | null {
+    const userJson = localStorage.getItem(this.USER_KEY);
+    if (userJson) {
+      const parsedUser = JSON.parse(userJson);
+      return parsedUser.roles && parsedUser.roles.length > 0 ? parsedUser.roles[0] : null; 
+    }
+    return null; 
+  }
 }
