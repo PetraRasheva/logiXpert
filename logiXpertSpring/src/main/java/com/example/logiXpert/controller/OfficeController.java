@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/office")
 public class OfficeController {
@@ -20,6 +22,12 @@ public class OfficeController {
     public ResponseEntity<OfficeDto> getOfficeById (@PathVariable("id") Integer id) {
         OfficeDto office = officeService.getOfficeById(id);
         return new ResponseEntity<>(office, HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<OfficeDto>> getAllOffices() {
+        List<OfficeDto> offices = officeService.getAllOffices();
+        return ResponseEntity.ok(offices);
     }
 
     @PostMapping("/add")
