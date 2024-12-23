@@ -1,0 +1,12 @@
+<ng-container *ngIf="role; else noAccess">
+    <ng-container [ngSwitch]="role">
+      <app-admin-dashboard *ngSwitchCase="'ADMIN'"></app-admin-dashboard>
+      <div *ngSwitchDefault>
+        <p>Unknown role: {{ role }}</p>
+      </div>
+    </ng-container>
+  </ng-container>
+  
+  <ng-template #noAccess>
+    <p>You do not have access to this dashboard. Please log in.</p>
+  </ng-template>
