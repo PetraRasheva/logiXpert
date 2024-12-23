@@ -41,7 +41,7 @@ public class AdminConfig {
                         "Peter Ivanov",
                         "peter@ibm.com",
                         "1234567890",
-                        passwordEncoder.encode("Ndssd_32534")
+                        passwordEncoder.encode("Peter_12345")
                 );
 
                 Admin admin = adminMapper.toEntity(adminDto);

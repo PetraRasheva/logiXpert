@@ -5,8 +5,8 @@ public record CourierDto(
         String name,
         String phone,
         String email,
-        double salary,
+        Double salary,
         String officeName,
         String companyName,
-        int vehicleId
+        Integer vehicleId
 ){}

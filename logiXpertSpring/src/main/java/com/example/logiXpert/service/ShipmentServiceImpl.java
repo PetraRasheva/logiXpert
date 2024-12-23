@@ -10,6 +10,7 @@ import com.example.logiXpert.mapper.GetShipmentMapper;
 import com.example.logiXpert.mapper.ShipmentMapper;
 import com.example.logiXpert.model.*;
 import com.example.logiXpert.repository.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -98,7 +99,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         return getShipmentMapper.toDto(shipment);
     }
 
-    @Override
+    @Transactional
     public void deleteShipment(Integer id) {
         shipmentRepository.deleteShipmentById(id);
     }
