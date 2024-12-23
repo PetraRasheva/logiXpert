@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { MessageService } from '../../services/message.service';
+import { ElementRef, Renderer2 } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -12,7 +13,12 @@ import { MessageService } from '../../services/message.service';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor(private userService: UserService, private router: Router, private messageService: MessageService) {}
+  constructor(private userService: UserService, 
+              private router: Router, 
+              private messageService: MessageService,
+              private el: ElementRef, // За директен достъп до HTML елементите на компонента
+              private renderer: Renderer2 // За безопасна манипулация на DOM
+  ) {}
 
   logout(): void {
     this.userService.logout().subscribe({
@@ -30,6 +36,20 @@ export class HeaderComponent implements OnInit {
   }
   ngOnInit(): void {
 
+  }
+
+
+  toggleMenu(): void {
+    const navContainer = this.el.nativeElement.querySelector('.nav-container');
+    const headerContainer = this.el.nativeElement.querySelector('.header-container');
+
+    if (navContainer.classList.contains('active')) {
+      this.renderer.removeClass(navContainer, 'active');
+      this.renderer.setStyle(headerContainer, 'margin-bottom', '0');
+    } else {
+      this.renderer.addClass(navContainer, 'active');
+      this.renderer.setStyle(headerContainer, 'margin-bottom', `${navContainer.scrollHeight}px`);
+    }
   }
 
 }
