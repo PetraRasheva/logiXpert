@@ -10,6 +10,8 @@ import com.example.logiXpert.mapper.GetShipmentMapper;
 import com.example.logiXpert.mapper.ShipmentMapper;
 import com.example.logiXpert.model.*;
 import com.example.logiXpert.repository.*;
+import com.itextpdf.barcodes.exceptions.WriterException;
+import com.itextpdf.io.exceptions.IOException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,9 +31,10 @@ public class ShipmentServiceImpl implements ShipmentService {
     private final ClientMapper clientMapper;
     private final UserRepository userRepository;
     private final CourierRepository courierRepository;
+    private final PdfGeneratorServiceImpl pdfGeneratorServiceImpl;
 
     @Autowired
-    public ShipmentServiceImpl(ShipmentRepository shipmentRepository, ShipmentMapper shipmentMapper, GetShipmentMapper getShipmentMapper, CompanyRepository companyRepository, ClientRepository clientRepository, ClientMapper clientMapper, UserRepository userRepository, CourierRepository courierRepository) {
+    public ShipmentServiceImpl(ShipmentRepository shipmentRepository, ShipmentMapper shipmentMapper, GetShipmentMapper getShipmentMapper, CompanyRepository companyRepository, ClientRepository clientRepository, ClientMapper clientMapper, UserRepository userRepository, CourierRepository courierRepository, PdfGeneratorServiceImpl pdfGeneratorServiceImpl) {
         this.shipmentRepository = shipmentRepository;
         this.shipmentMapper = shipmentMapper;
         this.getShipmentMapper = getShipmentMapper;
@@ -40,6 +43,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         this.clientMapper = clientMapper;
         this.userRepository = userRepository;
         this.courierRepository = courierRepository;
+        this.pdfGeneratorServiceImpl = pdfGeneratorServiceImpl;
     }
 
     @Override
@@ -48,6 +52,23 @@ public class ShipmentServiceImpl implements ShipmentService {
         return shipments.stream()
                 .mapToDouble(Shipment::getPrice)
                 .sum();
+    }
+
+    @Override
+    public byte[] getShipmentInvoice(Integer shipmentId) {
+        try {
+            Shipment shipment = shipmentRepository.findShipmentById(shipmentId)
+                    .orElseThrow(() -> new ShipmentNotFoundException("Shipment not found with ID: " + shipmentId));
+
+            GetShipmentDto shipmentDto = getShipmentMapper.toDto(shipment);
+            return pdfGeneratorServiceImpl.generateShipmentInvoice(shipmentDto);
+        } catch (WriterException | IOException e) {
+            throw new RuntimeException("Error generating shipment invoice: " + e.getMessage(), e);
+        } catch (java.io.IOException e) {
+            throw new RuntimeException(e);
+        } catch (com.google.zxing.WriterException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
