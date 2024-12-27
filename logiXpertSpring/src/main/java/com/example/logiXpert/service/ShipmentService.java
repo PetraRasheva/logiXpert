@@ -36,6 +36,10 @@ public interface ShipmentService {
 
     GetShipmentDto assignShipmentToCourier(Integer courierId, Integer shipmentId);
 
+    List<GetAllShipmentDto> getShipmentsCreatedByEmployee(Integer employeeId);
+
+    List<GetAllShipmentDto> getShipmentsCreatedByClient(Integer clientId);
+
     byte[] getShipmentInvoice(Integer shipmentId);
 }
 

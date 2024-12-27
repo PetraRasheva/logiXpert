@@ -60,6 +60,18 @@ public class ShipmentController {
                 .body(pdf);
     }
 
+    @GetMapping("/employee/{employeeId}/shipments")
+    public ResponseEntity<List<GetAllShipmentDto>> getShipmentsCreatedByEmployee(@PathVariable("employeeId") Integer employeeId) {
+        List<GetAllShipmentDto> shipments = shipmentService.getShipmentsCreatedByEmployee(employeeId);
+        return ResponseEntity.ok(shipments);
+    }
+
+    @GetMapping("/client/{clientId}/shipments")
+    public ResponseEntity<List<GetAllShipmentDto>> getShipmentsCreatedByClient(@PathVariable("clientId") Integer clientId) {
+        List<GetAllShipmentDto> shipments = shipmentService.getShipmentsCreatedByClient(clientId);
+        return ResponseEntity.ok(shipments);
+    }
+
     @PutMapping("/update")
     public ResponseEntity<GetShipmentDto> updateShipment(@RequestBody ShipmentDto shipment) {
         GetShipmentDto updateShipment = shipmentService.updateShipment(shipment);

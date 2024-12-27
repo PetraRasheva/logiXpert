@@ -1,10 +1,7 @@
 package com.example.logiXpert.service;
 
 import com.example.logiXpert.dto.*;
-import com.example.logiXpert.exception.CompanyNotFoundException;
-import com.example.logiXpert.exception.CourierNotFoundException;
-import com.example.logiXpert.exception.ShipmentNotFoundException;
-import com.example.logiXpert.exception.UserNotFoundException;
+import com.example.logiXpert.exception.*;
 import com.example.logiXpert.mapper.ClientMapper;
 import com.example.logiXpert.mapper.GetShipmentMapper;
 import com.example.logiXpert.mapper.ShipmentMapper;
@@ -31,10 +28,12 @@ public class ShipmentServiceImpl implements ShipmentService {
     private final ClientMapper clientMapper;
     private final UserRepository userRepository;
     private final CourierRepository courierRepository;
+    private final OfficeEmployeeRepository officeEmployeeRepository;
     private final PdfGeneratorServiceImpl pdfGeneratorServiceImpl;
 
+
     @Autowired
-    public ShipmentServiceImpl(ShipmentRepository shipmentRepository, ShipmentMapper shipmentMapper, GetShipmentMapper getShipmentMapper, CompanyRepository companyRepository, ClientRepository clientRepository, ClientMapper clientMapper, UserRepository userRepository, CourierRepository courierRepository, PdfGeneratorServiceImpl pdfGeneratorServiceImpl) {
+    public ShipmentServiceImpl(ShipmentRepository shipmentRepository, ShipmentMapper shipmentMapper, GetShipmentMapper getShipmentMapper, CompanyRepository companyRepository, ClientRepository clientRepository, ClientMapper clientMapper, UserRepository userRepository, CourierRepository courierRepository, PdfGeneratorServiceImpl pdfGeneratorServiceImpl, OfficeEmployeeRepository officeEmployeeRepository) {
         this.shipmentRepository = shipmentRepository;
         this.shipmentMapper = shipmentMapper;
         this.getShipmentMapper = getShipmentMapper;
@@ -44,6 +43,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         this.userRepository = userRepository;
         this.courierRepository = courierRepository;
         this.pdfGeneratorServiceImpl = pdfGeneratorServiceImpl;
+        this.officeEmployeeRepository= officeEmployeeRepository;
     }
 
     @Override
@@ -52,6 +52,24 @@ public class ShipmentServiceImpl implements ShipmentService {
         return shipments.stream()
                 .mapToDouble(Shipment::getPrice)
                 .sum();
+    }
+
+    @Override
+    public List<GetAllShipmentDto> getShipmentsCreatedByEmployee(Integer employeeId) {
+        OfficeEmployee employee = officeEmployeeRepository.findById(employeeId)
+                .orElseThrow(() -> new OfficeEmployeeNotFoundException("Office employee with id " + employeeId + " not found"));
+
+        List<Shipment> shipments = shipmentRepository.findAllByOwnerId(employee.getId());
+        return shipments.stream().map(shipmentMapper::toGetAllDto).toList();
+    }
+
+    @Override
+    public List<GetAllShipmentDto> getShipmentsCreatedByClient(Integer clientId) {
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ClientNotFoundException("Client with id " + clientId + " not found"));
+
+        List<Shipment> shipments = shipmentRepository.findAllByOwnerId(client.getId());
+        return shipments.stream().map(shipmentMapper::toGetAllDto).toList();
     }
 
     @Override

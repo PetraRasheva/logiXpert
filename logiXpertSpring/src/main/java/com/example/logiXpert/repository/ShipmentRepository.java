@@ -23,6 +23,7 @@ public interface ShipmentRepository extends JpaRepository<Shipment, Integer> {
     List<Shipment> findShipmentsNotDelivered();
     List<Shipment> findAllBySenderId(int senderId);
     List<Shipment> findAllByReceiverId(int receiverId);
+    List<Shipment> findAllByOwnerId(Integer ownerId);
 
     Optional<Shipment> findShipmentByTrackingNumber(String trackingNum);
 }
