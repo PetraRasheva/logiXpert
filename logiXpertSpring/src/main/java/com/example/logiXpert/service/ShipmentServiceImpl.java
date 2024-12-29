@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
@@ -70,6 +71,17 @@ public class ShipmentServiceImpl implements ShipmentService {
 
         List<Shipment> shipments = shipmentRepository.findAllByOwnerId(client.getId());
         return shipments.stream().map(shipmentMapper::toGetAllDto).toList();
+    }
+
+    @Override
+    public List<GetAllShipmentDto> getShipmentsByCourierId(Integer courierId) {
+        Courier courier = courierRepository.findCourierById(courierId)
+                .orElseThrow(() -> new CourierNotFoundException("Courier with ID " + courierId + " not found"));
+
+        List<Shipment> shipments = shipmentRepository.findAllByCourier(courier);
+        return shipments.stream()
+                .map(shipmentMapper::toGetAllDto)
+                .toList();
     }
 
     @Override
@@ -196,11 +208,66 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
+    public GetShipmentDto unassignShipmentFromCourier(Integer shipmentId) {
+        Shipment shipment = shipmentRepository.findShipmentById(shipmentId)
+                .orElseThrow(() -> new ShipmentNotFoundException("Shipment not found with ID: " + shipmentId));
+
+        if (shipment.getCourier() == null) {
+            throw new IllegalStateException("Shipment is not assigned to any courier");
+        }
+
+        shipment.setCourier(null);
+        Shipment updatedShipment = shipmentRepository.save(shipment);
+
+        return getShipmentMapper.toDto(updatedShipment);
+}
+
+    @Override
+    public GetShipmentDto assignShipmentToCourierByTrackingNumber(String trackingNumber, Integer courierId) {
+        Shipment shipment = shipmentRepository.findShipmentByTrackingNumber(trackingNumber)
+                .orElseThrow(() -> new ShipmentNotFoundException("Shipment not found with tracking number: " + trackingNumber));
+
+        Courier courier = courierRepository.findCourierById(courierId)
+                .orElseThrow(() -> new CourierNotFoundException("Courier not found with ID: " + courierId));
+
+        shipment.setCourier(courier);
+        Shipment updatedShipment = shipmentRepository.save(shipment);
+        return getShipmentMapper.toDto(updatedShipment);
+    }
+
+    @Override
+    public GetShipmentDto unassignShipmentFromCourierByTrackingNumber(String trackingNumber) {
+        Shipment shipment = shipmentRepository.findShipmentByTrackingNumber(trackingNumber)
+                .orElseThrow(() -> new ShipmentNotFoundException("Shipment not found with tracking number: " + trackingNumber));
+
+        if (shipment.getCourier() == null) {
+            throw new IllegalStateException("Shipment is not assigned to any courier");
+        }
+
+        shipment.setCourier(null);
+        Shipment updatedShipment = shipmentRepository.save(shipment);
+
+        return getShipmentMapper.toDto(updatedShipment);
+    }
+
+    @Override
     public List<GetAllShipmentDto> getNotDeliveredShipments() {
         List<Shipment> shipments = shipmentRepository.findShipmentsNotDelivered();
         return shipments.stream()
                 .map(shipmentMapper::toGetAllDto)
                 .toList();
+    }
+
+    @Override
+    public List<GetAllShipmentDto> getUnassignedShipmentsForCourier(Integer courierId) {
+        Courier courier = courierRepository.findById(courierId)
+                .orElseThrow(() -> new CourierNotFoundException("Courier with ID " + courierId + " not found"));
+
+        List<Shipment> unassignedShipments = shipmentRepository.findAllByCourierIsNullAndDeliveryStatus(DeliveryStatus.CREATED);
+
+        return unassignedShipments.stream()
+                .map(shipmentMapper::toGetAllDto)
+                .collect(Collectors.toList());
     }
 
     private void calculateTotalRevenue(Shipment shipment, Company company) {

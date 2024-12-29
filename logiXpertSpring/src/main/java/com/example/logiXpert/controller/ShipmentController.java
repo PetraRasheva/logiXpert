@@ -120,12 +120,45 @@ public class ShipmentController {
         return new ResponseEntity<>(updateShipment, HttpStatus.CREATED);
     }
 
+    @GetMapping("/courier/{courierId}")
+    public ResponseEntity<List<GetAllShipmentDto>> getShipmentsByCourierId(@PathVariable("courierId") Integer courierId) {
+        List<GetAllShipmentDto> shipments = shipmentService.getShipmentsByCourierId(courierId);
+        return ResponseEntity.ok(shipments);
+    }
+
     @PutMapping("/{shipmentId}/assign-courier/{courierId}")
     //@PreAuthorize("hasAuthority('COURIER')")
     public ResponseEntity<GetShipmentDto> assignShipmentToCourier(
             @PathVariable("courierId") Integer courierId,
             @PathVariable("shipmentId") Integer shipmentId) {
         GetShipmentDto updatedShipment = shipmentService.assignShipmentToCourier(courierId, shipmentId);
+        return new ResponseEntity<>(updatedShipment, HttpStatus.OK);
+    }
+
+    @PutMapping("/{shipmentId}/unassign-courier")
+    public ResponseEntity<GetShipmentDto> unassignShipmentFromCourier(@PathVariable("shipmentId") Integer shipmentId) {
+        GetShipmentDto updatedShipment = shipmentService.unassignShipmentFromCourier(shipmentId);
+        return new ResponseEntity<>(updatedShipment, HttpStatus.OK);
+    }
+
+    @PutMapping("/unassign-by-tracking/{trackingNumber}")
+    public ResponseEntity<GetShipmentDto> unassignShipmentFromCourierByTrackingNumber(
+            @PathVariable("trackingNumber") String trackingNumber) {
+        GetShipmentDto updatedShipment = shipmentService.unassignShipmentFromCourierByTrackingNumber(trackingNumber);
+        return new ResponseEntity<>(updatedShipment, HttpStatus.OK);
+    }
+
+    @GetMapping("/courier/{courierId}/unassigned-shipments")
+    public ResponseEntity<List<GetAllShipmentDto>> getUnassignedShipmentsForCourier(@PathVariable("courierId") Integer courierId) {
+        List<GetAllShipmentDto> unassignedShipments = shipmentService.getUnassignedShipmentsForCourier(courierId);
+        return ResponseEntity.ok(unassignedShipments);
+    }
+
+    @PutMapping("/assign-by-tracking/{trackingNumber}/courier/{courierId}")
+    public ResponseEntity<GetShipmentDto> assignShipmentToCourierByTrackingNumber(
+            @PathVariable("trackingNumber") String trackingNumber,
+            @PathVariable("courierId") Integer courierId) {
+        GetShipmentDto updatedShipment = shipmentService.assignShipmentToCourierByTrackingNumber(trackingNumber, courierId);
         return new ResponseEntity<>(updatedShipment, HttpStatus.OK);
     }
 }
