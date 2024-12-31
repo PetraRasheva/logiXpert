@@ -108,6 +108,8 @@ export class ProfileComponent implements OnInit {
         return '/employee';
       case 'ADMIN':
         return '/admin';
+      case 'COURIER':
+          return '/courier';
       default:
         throw new Error('Invalid role!');
     }
