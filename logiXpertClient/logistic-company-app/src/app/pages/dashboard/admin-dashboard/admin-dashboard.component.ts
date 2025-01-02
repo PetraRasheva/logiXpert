@@ -12,16 +12,18 @@ import { OfficeEmployeeService } from '../../../services/office-employee.service
 import { ShipmentService } from '../../../services/shipment.service';
 import { emailValidator } from '../../../utils/email-validator';
 import { passwordValidator } from '../../../utils/password-validator';
+import { ShipmentsComponent } from '../../shipments/shipments.component';
+import { ClickOutsideDirective } from '../../../utils/ClickOutsideDirective';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ShipmentsComponent, ClickOutsideDirective],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css',
   animations: [fade, slideFade]
 })
-export class AdminDashboardComponent implements AfterViewInit, OnInit{
+export class AdminDashboardComponent implements OnInit{
   employees: Employee[] = [];
   filteredEmployees: Employee[] = [];
   offices: Office[] = [];
@@ -41,6 +43,8 @@ export class AdminDashboardComponent implements AfterViewInit, OnInit{
   employeeForm: FormGroup;
   showElement = false;
   showTable = true;
+  isDropdownOpen = false;
+  selectedOption = 'Employees';
 
   constructor(private companyService: CompanyService, private courierService: CourierService, private fb: FormBuilder, private officeEmployeeService: OfficeEmployeeService, private shipmentService: ShipmentService) {
     this.employeeForm = this.fb.group({
@@ -173,8 +177,9 @@ export class AdminDashboardComponent implements AfterViewInit, OnInit{
     });
   }
 
-  filterByRole(role: string): void {
+  filterByRole(role: string, label: string): void {
     this.selectedRole = role;
+    this.selectedOption = label;
   
     if (role === 'ALL') {
       this.filteredEmployees = [...this.employees]; 
@@ -400,15 +405,12 @@ export class AdminDashboardComponent implements AfterViewInit, OnInit{
     }
   }
 
-  ngAfterViewInit(): void {
-    const dropdownButton = document.getElementById('dropdownActionButton');
-    const dropdownMenu = document.getElementById('dropdownAction');
+  toggleDropdown(): void {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
 
-    if (dropdownButton && dropdownMenu) {
-      dropdownButton.addEventListener('click', () => {
-        dropdownMenu.classList.toggle('hidden');
-      });
-    }
+  closeDropdown(): void {
+    this.isDropdownOpen = false;
   }
 
   assignBackendErrors(backendErrors: any, formGroup: FormGroup): void {
