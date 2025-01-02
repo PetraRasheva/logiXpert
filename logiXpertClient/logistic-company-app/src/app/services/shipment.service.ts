@@ -11,6 +11,24 @@ export class ShipmentService {
 
   constructor(private http: HttpClient) {}
 
+  getShipmentById(id: number): Observable<Shipment> {
+    return this.http.get<Shipment>(`${environment.apiUrl}/shipment/find/${id}`, {
+      withCredentials: true,
+    });
+  }
+
+  getAllShipments(): Observable<Shipment[]> {
+    return this.http.get<Shipment[]>(`${environment.apiUrl}/shipment/all`, {
+      withCredentials: true,
+    });
+  }
+
+  createShipment(shipment: Shipment): Observable<Shipment> {
+    return this.http.post<Shipment>(`${environment.apiUrl}/shipment/add`, shipment, {
+      withCredentials: true,
+    });
+  }
+
   getNotDeliveredShipments(): Observable<Shipment[]> {
     return this.http.get<Shipment[]>(`${environment.apiUrl}/shipment/not-delivered`, {
       withCredentials: true,
@@ -50,5 +68,10 @@ export class ShipmentService {
     });
   }
 
+  deleteShipment(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/shipment/delete/${id}`, {
+      withCredentials: true,
+    });
+  }
 
 }
