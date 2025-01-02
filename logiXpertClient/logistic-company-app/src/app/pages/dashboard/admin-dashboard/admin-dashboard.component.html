@@ -138,12 +138,12 @@
                         </ng-container>
 
                         <!-- Delete Tooltip -->
-                        <button (click)="deleteEmployee(employee)" class="hover:opacity-80 relative group">
-                            <img src="assets/images/icons/delete-friend.png" alt="Delete" class="w-6 h-6">
-                            <div
-                                class="absolute bottom-full left-1/2 transform -translate-x-1/2 translate-y-[-4px] invisible group-hover:visible opacity-0 group-hover:opacity-100 bg-gray-700 text-white text-sm rounded-lg px-2 py-1 whitespace-nowrap z-10 transition-opacity duration-200">
-                                Delete Employee
-                            </div>
+                        <button (click)="openDeleteModal(employee)" class="hover:opacity-80 relative group">
+                          <img src="assets/images/icons/delete-friend.png" alt="Delete" class="w-6 h-6">
+                          <div
+                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 translate-y-[-4px] invisible group-hover:visible opacity-0 group-hover:opacity-100 bg-gray-700 text-white text-sm rounded-lg px-2 py-1 whitespace-nowrap z-10 transition-opacity duration-200">
+                            Delete Employee
+                          </div>
                         </button>
                     </div>
                 </td>
@@ -183,7 +183,7 @@
                 <div class="grid grid-cols-6 gap-6">
                     <div class="col-span-6 sm:col-span-3">
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                        <input type="text" formControlName="name" name="name" id="name" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                        <input type="text" formControlName="name" name="name" id="name" readonly class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
                     </div>
                     <div class="col-span-6 sm:col-span-3">
                         <label for="salary" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Salary</label>
@@ -191,11 +191,11 @@
                     </div>
                     <div class="col-span-6 sm:col-span-3">
                         <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                        <input type="email" formControlName="email" name="email" id="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                        <input type="email" formControlName="email" name="email" id="email" readonly class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
                     </div>
                     <div class="col-span-6 sm:col-span-3">
                         <label for="phone-number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number</label>
-                        <input type="number" formControlName="phone" name="phone-number" id="phone-number" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                        <input type="number" formControlName="phone" name="phone-number" id="phone-number" readonly class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
                     </div>
                     <div class="col-span-6 sm:col-span-3">
                         <label for="officeName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Office</label>
@@ -205,7 +205,7 @@
                       </div>
                     <div class="col-span-6 sm:col-span-3">
                         <label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label>
-                        <input type="text" formControlName="role" name="role" id="role" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                        <input type="text" formControlName="role" name="role" id="role" class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
                     </div>
                        <!-- Полета за COURIER -->
                        <ng-container *ngIf="selectedRole === 'COURIER'">
@@ -217,7 +217,7 @@
                         <div class="col-span-6 sm:col-span-3">
                           <label for="companyName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company Name</label>
                           <input type="text" formControlName="companyName" id="companyName"
-                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         </div>
                       </ng-container>
 
@@ -470,6 +470,41 @@ class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-5
     </form>
   </div>
 </div>
+
+<!-- ------------------------------------ DELETE EMPLOYEE MODAL ------------------------------------------------------------ -->
+<div
+  *ngIf="isDeleteModalOpen" @fade
+  class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
+  <div class="bg-white rounded-lg shadow dark:bg-gray-700 w-full max-w-md">
+    <div class="relative p-4 text-center">
+      <button
+        type="button"
+        class="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+        (click)="closeDeleteModal()">
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+        </svg>
+        <span class="sr-only">Close modal</span>
+      </button>
+      <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+        Are you sure you want to delete {{ selectedEmployee?.name }}?
+      </h3>
+      <button
+        (click)="confirmDelete()"
+        type="button"
+        class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+        Yes, I'm sure
+      </button>
+      <button
+        (click)="closeDeleteModal()"
+        type="button"
+        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+        No, cancel
+      </button>
+    </div>
+  </div>
+</div>
+
 </div>
 
 <app-shipments> </app-shipments>

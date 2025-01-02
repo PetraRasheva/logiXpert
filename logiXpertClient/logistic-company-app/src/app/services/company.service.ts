@@ -43,8 +43,8 @@ export class CompanyService {
     });
   }
 
-  updateEmployeeDetails(employee: EmployeeDetails): Observable<any> {
-    return this.http.put(`${environment.apiUrl}/employee/admin/update`, employee, {
+  updateEmployeeDetails(employee: EmployeeDetails): Observable<EmployeeDetails> {
+    return this.http.put<EmployeeDetails>(`${environment.apiUrl}/employee/admin/update`, employee, {
       withCredentials: true,
     });
   }

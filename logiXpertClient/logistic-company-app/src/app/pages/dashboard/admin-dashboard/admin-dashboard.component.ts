@@ -14,6 +14,8 @@ import { emailValidator } from '../../../utils/email-validator';
 import { passwordValidator } from '../../../utils/password-validator';
 import { ShipmentsComponent } from '../../shipments/shipments.component';
 import { ClickOutsideDirective } from '../../../utils/ClickOutsideDirective';
+import { MessageService } from '../../../services/message.service';
+import { ErrorHandlerService } from '../../../services/error-handler.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -32,6 +34,7 @@ export class AdminDashboardComponent implements OnInit{
   selectedRole: string = 'ALL';
   selectedEmployeeName: string = '';
   selectedEmployee: EmployeeDetails | null = null;
+  selectedEmployee2: Employee | null = null;
   showAssignPackagesModal: boolean = false;
   unassignedShipments: Shipment[] = [];
   assignedShipments: Shipment[] = [];
@@ -44,9 +47,17 @@ export class AdminDashboardComponent implements OnInit{
   showElement = false;
   showTable = true;
   isDropdownOpen = false;
+  isDeleteModalOpen = false;
   selectedOption = 'Employees';
 
-  constructor(private companyService: CompanyService, private courierService: CourierService, private fb: FormBuilder, private officeEmployeeService: OfficeEmployeeService, private shipmentService: ShipmentService) {
+  constructor(private companyService: CompanyService, 
+    private courierService: CourierService, 
+    private fb: FormBuilder, 
+    private officeEmployeeService: OfficeEmployeeService, 
+    private shipmentService: ShipmentService,  
+    private messageService: MessageService,  
+    private errorHandler: ErrorHandlerService) {
+
     this.employeeForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email, emailValidator()]],
@@ -69,7 +80,7 @@ export class AdminDashboardComponent implements OnInit{
     const passwordControl = this.employeeForm.get('password');
   
     if (required) {
-      passwordControl?.setValidators([Validators.required, Validators.minLength(8)]);
+      passwordControl?.setValidators([Validators.required, passwordValidator()]);
     } else {
       passwordControl?.clearValidators(); 
     }
@@ -143,7 +154,7 @@ export class AdminDashboardComponent implements OnInit{
     if (this.selectedCourierId !== null) {
       this.shipmentService.assignShipmentToCourier(trackingNumber, this.selectedCourierId).subscribe({
         next: () => {
-          alert('Shipment assigned successfully!');
+          this.messageService.setMessage('Shipment assigned successfully!', 'success');
           
           const shipment = this.unassignedShipments.find(s => s.trackingNumber === trackingNumber);
           if (shipment) {
@@ -153,17 +164,19 @@ export class AdminDashboardComponent implements OnInit{
         },
         error: (error) => {
           console.error('Error assigning shipment:', error);
+          this.messageService.setMessage('Failed to assign shipment. Please try again.', 'error');
         }
       });
     } else {
       console.error('Selected courier ID is null.');
+      this.messageService.setMessage('No courier selected. Please try again.', 'error');
     }
   }
   
   unassignShipment(trackingNumber: string): void {
     this.shipmentService.unassignShipmentFromCourier(trackingNumber).subscribe({
       next: () => {
-        alert('Shipment unassigned successfully!');
+        this.messageService.setMessage('Shipment unassigned successfully!', 'success');
         
         const shipment = this.assignedShipments.find(s => s.trackingNumber === trackingNumber);
         if (shipment) {
@@ -173,6 +186,7 @@ export class AdminDashboardComponent implements OnInit{
       },
       error: (error) => {
         console.error('Error unassigning shipment:', error);
+        this.messageService.setMessage('Failed to unassign shipment. Please try again.', 'error');
       }
     });
   }
@@ -208,8 +222,8 @@ export class AdminDashboardComponent implements OnInit{
               salary: data.salary,
               officeName: data.officeName,
               role: 'COURIER',
-              vehicleId: data.vehicleId,
-              companyName: data.companyName,
+              vehicleId: data.vehicleId || null, // Уверете се, че полето е зададено правилно
+              companyName: data.companyName || '', // Избягвайте липсващи стойности
             });
   
             this.setPasswordValidators(false);
@@ -236,7 +250,7 @@ export class AdminDashboardComponent implements OnInit{
             this.showElement = true; 
           },
           error: (error) => {
-            console.error('Error fetching office employee details:', error);
+            console.error('Error fetching office employee details:', error); 
           },
         });
       }
@@ -268,7 +282,7 @@ export class AdminDashboardComponent implements OnInit{
       if (newEmployee.role === 'COURIER') {
         this.courierService.addCourier(newEmployee).subscribe({
           next: () => {
-            alert('Courier hired successfully!');
+            this.messageService.setMessage('Courier hired successfully!', 'success');
             this.closeHireEmployeeModal();
             this.loadEmployees();
           },
@@ -280,20 +294,20 @@ export class AdminDashboardComponent implements OnInit{
       } else if (newEmployee.role === 'OFFICE_EMPLOYEE') {
         this.officeEmployeeService.addEmployee(newEmployee).subscribe({
           next: () => {
-            alert('Office employee hired successfully!');
+            this.messageService.setMessage('Office employee hired successfully!', 'success');
             this.closeHireEmployeeModal();
             this.loadEmployees();
           },
           error: (error) => {
             console.error('Error hiring office employee:', error);
-            alert('Failed to hire office employee. Please try again.');
+            this.messageService.setMessage('Failed to hire office employee. Please try again.', 'error');
           }
         });
       } else {
-        alert('Invalid role selected. Please choose a valid role.');
+        this.messageService.setMessage('Invalid role selected. Please choose a valid role.', 'error');
       }
     } else {
-      alert('Please fill in all required fields correctly.');
+      this.messageService.setMessage('Please fill in all required fields correctly.', 'error');
     }
   }
 
@@ -302,6 +316,16 @@ export class AdminDashboardComponent implements OnInit{
     this.employeeForm.reset(); 
     this.setPasswordValidators(true); 
     this.showHireEmployeeModal = true; 
+  }
+
+  openDeleteModal(employee: Employee): void {
+    this.selectedEmployee2 = employee; 
+    this.isDeleteModalOpen = true; 
+  }
+
+  closeDeleteModal(): void {
+    this.isDeleteModalOpen = false; 
+    this.selectedEmployee2 = null; 
   }
 
   closeModal(): void {
@@ -329,81 +353,120 @@ export class AdminDashboardComponent implements OnInit{
 
   saveEmployeeDetails(): void {
     this.formSubmitted = true;
+  
     if (this.employeeForm.valid) {
       const formValue = this.employeeForm.value;
   
-      const updatedEmployee = {
-        ...this.selectedEmployee,
-        ...formValue,
+      const updatedEmployee: any = {
+        id: this.selectedEmployee?.id,
+        name: formValue.name,
+        email: formValue.email,
+        phone: formValue.phone,
+        salary: formValue.salary,
+        officeName: formValue.officeName,
+        role: formValue.role,
       };
-
-      if (!updatedEmployee.password) {
+  
+      if (formValue.role === 'COURIER') {
+        updatedEmployee.vehicleId = formValue.vehicleId || null;
+        updatedEmployee.companyName = formValue.companyName || '';
+      }
+  
+      if (!formValue.password) {
         delete updatedEmployee.password;
       }
   
       if (updatedEmployee.role === 'COURIER') {
         this.courierService.updateCourierDetails(updatedEmployee).subscribe({
           next: () => {
-            alert('Courier details updated successfully!');
+            this.messageService.setMessage('Courier updated successfully!', 'success');
             this.closeModal();
             this.loadEmployees();
           },
           error: (backendErrors) => {
             const errorMessage = backendErrors.error?.message || 'An unexpected error occurred.';
             console.error('Error updating courier:', errorMessage);
-            this.assignBackendErrors(backendErrors.error, this.employeeForm); 
+            this.errorHandler.assignBackendErrors(backendErrors.error, this.employeeForm);
           },
         });
       } else if (updatedEmployee.role === 'OFFICE_EMPLOYEE') {
         this.companyService.updateEmployeeDetails(updatedEmployee).subscribe({
           next: () => {
-            alert('Office employee details updated successfully!');
+            this.messageService.setMessage('Office employee updated successfully!', 'success');
             this.closeModal();
             this.loadEmployees();
           },
           error: (backendErrors) => {
             const errorMessage = backendErrors.error?.message || 'An unexpected error occurred.';
             console.error('Error updating office employee:', errorMessage);
-            this.assignBackendErrors(backendErrors.error, this.employeeForm); 
+            this.errorHandler.assignBackendErrors(backendErrors.error, this.employeeForm);
           },
         });
       } else {
-        alert('Unknown role: ' + updatedEmployee.role);
+        this.messageService.setMessage('Unknown role. Cannot update this employee.', 'error');
       }
     } else {
-      alert('Please fill in all required fields correctly.');
+      this.messageService.setMessage('Please fill in all required fields correctly.', 'error');
     }
   }
 
-  deleteEmployee(employee: Employee): void {
-    if (confirm(`Are you sure you want to delete ${employee.name}?`)) {
-      if (employee.roles.includes('COURIER')) {
-        this.courierService.deleteCourierById(employee.id).subscribe({
-          next: () => {
-            alert('Courier deleted successfully!');
-            this.loadEmployees(); 
-          },
-          error: (error) => {
-            console.error('Error deleting courier:', error);
-            alert('Failed to delete the courier. Please try again.');
+ confirmDelete(): void {
+  if (this.selectedEmployee2) {
+    const employee = this.selectedEmployee2;
+
+    if (employee.roles.includes('COURIER')) {
+      this.courierService.deleteCourierById(employee.id).subscribe({
+        next: () => {
+          this.messageService.setMessage('Courier deleted successfully!', 'success');
+          this.loadEmployees();
+          this.closeDeleteModal();
+        },
+        error: (errorResponse) => {
+          const backendMessage = errorResponse.error?.message || '';
+          const cleanMessage = this.errorHandler.extractErrorMessage(backendMessage);
+          
+          if (backendMessage.includes('foreign key constraint fails')) {
+            this.messageService.setMessage('This courier cannot be deleted because they have assigned packages.', 'error');
+            this.closeDeleteModal();
+          } else {
+            this.messageService.setMessage(cleanMessage || 'Failed to delete the courier.', 'error');
           }
-        });
-      } else if (employee.roles.includes('OFFICE_EMPLOYEE')) {
-        this.officeEmployeeService.deleteEmployeeById(employee.id).subscribe({
-          next: () => {
-            alert('Office employee deleted successfully!');
-            this.loadEmployees();
-          },
-          error: (error) => {
-            console.error('Error deleting office employee:', error);
-            alert('Failed to delete the office employee. Please try again.');
+
+          console.error('Error deleting courier:', cleanMessage);
+        },
+      });
+    } else if (employee.roles.includes('OFFICE_EMPLOYEE')) {
+      this.officeEmployeeService.deleteEmployeeById(employee.id).subscribe({
+        next: () => {
+          this.messageService.setMessage('Office employee deleted successfully!', 'success');
+          this.loadEmployees();
+          this.closeDeleteModal();
+        },
+        error: (errorResponse) => {
+          const backendMessage = errorResponse.error?.message || '';
+          const cleanMessage = this.errorHandler.extractErrorMessage(backendMessage);
+
+          if (backendMessage.includes('foreign key constraint fails')) {
+            this.messageService.setMessage(
+              'This employee cannot be deleted because they are associated with packages.',
+              'error'
+            );
+          } else {
+            this.messageService.setMessage(cleanMessage || 'Failed to delete the office employee.', 'error');
           }
-        });
-      } else {
-        alert('Unknown role. Cannot delete this employee.');
-      }
+
+          console.error('Error deleting office employee:', cleanMessage);
+        },
+      });
+    } else {
+      this.messageService.setMessage('Unknown role. Cannot delete this employee.', 'error');
+      this.closeDeleteModal();
     }
+
+    this.selectedEmployee2 = null;
   }
+}
+
 
   toggleDropdown(): void {
     this.isDropdownOpen = !this.isDropdownOpen;
