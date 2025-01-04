@@ -151,6 +151,7 @@ public class ShipmentServiceImpl implements ShipmentService {
                         .orElseThrow(() -> new CourierNotFoundException(("Courier with id " + courierId + " was not found")));
 
         shipment.setCourier(courier);
+        shipment.setDeliveryStatus(DeliveryStatus.TRANSIT);
         Shipment updatedShipment = shipmentRepository.save(shipment);
         return getShipmentMapper.toDto(updatedShipment);
     }

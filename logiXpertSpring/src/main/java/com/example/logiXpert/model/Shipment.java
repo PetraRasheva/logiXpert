@@ -15,10 +15,10 @@ public class Shipment extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String trackingNumber;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 
-    @Enumerated(EnumType.STRING)
+   @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
     private LocalDateTime shipmentDate;

@@ -33,13 +33,11 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public CompanyDto updateCompany(CompanyDto companyDto) {
-        Company updateCompany = companyMapper.toEntity(companyDto);
         Company company = companyRepository.findCompanyById(companyDto.id())
                 .orElseThrow(() -> new CompanyNotFoundException("Company with id " + companyDto.id() + " was not found"));
-        company.setName(updateCompany.getName());
-        company.setBaseCapital(updateCompany.getBaseCapital());
-        Company updatedCompany = companyRepository.save(company);
-        return companyMapper.toDto(updatedCompany);
+        company.setName(companyDto.name());
+        company.setBaseCapital(companyDto.baseCapital());
+        return companyMapper.toDto(companyRepository.save(company));
     }
 
     @Override
