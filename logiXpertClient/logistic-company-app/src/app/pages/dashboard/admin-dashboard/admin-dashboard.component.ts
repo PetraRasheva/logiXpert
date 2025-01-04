@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Employee } from '../../../types/еmployee';
 import { CompanyService } from '../../../services/company.service';
 import { CourierService } from '../../../services/courier.service';
@@ -13,6 +13,7 @@ import { ShipmentService } from '../../../services/shipment.service';
 import { emailValidator } from '../../../utils/email-validator';
 import { passwordValidator } from '../../../utils/password-validator';
 import { ShipmentsComponent } from '../../shipments/shipments.component';
+import { CompanyComponent } from '../../company/company.component';
 import { ClickOutsideDirective } from '../../../utils/ClickOutsideDirective';
 import { MessageService } from '../../../services/message.service';
 import { ErrorHandlerService } from '../../../services/error-handler.service';
@@ -20,7 +21,7 @@ import { ErrorHandlerService } from '../../../services/error-handler.service';
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ShipmentsComponent, ClickOutsideDirective],
+  imports: [CommonModule, ReactiveFormsModule, ShipmentsComponent, ClickOutsideDirective, CompanyComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css',
   animations: [fade, slideFade]
