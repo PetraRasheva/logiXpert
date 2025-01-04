@@ -48,5 +48,7 @@ public interface ShipmentService {
     List<GetAllShipmentDto> getShipmentsByCourierId(Integer courierId);
 
     byte[] getShipmentInvoice(Integer shipmentId);
+
+    double calculateCompanyRevenue(Integer companyId);
 }
 
