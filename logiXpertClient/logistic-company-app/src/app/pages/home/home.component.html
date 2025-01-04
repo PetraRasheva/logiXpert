@@ -1,1 +1,132 @@
-<p>home works!</p>
+
+<div class="slider">
+    <div class="slides">
+        <div class="slide">
+            <img src="assets/images/header-pictures/truck33.png" alt="Truck">
+            <div class="content">
+                <h2 class="first-photo-text">We are your reliable partner</h2>
+            </div>
+            <div class="track-shipment-container">
+                <h5>Track Shipment</h5>
+                <input type="text" placeholder="Enter tracking number">
+                <button>TRACK</button>
+            </div> 
+        </div>
+        <div class="slide">
+            <img src="assets/images/header-pictures/truckHeader2.png" alt="Logistics">
+            <div class="content">
+                <h2 class="second-photo-text">Create your shipment parcel label in just 3 easy steps</h2>
+            </div>
+            <div class="lets-start">
+                <button>LET'S START</button>
+            </div>
+        </div>
+        <div class="slide third-slide">
+            <img src="assets/images/header-pictures/worker2.png" alt="Worker">
+            <div class="content">
+                <h2 class="third-photo-text">Your packaging is in safe hands of professionals</h2>
+                <div class="slide-icons">
+                    <div class="slide-icon">
+                        <span class="icon-number">1</span>
+                        <img src="assets/images/icons/Layer 18.png" alt="">
+                    </div>
+                    <div class="slide-icon">
+                        <span class="icon-number">2</span>
+                        <img src="assets/images/icons/Layer 19.png" alt="">
+                    </div>
+                    <div class="slide-icon">
+                        <span class="icon-number">3</span>
+                        <img src="assets/images/icons/Layer 20.png" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dots">
+        <!--<span class="dot" data-index="0"></span>
+        <span class="dot" data-index="1"></span>
+        <span class="dot" data-index="2"></span>-->
+        <span class="dot" *ngFor="let dot of slides; let i = index" [class.active]="i === currentIndex" (click)="goToSlide(i)"></span>
+    </div>
+</div>
+
+<div class="partners-container">
+    <img src="assets/images/logos/logo1.png" alt="">
+    <img src="assets/images/logos/logo2.png" alt="">
+    <img src="assets/images/logos/logo3.png" alt="">
+    <img src="assets/images/logos/logo4.png" alt="">
+    <img src="assets/images/logos/logo5.png" alt="">
+</div>
+
+<div class="ad-text">
+    <h2>We're NOT JUST another logistics company</h2>
+</div>
+
+<div class="wrapper2">
+    <div class="wrapper2-image-container">
+         <div class="small-image-container top-left">
+             <img src="assets/images/icons/proposition.png" alt="" class="small-image top-left">
+             <h4>UNIQUE</h4>
+         </div>
+         <img src="assets/images/header-pictures/13.jpg" alt="" class="main-image">
+         <div class="small-image-container bottom-right">
+             <img src="assets/images/icons/trust.png" alt="" class="small-image bottom-right">
+             <h4>TRUSTED</h4>
+         </div>
+    </div>
+    <div class="wrapper2-text-container">
+         <div class="text-with-line">
+             <div class="text-content">
+              <p>We're your trusted partner in delivering solutions that 
+                 make a difference. Whether it's a single package or a 
+                 full fleet operations, we provide efficient, tailored
+                 services to meet your unique needs.
+              </p>
+             </div>
+         </div>
+         <div class="bottom-content">
+             <h3>BUT mostly...</h3>
+             <div class="small-bottom-image-container">
+                 <img src="assets/images/icons/optimization.png" alt="" class="small-bottom-image">
+                 <h4>EFFICIENT</h4>
+             </div>
+         </div>
+    </div>
+ </div>
+
+ <div class="line-image">
+    <img src="assets/images/header-pictures/Screenshot 2024-11-25 at 19.29.32.png" alt="">
+</div>
+
+<div class="ad-text">
+    <h2>Why Choosing Us?</h2>
+</div>
+
+<div class="skills">
+    <div class="skill-container">
+        <div class="title-image-container">
+            <h3>Reability at Every Step</h3>
+            <img src="assets/images/icons/reliability.png" alt="">
+        </div>
+        <p>From pickup to delivery, we're committed to punctuality, accuracy, and security.
+            Our technology tracks every step of your package's journey, givind you peace of mind.
+        </p>
+    </div>
+    <div class="skill-container">
+        <div class="title-image-container">
+            <h3>Transparent Pricing</h3>
+            <img src="assets/images/icons/cost.png" alt="">
+        </div>
+        <p>Calculate your costs with ease. With our innovative pricing tool, you get clarity on every cent,
+            ensuring you only pay for the
+        </p>
+    </div>
+    <div class="skill-container">
+        <div class="title-image-container">
+            <h3>Eco-Friendly Operations</h3>
+            <img src="assets/images/icons/recycle-box.png" alt="">
+        </div>
+        <p>We care about the planet. Our efficient route-planning and eco-friendly practices mean that every delivery reduces our carbon.
+        </p>
+    </div>
+</div>

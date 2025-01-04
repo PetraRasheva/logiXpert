@@ -1,0 +1,386 @@
+
+h1{
+    justify-content: center;
+    text-align: center;
+    color: #1f3372;
+    font-size: 60px;
+    font-weight: 450;
+    margin-top: 40px;
+}
+
+/*PREPARE SHIPMENT CONTAINER*/
+
+
+.prepare-shipment-container {
+    width: 100%;
+   /* max-width: 600px;*/
+    margin: 0;
+    margin-top: 50px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   /* min-height: 100vh;*/
+   flex-direction: column;
+}
+
+.container {
+    background-color: #fdfdfd;
+    border-radius: 10px;
+    box-shadow: 5px 8px 6px rgba(0, 0, 0, 0.2), inset 4px 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 50px;
+    padding-bottom: 20px;
+    width: 100%;
+    /*justify-content: center;*/
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.container .number {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    background-color: #1f3372; 
+    color: white;
+    font-size: 16px; 
+    font-weight: bold;
+    padding: 5px 5px; 
+    border-radius: 50%; 
+    width: 30px; 
+    height: 30px; 
+    display: flex; 
+    align-items: center;
+    justify-content: center; 
+}
+
+.form-container{
+    align-items: flex-start;
+    width: 60%;
+    color: black;
+    margin-bottom: 20px;
+    margin-top: 30px;
+}
+
+.container h2 {
+    margin-bottom: 20px;
+    color: #1f3372;
+    font-size: 40px;
+    font-weight: 450;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 100%;
+}
+
+input[type="text"],
+input[type="email"],
+select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #1f3372;
+    border-radius: 5px;
+    height: 45px;
+}
+
+form input[type="text"], 
+form input[type="email"], 
+form input[type="number"], 
+form textarea {
+    color: black !important; 
+    font-size: 25px;
+    outline: none;
+}
+
+
+input[type="text"],
+input[type="email"],
+::placeholder {
+    font-size: 25px;
+    color: rgb(219, 219, 219);
+}
+
+input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none; /* За Safari */
+    -moz-appearance: none; /* За Firefox */
+    width: 10px;
+    height: 10px;
+    border: 2px solid #1f3372; 
+    border-radius: 50%; 
+    outline: none;
+    cursor: pointer; 
+    display: inline-block;
+    position: relative;
+    margin-right: 5px;
+}
+
+input[type="radio"]:checked {
+    background-color: #1f3372; 
+    border-color: #1f3372; 
+}
+
+input[type="radio"]:checked::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color:#1f3372;
+    border-radius: 50%; 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+} 
+
+input:focus {
+    border-color: #1f3372; 
+    box-shadow: 0 0 5px rgba(31, 51, 114, 0.5);
+}
+
+.option-select {
+    display: flex;
+    /*justify-content: center;*/
+    gap: 15px;
+    color: #1f3372;
+}
+
+.office-dropdown,
+.address-input {
+    display: none;
+     
+}
+
+
+select {
+    width: 100%;
+    height: 45px; 
+    border: 2px solid #1f3372; 
+    border-radius: 5px; 
+    padding: 5px;
+    font-size: 16px; 
+}
+
+select:focus {
+    border-color: #1f3372; 
+    box-shadow: 0 0 5px rgba(31, 51, 114, 0.5);
+}
+
+
+/*BOXES*/
+
+.boxes {
+    display: flex;
+    gap: 40px; 
+    justify-content: center; 
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.box {
+    border: 2px solid #f8f7f7; 
+    padding: 20px 30px 0px 30px; 
+    background-color: #f4f4f4;
+    box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.05); 
+}
+
+.box img{
+    width: 200px;
+}
+
+
+/* Package info */
+
+.info-container{
+    display: flex;
+    gap: 70px;
+    flex-wrap: wrap;
+    margin-top: 50px;
+}
+
+.package-info{
+    display: flex;
+    gap: 10px;
+    color: #1f3372;
+    font-size: 25px;
+}
+
+.package-info input{
+    width: 120px;
+    height: 30px;
+    padding: 0;
+    margin-top: 0px;
+    color: #1f3372;
+    text-align: center;
+    outline: none;
+}
+
+
+/* Final Price */
+.final-price-container{
+    display: flex;
+    color: #1f3372;
+    margin-bottom: 0px;
+    margin-top: 50px;
+    align-items: center;
+}
+
+.final-price-container h3{
+    font-weight: 450;
+    font-size: 30px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    margin-right: 10px;
+    
+}
+
+#finalPrice, .final-price-container p{
+    font-size: 50px;
+    margin-right: 10px;
+    margin-bottom: 0px;
+    padding: 0px;
+}
+
+
+/*Button*/
+
+.btn{
+    display: flex;
+    justify-content: center; 
+    align-items: center;  
+    height: 10vh; 
+    margin: 50px 0 50px 0;
+}
+
+button{
+    background-color: #1f3372;
+    color: #f4f4f4;
+    padding: 10px;
+    border-radius: 20px;
+    width: 20%;
+    font-size: 27px;
+}
+
+
+
+/* Responsive Styles */
+
+@media (max-width: 1200px) {
+    
+    .container{
+        width: 90%;
+    }
+
+    form input[type="text"], 
+    form input[type="email"], 
+    form input[type="number"], 
+    form textarea {
+    color: black !important; 
+    font-size: 20px;
+    outline: none;
+    }
+
+    form input[type="email"]{
+        font-size: 20px;
+    }
+
+    .boxes{
+        width: 70%;
+        gap: 80px;
+    }
+
+    .box{
+        width: 200px;
+    }
+
+    .prepare-shipment-container{
+        justify-content: center;
+        align-items: center;
+    }
+
+    .info-container{
+        margin-left: 20px;
+        flex-direction: column;
+        gap: 10px;
+        align-self: start;
+    }
+
+    button{
+        width: 40%;
+    }
+}
+
+
+
+@media (max-width: 768px) {
+
+    .container{
+        width: 90%;
+    }
+
+    form input[type="text"], 
+    form input[type="email"], 
+    form input[type="number"], 
+    form textarea {
+    color: black !important; 
+    font-size: 20px;
+    outline: none;
+    }
+
+    form input[type="email"]{
+        font-size: 15px;
+    }
+
+    .select{
+        width: 100%;
+    }
+
+    .boxes{
+        width: 100%;
+        gap: 10px;
+    }
+
+    .box{
+        width: 150px;
+    }
+
+    .info-container{
+        gap: 20px;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .package-info{
+        align-items: flex-end;
+    }
+
+    .package-info p{
+        margin-bottom: 0px;
+    }
+
+    .final-price-container{
+        margin-left: 20px;
+        align-items: flex-end;
+    }
+
+    .final-price-container h3{
+        margin-bottom: 5px;
+    }
+
+    select{
+        width: 110%;  
+    }
+
+    .option-select{
+        flex-direction: column;
+    }
+
+    button{
+        width: 80%;
+    }
+}
+
+

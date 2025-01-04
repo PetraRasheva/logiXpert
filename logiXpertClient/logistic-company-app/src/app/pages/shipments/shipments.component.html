@@ -1,0 +1,125 @@
+<p>shipments works!</p>
+  <div class="relative shadow-md sm:rounded-lg max-w-screen-md mx-auto max-h-[100] mt-28 mb-52">
+    <div class="sticky top-0 z-10 flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 mx-5 bg-white dark:bg-gray-900">
+          <div class="relative">
+  
+            <button
+            id="dropdownActionButton"
+            class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+            type="button"
+            (click)="toggleDropdown(); $event.stopPropagation()"> 
+            <span>{{ selectedOption }}</span>
+            <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
+            </svg>
+          </button>
+      
+            <!-- Dropdown menu -->
+            <div *ngIf="isDropdownOpen"
+            class="absolute z-50 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 top-12"
+            clickOutside
+            (clickOutside)="closeDropdown()">
+            
+            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
+              <li>
+                <button (click)="loadAllShipments('All shipments')"
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                  All shipments
+                </button>
+              </li>
+              <li>
+                <button (click)="filterNotDelivered('Not delivered')"
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                  Not delivered
+                </button>
+              </li>
+            </ul>
+            <div class="py-1">
+              <button class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                Create shipment
+              </button>
+            </div>
+          </div>
+          </div>
+  
+          <div class="text-center md:text-left">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Shipments Table</h2>
+          </div>
+  
+          <div class="bg-gray-100 text-black px-4 py-1 rounded-lg shadow-md flex items-center justify-between w-full sm:w-auto">
+            <span class="font-medium text-lg">Total Shipments:</span>
+            <span class="font-bold text-xl ml-2">{{ filteredShipments.length }}</span>
+          </div>
+      </div>
+      
+      <!-- Table -->
+      <div class="overflow-y-auto max-h-[400px] rounded-lg">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead class=" sticky top-0 z-9 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                  <th scope="col" class="px-6 py-3">
+                      Tracking number
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                      Price
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                       Delivery status
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                    Action
+               </th>
+              </tr>
+          </thead>
+  
+          <tbody>
+              <tr *ngFor="let shipment of filteredShipments" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+  
+                      <div class="w-10 h-10"> <img src="assets/images/icons/package.png" alt=""></div>
+  
+                      <div class="ps-3">
+                          <div class="text-base font-semibold">{{ shipment.trackingNumber }}</div>
+                          <div class="font-normal text-gray-500">{{ shipment.shipmentDate }}</div>
+                      </div>  
+                  </th>
+                  <td class="px-6 py-4">
+                    {{ shipment.price }}
+                </td>
+                  <td class="px-6 py-4">
+                      {{ shipment.deliveryStatus }}
+                  </td>
+                  <td class="px-6 py-4">
+                      <!-- Actions with icons -->
+                      <div class="flex items-center space-x-2">
+                          <!-- Details Tooltip -->
+                          <button  class="hover:opacity-80 relative group">
+                              <img src="assets/images/icons/info.png" alt="Details" class="w-6 h-6">
+                              <div
+                                  class="absolute bottom-full left-1/2 transform -translate-x-1/2 translate-y-[-4px] invisible group-hover:visible opacity-0 group-hover:opacity-100 bg-gray-700 text-white text-sm rounded-lg px-2 py-1 whitespace-nowrap z-10 transition-opacity duration-200">
+                                  View Details
+                              </div>
+                          </button>
+
+                          <button  class="hover:opacity-80 relative group">
+                            <img src="assets/images/icons/delivery-man.png" alt="Details" class="w-6 h-6">
+                            <div
+                                class="absolute bottom-full left-1/2 transform -translate-x-1/2 translate-y-[-4px] invisible group-hover:visible opacity-0 group-hover:opacity-100 bg-gray-700 text-white text-sm rounded-lg px-2 py-1 whitespace-nowrap z-10 transition-opacity duration-200">
+                                Assigned courier
+                            </div>
+                        </button>
+
+                          <!-- Delete Tooltip -->
+                          <button  class="hover:opacity-80 relative group">
+                              <img src="assets/images/icons/bin.png" alt="Delete" class="w-6 h-6">
+                              <div
+                                  class="absolute bottom-full left-1/2 transform -translate-x-1/2 translate-y-[-4px] invisible group-hover:visible opacity-0 group-hover:opacity-100 bg-gray-700 text-white text-sm rounded-lg px-2 py-1 whitespace-nowrap z-10 transition-opacity duration-200">
+                                  Delete Shipment
+                              </div>
+                          </button>
+                      </div>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+      </div>

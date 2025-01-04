@@ -1,4 +1,4 @@
-<nav class="bg-backgroundColour py-14">
+<!--<nav class="bg-backgroundColour py-14">
   <ul class="flex justify-center space-x-8">
     <li><a routerLink="/home" routerLinkActive="active" class="text-gray-700 hover:text-blue-500">Home</a></li>
     <li><a routerLink="/login" routerLinkActive="active" class="text-gray-700 hover:text-blue-500">Login</a></li>
@@ -10,3 +10,34 @@
   </ul>
   <hr style="border: 1px solid #ddd; margin: 0;">
 </nav>
+-->
+
+<header>
+  <div class="wrapper header-container">
+      <div class="logo-container">
+          <img src="assets/images/logos/whiteMainLogo.png" alt="LogiExpert logo">
+      </div>
+      <div class="nav-container">
+          <nav>
+              <ul>
+                <li><a routerLink="/home" routerLinkActive="active">Home</a></li>
+              <li><a routerLink="/login" routerLinkActive="active">Login</a></li>
+              <li><a routerLink="/register" routerLinkActive="active">Register</a></li>
+              <li><a routerLink="/calculate-price" routerLinkActive="active">Calculate Price</a></li>
+              <li><a routerLink="/profile" routerLinkActive="active">Profile</a></li>
+              <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
+              <li><button (click)="logout()">Logout</button></li>
+              </ul>
+          </nav>
+      </div>
+      <div class="menu-toggle" id="mobile-menu" (click)="toggleMenu()">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+      </div>
+  </div>
+  
+</header>
+
+
+

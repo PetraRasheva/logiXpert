@@ -1,5 +1,7 @@
 package com.example.logiXpert.repository;
 
+import com.example.logiXpert.model.Courier;
+import com.example.logiXpert.model.DeliveryStatus;
 import com.example.logiXpert.model.Shipment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,8 +23,12 @@ public interface ShipmentRepository extends JpaRepository<Shipment, Integer> {
 
     @Query("SELECT s FROM Shipment s WHERE s.deliveryStatus = 'CREATED' OR s.deliveryStatus = 'TRANSIT'")
     List<Shipment> findShipmentsNotDelivered();
+
+    @Query("SELECT s FROM Shipment s WHERE s.courier IS NULL AND s.deliveryStatus = :deliveryStatus")
+    List<Shipment> findAllByCourierIsNullAndDeliveryStatus(@Param("deliveryStatus") DeliveryStatus deliveryStatus);
     List<Shipment> findAllBySenderId(int senderId);
     List<Shipment> findAllByReceiverId(int receiverId);
-
+    List<Shipment> findAllByOwnerId(Integer ownerId);
+    List<Shipment> findAllByCourier(Courier courier);
     Optional<Shipment> findShipmentByTrackingNumber(String trackingNum);
 }

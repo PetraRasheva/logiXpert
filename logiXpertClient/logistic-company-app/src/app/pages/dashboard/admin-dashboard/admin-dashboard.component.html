@@ -1,0 +1,510 @@
+<div class="text-center mt-10">
+  <h1 class="text-4xl lg:text-6xl font-medium text-primaryText mb-2 text-center">Admin dashboard</h1>
+</div>
+
+<div class="relative shadow-md sm:rounded-lg max-w-4xl mx-auto max-h-[100] mt-28">
+  <div class="sticky top-0 z-10 flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 mx-5 bg-white dark:bg-gray-900">
+        <div class="relative">
+
+        <button
+          id="dropdownActionButton"
+          class="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+          type="button"
+          (click)="toggleDropdown(); $event.stopPropagation()"> 
+          <span>{{ selectedOption }}</span>
+          <svg
+            class="w-2.5 h-2.5 ms-2.5"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6">
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 4 4 4-4" />
+          </svg>
+        </button>
+    
+          <!-- Dropdown menu -->
+          <div *ngIf="isDropdownOpen"
+            class="absolute z-50 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 top-12"
+            clickOutside
+            (clickOutside)="closeDropdown()">
+            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
+                <li>
+                    <button (click)="filterByRole('ALL', 'All employees'); closeDropdown()" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                        All employees
+                      </button>
+                    </li>
+                    <li>
+                      <button (click)="filterByRole('OFFICE_EMPLOYEE', 'Office employees'); closeDropdown()" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                        Office employees
+                      </button>
+                    </li>
+                    <li>
+                      <button (click)="filterByRole('COURIER', 'Couriers'); closeDropdown()" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                        Couriers
+                      </button>
+                  </li>
+            </ul>
+            <div class="py-1">
+              <button (click)="openHireEmployeeModal(); closeDropdown()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                Hire employee
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center md:text-left">
+          <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Employees Table</h2>
+        </div>
+
+        <div class="bg-gray-100 text-black px-4 py-1 rounded-lg shadow-md flex items-center justify-between w-full sm:w-auto">
+          <span class="font-medium text-lg">Total Employees:</span>
+          <span class="font-bold text-xl ml-2">{{ filteredEmployees.length }}</span>
+        </div>
+    </div>
+    
+    <!-- Table -->
+    <div class="overflow-y-auto max-h-[400px] rounded-lg">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class=" sticky top-0 z-9 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Name
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Role
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Phone
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Action
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let employee of filteredEmployees" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+
+                    <div class="w-10 h-10"> <img src="assets/images/icons/user2.png" alt=""> </div>
+
+                    <div class="ps-3">
+                        <div class="text-base font-semibold">{{ employee.name }}</div>
+                        <div class="font-normal text-gray-500">{{ employee.email }}</div>
+                    </div>  
+                </th>
+                <td class="px-6 py-4">
+                    {{ employee.roles}}
+                </td>
+                <td class="px-6 py-4">
+                    {{ employee.phone}}
+                </td>
+                <td class="px-6 py-4">
+                    <!-- Actions with icons -->
+                    <div class="flex items-center space-x-2">
+                        <!-- Details Tooltip -->
+                        <button (click)="showDetails(employee.id)" class="hover:opacity-80 relative group">
+                            <img src="assets/images/icons/info.png" alt="Details" class="w-6 h-6">
+                            <div
+                                class="absolute bottom-full left-1/2 transform -translate-x-1/2 translate-y-[-4px] invisible group-hover:visible opacity-0 group-hover:opacity-100 bg-gray-700 text-white text-sm rounded-lg px-2 py-1 whitespace-nowrap z-10 transition-opacity duration-200">
+                                View Details
+                            </div>
+                        </button>
+
+                        <ng-container *ngIf="employee.roles.includes('OFFICE_EMPLOYEE')">
+                          <button (click)="loadShipmentsForEmployee(employee.id, employee.name)" class="hover:opacity-80 relative group">
+                            <img src="assets/images/icons/boxes.png" alt="Assigned Packages" class="w-6 h-6">
+                            <div
+                              class="absolute bottom-full left-1/2 transform -translate-x-1/2 translate-y-[-4px] invisible group-hover:visible opacity-0 group-hover:opacity-100 bg-gray-700 text-white text-sm rounded-lg px-2 py-1 whitespace-nowrap z-10 transition-opacity duration-200">
+                              Assigned Packages
+                            </div>
+                          </button>
+                        </ng-container>
+                        
+                        
+                        <ng-container *ngIf="employee.roles.includes('COURIER')">
+                          <button (click)="loadShipmentsForCourier(employee.id)" class="hover:opacity-80 relative group">
+                            <img src="assets/images/icons/delivery-man.png" alt="Assigned Deliveries" class="w-6 h-6">
+                            <div
+                              class="absolute bottom-full left-1/2 transform -translate-x-1/2 translate-y-[-4px] invisible group-hover:visible opacity-0 group-hover:opacity-100 bg-gray-700 text-white text-sm rounded-lg px-2 py-1 whitespace-nowrap z-10 transition-opacity duration-200">
+                              Assign packages
+                            </div>
+                          </button>
+                        </ng-container>
+
+                        <!-- Delete Tooltip -->
+                        <button (click)="openDeleteModal(employee)" class="hover:opacity-80 relative group">
+                          <img src="assets/images/icons/delete-friend.png" alt="Delete" class="w-6 h-6">
+                          <div
+                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 translate-y-[-4px] invisible group-hover:visible opacity-0 group-hover:opacity-100 bg-gray-700 text-white text-sm rounded-lg px-2 py-1 whitespace-nowrap z-10 transition-opacity duration-200">
+                            Delete Employee
+                          </div>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+
+    <!-- ------------------------------------ MODALS ------------------------------------------------------------ -->
+
+    <!-- ------------------------------------ EDIT USER MODAL ------------------------------------------------------------ -->
+
+  <!-- Edit user modal -->
+  <div *ngIf="showElement" @fade id="editUserModal" tabindex="-1" aria-hidden="true"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="relative w-full max-w-2xl bg-white rounded-lg shadow dark:bg-gray-700">
+        <!-- Modal content -->
+        <form [formGroup]="employeeForm" (ngSubmit)="saveEmployeeDetails()" class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    Employee details
+                </h3>
+                <button (click)="closeModal()" type="button"
+                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="p-6 space-y-6">
+                <div class="grid grid-cols-6 gap-6">
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+                        <input type="text" formControlName="name" name="name" id="name" readonly class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="salary" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Salary</label>
+                        <input type="number" formControlName="salary" name="salary" id="salary" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                        <input type="email" formControlName="email" name="email" id="email" readonly class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="phone-number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number</label>
+                        <input type="number" formControlName="phone" name="phone-number" id="phone-number" readonly class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="officeName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Office</label>
+                        <select formControlName="officeName" id="officeName" class="form-select bg-gray-50 border border-gray-300 text-sm block w-full p-2.5 rounded-lg">
+                          <option *ngFor="let office of offices" [value]="office.name">{{ office.name }}</option>
+                        </select>
+                      </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label>
+                        <input type="text" formControlName="role" name="role" id="role" class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                    </div>
+                       <!-- Полета за COURIER -->
+                       <ng-container *ngIf="selectedRole === 'COURIER'">
+                        <div class="col-span-6 sm:col-span-3">
+                          <label for="vehicleId" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Vehicle ID</label>
+                          <input type="number" formControlName="vehicleId" id="vehicleId"
+                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        </div>
+                        <div class="col-span-6 sm:col-span-3">
+                          <label for="companyName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company Name</label>
+                          <input type="text" formControlName="companyName" id="companyName"
+                            class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        </div>
+                      </ng-container>
+
+                </div>
+            </div>
+            <!-- Modal footer -->
+            <div class="flex items-center p-6 space-x-3 rtl:space-x-reverse border-t border-gray-200 rounded-b dark:border-gray-600">
+                <button type="submit" class="text-white bg-btn hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Save all</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ------------------------------------ ASSIGNED PACKAGES MODAL ------------------------------------------------------------ -->
+
+<!-- Assigned Packages Modal -->
+<div *ngIf="showAssignedPackages" @fade id="assignedPackagesModal" tabindex="-1" aria-hidden="true"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="relative w-full max-w-4xl bg-white rounded-lg shadow dark:bg-gray-700">
+    <!-- Modal content -->
+    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+      <!-- Modal header -->
+      <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+          Assigned Packages <span class="text-blue-600 dark:text-blue-400"> - {{ selectedEmployeeName }}</span>
+        </h3>
+        <button (click)="closeAssignedPackagesModal()" type="button"
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+          </svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="p-6 space-y-6">
+        <table class="table-auto w-full border-collapse border border-gray-300">
+          <thead>
+            <tr>
+              <th class="border border-gray-300 px-4 py-2">Tracking Number</th>
+              <th class="border border-gray-300 px-4 py-2">Price</th>
+              <th class="border border-gray-300 px-4 py-2">Status</th>
+              <th class="border border-gray-300 px-4 py-2">Shipment Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let shipment of shipments">
+              <td class="border border-gray-300 px-4 py-2">{{ shipment.trackingNumber }}</td>
+              <td class="border border-gray-300 px-4 py-2">{{ shipment.price | currency }}</td>
+              <td class="border border-gray-300 px-4 py-2">{{ shipment.deliveryStatus }}</td>
+              <td class="border border-gray-300 px-4 py-2">{{ shipment.shipmentDate | date: 'short' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="flex items-center p-6 space-x-3 rtl:space-x-reverse border-t border-gray-200 rounded-b dark:border-gray-600">
+        <button (click)="closeAssignedPackagesModal()"
+          class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ------------------------------------ ASSIGN PACKAGES TO COURIER  MODAL ------------------------------------------------------------ -->
+ <!-- Assign Packages Modal -->
+<div *ngIf="showAssignPackagesModal" @fade id="assignPackagesModal" tabindex="-1" aria-hidden="true"
+class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+<div class="relative w-full max-w-6xl bg-white rounded-lg shadow dark:bg-gray-700">
+  <!-- Modal Header -->
+  <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+      Assign Packages <span class="text-blue-600 dark:text-blue-400">- {{ selectedCourierName }}</span>
+    </h3>
+    <button (click)="closeAssignPackagesModal()" type="button"
+      class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+      </svg>
+      <span class="sr-only">Close modal</span>
+    </button>
+  </div>
+
+  <!-- Modal Body -->
+  <div class="p-6 grid grid-cols-2 gap-4">
+    <!-- Unassigned Shipments -->
+    <div>
+      <h4 class="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Unassigned Shipments</h4>
+      <table class="table-auto w-full border-collapse border border-gray-300">
+        <thead>
+          <tr>
+            <th class="border border-gray-300 px-4 py-2">Tracking Number</th>
+            <th class="border border-gray-300 px-4 py-2">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let shipment of unassignedShipments">
+            <td class="border border-gray-300 px-4 py-2">{{ shipment.trackingNumber }}</td>
+            <td class="border border-gray-300 px-4 py-2">
+              <button (click)="assignShipmentToCourier(shipment.trackingNumber)"
+                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                Assign
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Assigned Shipments -->
+    <div>
+      <h4 class="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Assigned Shipments</h4>
+      <table class="table-auto w-full border-collapse border border-gray-300">
+        <thead>
+          <tr>
+            <th class="border border-gray-300 px-4 py-2">Tracking Number</th>
+            <th class="border border-gray-300 px-4 py-2">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let shipment of assignedShipments">
+            <td class="border border-gray-300 px-4 py-2">{{ shipment.trackingNumber }}</td>
+            <td class="border border-gray-300 px-4 py-2">
+              <button (click)="unassignShipment(shipment.trackingNumber)"
+                      class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Unassign
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal Footer -->
+  <div class="flex items-center p-6 space-x-3 rtl:space-x-reverse border-t border-gray-200 rounded-b dark:border-gray-600">
+    <button (click)="closeAssignPackagesModal()"
+      class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Close</button>
+  </div>
+</div>
+</div>
+
+<!-- ------------------------------------ HIRE EMPLOYEE MODAL ------------------------------------------------------------ -->
+<!-- Hire Employee Modal -->
+<div *ngIf="showHireEmployeeModal" @fade id="hireEmployeeModal" tabindex="-1" aria-hidden="true"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="relative w-full max-w-2xl bg-white rounded-lg shadow dark:bg-gray-700">
+    <!-- Modal content -->
+    <form [formGroup]="employeeForm" (ngSubmit)="hireEmployee()" class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+      <!-- Modal header -->
+      <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+          Hire Employee
+        </h3>
+        <button (click)="closeHireEmployeeModal()" type="button"
+          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+          </svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="p-6 space-y-6">
+        <div class="grid grid-cols-6 gap-6">
+          <div class="col-span-6 sm:col-span-3">
+            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+            <input type="text" formControlName="name" id="name" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+            <div *ngIf="formSubmitted && employeeForm.controls['name'].invalid">
+              <small class="text-red-500" *ngIf="employeeForm.get('name')?.errors?.['required']">Name is required.</small>
+              <small class="text-red-500" *ngIf="employeeForm.get('name')?.errors?.['minlength']">Name must be at least 2 characters.</small>
+              <small class="text-red-500" *ngIf="employeeForm.get('name')?.errors?.['maxlength']">Name must not exceed 50 characters.</small>
+            </div>
+          </div>
+          <div class="col-span-6 sm:col-span-3">
+            <label for="salary" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Salary</label>
+            <input type="number" formControlName="salary" id="salary" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+            <div *ngIf="formSubmitted && employeeForm.controls['salary'].invalid">
+              <small class="text-red-500" *ngIf="employeeForm.get('salary')?.errors?.['required']">Salary is required.</small>
+              <small class="text-red-500" *ngIf="employeeForm.get('salary')?.errors?.['min']">Salary must be greater than 0.</small>
+            </div>
+          </div>
+          <div class="col-span-6 sm:col-span-3">
+            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+            <input type="email" formControlName="email" id="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+            <div *ngIf="formSubmitted && employeeForm.controls['email'].invalid">
+              <small class="text-red-500" *ngIf="employeeForm.get('email')?.errors?.['required']">Email is required.</small>
+              <small class="text-red-500" *ngIf="employeeForm.get('email')?.errors?.['email']">Invalid email format.</small>
+            </div>
+          </div>
+          <div class="col-span-6 sm:col-span-3">
+            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+            <input type="password" formControlName="password" id="password"
+                   class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                   required>
+            
+            <!-- Динамично показване на грешки -->
+            <div *ngIf="formSubmitted && employeeForm.get('password')?.errors as errors">
+              <small class="text-red-500" *ngIf="errors['backend']">
+                {{ errors['backend'] }}
+              </small>
+              <small class="text-red-500" *ngIf="errors['minlength']">
+                Password must be at least {{ employeeForm.get('password')?.errors?.['minlength']?.requiredLength }} characters.
+              </small>
+            </div>
+          </div>
+          <div class="col-span-6 sm:col-span-3">
+            <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone</label>
+            <input type="text" formControlName="phone" id="phone" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+            <div *ngIf="formSubmitted && employeeForm.controls['phone'].invalid">
+              <small class="text-red-500" *ngIf="employeeForm.get('phone')?.errors?.['required']">Phone is required.</small>
+              <small class="text-red-500" *ngIf="employeeForm.get('phone')?.errors?.['pattern']">Invalid phone number format.</small>
+            </div>
+          </div>
+          <div class="col-span-6 sm:col-span-3">
+            <label for="officeName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Office</label>
+            <select formControlName="officeName" id="officeName" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <option *ngFor="let office of offices" [value]="office.name">{{ office.name }}</option>
+            </select>
+            <div *ngIf="formSubmitted && employeeForm.controls['officeName'].invalid">
+              <small class="text-red-500">Office is required.</small>
+            </div>
+          </div>
+          <div class="col-span-6 sm:col-span-3">
+            <label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label>
+            <select formControlName="role" id="role" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+              <option value="COURIER">Courier</option>
+              <option value="OFFICE_EMPLOYEE">Office Employee</option>
+            </select>
+          </div>
+          <ng-container *ngIf="employeeForm.get('role')?.value === 'COURIER'">
+            <div class="col-span-6 sm:col-span-3">
+              <label for="vehicleId" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Vehicle ID</label>
+              <input type="text" formControlName="vehicleId" id="vehicleId" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="flex items-center p-6 space-x-3 rtl:space-x-reverse border-t border-gray-200 rounded-b dark:border-gray-600">
+        <button type="submit" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Hire</button>
+        <button type="button" (click)="closeHireEmployeeModal()" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:bg-gray-600 dark:hover:border-gray-600">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ------------------------------------ DELETE EMPLOYEE MODAL ------------------------------------------------------------ -->
+<div
+  *ngIf="isDeleteModalOpen" @fade
+  class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
+  <div class="bg-white rounded-lg shadow dark:bg-gray-700 w-full max-w-md">
+    <div class="relative p-4 text-center">
+      <button
+        type="button"
+        class="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+        (click)="closeDeleteModal()">
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+        </svg>
+        <span class="sr-only">Close modal</span>
+      </button>
+      <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+        Are you sure you want to delete {{ selectedEmployee?.name }}?
+      </h3>
+      <button
+        (click)="confirmDelete()"
+        type="button"
+        class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
+        Yes, I'm sure
+      </button>
+      <button
+        (click)="closeDeleteModal()"
+        type="button"
+        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+        No, cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<app-shipments> </app-shipments>

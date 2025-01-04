@@ -1,21 +1,22 @@
 package com.example.logiXpert.service;
 
 import com.example.logiXpert.dto.*;
-import com.example.logiXpert.exception.CompanyNotFoundException;
-import com.example.logiXpert.exception.CourierNotFoundException;
-import com.example.logiXpert.exception.ShipmentNotFoundException;
-import com.example.logiXpert.exception.UserNotFoundException;
+import com.example.logiXpert.exception.*;
 import com.example.logiXpert.mapper.ClientMapper;
 import com.example.logiXpert.mapper.GetShipmentMapper;
 import com.example.logiXpert.mapper.ShipmentMapper;
 import com.example.logiXpert.model.*;
 import com.example.logiXpert.repository.*;
+import com.itextpdf.barcodes.exceptions.WriterException;
+import com.itextpdf.io.exceptions.IOException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
@@ -28,9 +29,12 @@ public class ShipmentServiceImpl implements ShipmentService {
     private final ClientMapper clientMapper;
     private final UserRepository userRepository;
     private final CourierRepository courierRepository;
+    private final OfficeEmployeeRepository officeEmployeeRepository;
+    private final PdfGeneratorServiceImpl pdfGeneratorServiceImpl;
+
 
     @Autowired
-    public ShipmentServiceImpl(ShipmentRepository shipmentRepository, ShipmentMapper shipmentMapper, GetShipmentMapper getShipmentMapper, CompanyRepository companyRepository, ClientRepository clientRepository, ClientMapper clientMapper, UserRepository userRepository, CourierRepository courierRepository) {
+    public ShipmentServiceImpl(ShipmentRepository shipmentRepository, ShipmentMapper shipmentMapper, GetShipmentMapper getShipmentMapper, CompanyRepository companyRepository, ClientRepository clientRepository, ClientMapper clientMapper, UserRepository userRepository, CourierRepository courierRepository, PdfGeneratorServiceImpl pdfGeneratorServiceImpl, OfficeEmployeeRepository officeEmployeeRepository) {
         this.shipmentRepository = shipmentRepository;
         this.shipmentMapper = shipmentMapper;
         this.getShipmentMapper = getShipmentMapper;
@@ -39,6 +43,8 @@ public class ShipmentServiceImpl implements ShipmentService {
         this.clientMapper = clientMapper;
         this.userRepository = userRepository;
         this.courierRepository = courierRepository;
+        this.pdfGeneratorServiceImpl = pdfGeneratorServiceImpl;
+        this.officeEmployeeRepository= officeEmployeeRepository;
     }
 
     @Override
@@ -47,6 +53,52 @@ public class ShipmentServiceImpl implements ShipmentService {
         return shipments.stream()
                 .mapToDouble(Shipment::getPrice)
                 .sum();
+    }
+
+    @Override
+    public List<GetAllShipmentDto> getShipmentsCreatedByEmployee(Integer employeeId) {
+        OfficeEmployee employee = officeEmployeeRepository.findById(employeeId)
+                .orElseThrow(() -> new OfficeEmployeeNotFoundException("Office employee with id " + employeeId + " not found"));
+
+        List<Shipment> shipments = shipmentRepository.findAllByOwnerId(employee.getId());
+        return shipments.stream().map(shipmentMapper::toGetAllDto).toList();
+    }
+
+    @Override
+    public List<GetAllShipmentDto> getShipmentsCreatedByClient(Integer clientId) {
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ClientNotFoundException("Client with id " + clientId + " not found"));
+
+        List<Shipment> shipments = shipmentRepository.findAllByOwnerId(client.getId());
+        return shipments.stream().map(shipmentMapper::toGetAllDto).toList();
+    }
+
+    @Override
+    public List<GetAllShipmentDto> getShipmentsByCourierId(Integer courierId) {
+        Courier courier = courierRepository.findCourierById(courierId)
+                .orElseThrow(() -> new CourierNotFoundException("Courier with ID " + courierId + " not found"));
+
+        List<Shipment> shipments = shipmentRepository.findAllByCourier(courier);
+        return shipments.stream()
+                .map(shipmentMapper::toGetAllDto)
+                .toList();
+    }
+
+    @Override
+    public byte[] getShipmentInvoice(Integer shipmentId) {
+        try {
+            Shipment shipment = shipmentRepository.findShipmentById(shipmentId)
+                    .orElseThrow(() -> new ShipmentNotFoundException("Shipment not found with ID: " + shipmentId));
+
+            GetShipmentDto shipmentDto = getShipmentMapper.toDto(shipment);
+            return pdfGeneratorServiceImpl.generateShipmentInvoice(shipmentDto);
+        } catch (WriterException | IOException e) {
+            throw new RuntimeException("Error generating shipment invoice: " + e.getMessage(), e);
+        } catch (java.io.IOException e) {
+            throw new RuntimeException(e);
+        } catch (com.google.zxing.WriterException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -98,7 +150,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         return getShipmentMapper.toDto(shipment);
     }
 
-    @Override
+    @Transactional
     public void deleteShipment(Integer id) {
         shipmentRepository.deleteShipmentById(id);
     }
@@ -157,11 +209,66 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
+    public GetShipmentDto unassignShipmentFromCourier(Integer shipmentId) {
+        Shipment shipment = shipmentRepository.findShipmentById(shipmentId)
+                .orElseThrow(() -> new ShipmentNotFoundException("Shipment not found with ID: " + shipmentId));
+
+        if (shipment.getCourier() == null) {
+            throw new IllegalStateException("Shipment is not assigned to any courier");
+        }
+
+        shipment.setCourier(null);
+        Shipment updatedShipment = shipmentRepository.save(shipment);
+
+        return getShipmentMapper.toDto(updatedShipment);
+}
+
+    @Override
+    public GetShipmentDto assignShipmentToCourierByTrackingNumber(String trackingNumber, Integer courierId) {
+        Shipment shipment = shipmentRepository.findShipmentByTrackingNumber(trackingNumber)
+                .orElseThrow(() -> new ShipmentNotFoundException("Shipment not found with tracking number: " + trackingNumber));
+
+        Courier courier = courierRepository.findCourierById(courierId)
+                .orElseThrow(() -> new CourierNotFoundException("Courier not found with ID: " + courierId));
+
+        shipment.setCourier(courier);
+        Shipment updatedShipment = shipmentRepository.save(shipment);
+        return getShipmentMapper.toDto(updatedShipment);
+    }
+
+    @Override
+    public GetShipmentDto unassignShipmentFromCourierByTrackingNumber(String trackingNumber) {
+        Shipment shipment = shipmentRepository.findShipmentByTrackingNumber(trackingNumber)
+                .orElseThrow(() -> new ShipmentNotFoundException("Shipment not found with tracking number: " + trackingNumber));
+
+        if (shipment.getCourier() == null) {
+            throw new IllegalStateException("Shipment is not assigned to any courier");
+        }
+
+        shipment.setCourier(null);
+        Shipment updatedShipment = shipmentRepository.save(shipment);
+
+        return getShipmentMapper.toDto(updatedShipment);
+    }
+
+    @Override
     public List<GetAllShipmentDto> getNotDeliveredShipments() {
         List<Shipment> shipments = shipmentRepository.findShipmentsNotDelivered();
         return shipments.stream()
                 .map(shipmentMapper::toGetAllDto)
                 .toList();
+    }
+
+    @Override
+    public List<GetAllShipmentDto> getUnassignedShipmentsForCourier(Integer courierId) {
+        Courier courier = courierRepository.findById(courierId)
+                .orElseThrow(() -> new CourierNotFoundException("Courier with ID " + courierId + " not found"));
+
+        List<Shipment> unassignedShipments = shipmentRepository.findAllByCourierIsNullAndDeliveryStatus(DeliveryStatus.CREATED);
+
+        return unassignedShipments.stream()
+                .map(shipmentMapper::toGetAllDto)
+                .collect(Collectors.toList());
     }
 
     private void calculateTotalRevenue(Shipment shipment, Company company) {
