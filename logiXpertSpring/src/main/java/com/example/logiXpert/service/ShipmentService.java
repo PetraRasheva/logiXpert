@@ -21,6 +21,8 @@ public interface ShipmentService {
 
     void deleteShipment(Integer id);
 
+    void deleteShipmentByTrackingNumber(String trackingNumber);
+
     List<GetAllShipmentDto> getAllShipments();
 
     double calculateTotalRevenueForPeriod(Integer companyId, LocalDateTime startDate, LocalDateTime endDate);

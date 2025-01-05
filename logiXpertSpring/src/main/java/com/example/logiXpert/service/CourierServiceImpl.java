@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CourierServiceImpl implements CourierService {
 
@@ -92,6 +94,13 @@ public class CourierServiceImpl implements CourierService {
                 .orElseThrow(() -> new CourierNotFoundException("Courier with id " + id + " was not found"));
 
         return courierMapper.toDto(courier);
+    }
+
+    @Override
+    public List<CourierDto> getAllCouriers() {
+        return courierRepository.findAll().stream()
+                .map(courierMapper::toDto)
+                .toList();
     }
 
     @Transactional

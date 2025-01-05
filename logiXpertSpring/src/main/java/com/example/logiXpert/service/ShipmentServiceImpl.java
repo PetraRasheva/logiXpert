@@ -156,6 +156,14 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
+    public void deleteShipmentByTrackingNumber(String trackingNumber) {
+        Shipment shipment = shipmentRepository.findShipmentByTrackingNumber(trackingNumber)
+                .orElseThrow(() -> new ShipmentNotFoundException("Shipment with tracking number " + trackingNumber + " was not found"));
+
+        shipmentRepository.delete(shipment);
+    }
+
+    @Override
     public List<GetAllShipmentDto> getAllShipments() {
         List<Shipment> shipments = shipmentRepository.findAll();
         return shipments.stream().map(shipmentMapper::toGetAllDto).toList();
