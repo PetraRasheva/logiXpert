@@ -5,6 +5,7 @@ import com.example.logiXpert.dto.ShipmentDto;
 import com.example.logiXpert.model.Shipment;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface ShipmentMapper {
@@ -15,4 +16,7 @@ public interface ShipmentMapper {
     GetAllShipmentDto toGetAllDto(Shipment shipment);
 
     Shipment toEntity(ShipmentDto shipmentDto);
+
+    @Mapping(target = "id", ignore = true) // Skip ID as it should not be updated
+    void updateShipmentFromDto(ShipmentDto dto, @MappingTarget Shipment shipment);
 }

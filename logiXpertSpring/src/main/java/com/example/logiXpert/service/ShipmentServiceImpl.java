@@ -127,6 +127,8 @@ public class ShipmentServiceImpl implements ShipmentService {
         Shipment shipment = shipmentRepository.findShipmentById(shipmentDto.id())
                 .orElseThrow(() -> new ShipmentNotFoundException("Shipment with id " + shipmentDto.id() + " was not found"));
 
+        shipmentMapper.updateShipmentFromDto(shipmentDto, shipment);
+
         if (shipmentDto.ownerId() != null) {
             User owner = userRepository.findById(shipmentDto.ownerId())
                     .orElseThrow(() -> new UserNotFoundException("User with ID " + shipmentDto.ownerId() + " not found"));
@@ -136,10 +138,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         setSender(shipment, shipmentDto);
         setReceiver(shipment, shipmentDto);
 
-        shipment.setProfit(shipmentDto.profit());
-
         Shipment updatedShipment = shipmentRepository.save(shipment);
-
         return getShipmentMapper.toDto(updatedShipment);
     }
 
