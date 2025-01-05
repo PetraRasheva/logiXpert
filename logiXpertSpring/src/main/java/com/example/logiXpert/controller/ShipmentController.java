@@ -85,6 +85,13 @@ public class ShipmentController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @DeleteMapping("/delete-by-tracking/{trackingNumber}")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('OFFICE_EMPLOYEE')")
+    public ResponseEntity<?> deleteShipmentByTrackingNumber(@PathVariable("trackingNumber") String trackingNumber) {
+        shipmentService.deleteShipmentByTrackingNumber(trackingNumber);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping("/all")
     public ResponseEntity<List<GetAllShipmentDto>> getAllShipments() {
         List<GetAllShipmentDto> shipments = shipmentService.getAllShipments();

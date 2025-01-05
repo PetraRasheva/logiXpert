@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/courier")
 @PreAuthorize("hasAuthority('ADMIN')")
@@ -36,6 +38,12 @@ public class CourierController {
     public ResponseEntity<CourierDto> updateCourier(@RequestBody CourierDto courierDto) {
         CourierDto updatedCourier = courierService.updateCourier(courierDto);
         return new ResponseEntity<>(updatedCourier, HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<CourierDto>> getAllCouriers() {
+        List<CourierDto> couriers = courierService.getAllCouriers();
+        return new ResponseEntity<>(couriers, HttpStatus.OK);
     }
 
     // Endpoint for admins to update courier-specific properties
