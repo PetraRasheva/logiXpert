@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Shipment } from '../types/shipment';
 import { environment } from '../../environments/environment';
+import { ShipmentDetails } from '../types/shipmentDetails';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,12 @@ export class ShipmentService {
 
   getShipmentById(id: number): Observable<Shipment> {
     return this.http.get<Shipment>(`${environment.apiUrl}/shipment/find/${id}`, {
+      withCredentials: true,
+    });
+  }
+
+  getShipmentByTrackingNumber(trackingNum: string): Observable<ShipmentDetails> {
+    return this.http.get<ShipmentDetails>(`${environment.apiUrl}/shipment/track/${trackingNum}`, {
       withCredentials: true,
     });
   }
@@ -70,6 +77,12 @@ export class ShipmentService {
 
   deleteShipment(id: number): Observable<void> {
     return this.http.delete<void>(`${environment.apiUrl}/shipment/delete/${id}`, {
+      withCredentials: true,
+    });
+  }
+
+  deleteShipmentByTrackingNumber(trackingNumber: string): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/shipment/delete-by-tracking/${trackingNumber}`, {
       withCredentials: true,
     });
   }
