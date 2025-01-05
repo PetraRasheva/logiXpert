@@ -17,11 +17,12 @@ import { CompanyComponent } from '../../company/company.component';
 import { ClickOutsideDirective } from '../../../utils/ClickOutsideDirective';
 import { MessageService } from '../../../services/message.service';
 import { ErrorHandlerService } from '../../../services/error-handler.service';
+import { OfficeComponent } from '../../office/office.component';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ShipmentsComponent, ClickOutsideDirective, CompanyComponent],
+  imports: [CommonModule, ReactiveFormsModule, ShipmentsComponent, ClickOutsideDirective, CompanyComponent, OfficeComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.css',
   animations: [fade, slideFade]

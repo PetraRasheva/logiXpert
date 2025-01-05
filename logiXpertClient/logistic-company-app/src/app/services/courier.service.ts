@@ -24,6 +24,12 @@ export class CourierService {
       });
     }
 
+    getAllCouriers(): Observable<Courier[]> {
+      return this.http.get<Courier[]>(`${environment.apiUrl}/courier/all`, {
+        withCredentials: true,
+      });
+    }
+
     updateCourierDetails(courier: Courier): Observable<Courier> {
       return this.http.put<Courier>(`${environment.apiUrl}/courier/update-admin`, courier, {
         withCredentials: true,
