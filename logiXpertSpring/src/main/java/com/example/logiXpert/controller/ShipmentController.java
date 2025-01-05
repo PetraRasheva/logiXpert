@@ -91,13 +91,21 @@ public class ShipmentController {
         return new ResponseEntity<>(shipments, HttpStatus.OK);
     }
 
-    @GetMapping("/revenue")
-    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/revenueByDateRange")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Double> getRevenue(
             @RequestParam("companyId") Integer companyId,
             @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
             @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate) {
         double revenue = shipmentService.calculateTotalRevenueForPeriod(companyId, startDate, endDate);
+        return ResponseEntity.ok(revenue);
+    }
+
+    @GetMapping("/totalRevenue")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Double> getTotalRevenue(
+            @RequestParam("companyId") Integer companyId) {
+        double revenue = shipmentService.calculateCompanyRevenue(companyId);
         return ResponseEntity.ok(revenue);
     }
 

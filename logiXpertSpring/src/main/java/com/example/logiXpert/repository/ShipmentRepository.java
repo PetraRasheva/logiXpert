@@ -21,6 +21,8 @@ public interface ShipmentRepository extends JpaRepository<Shipment, Integer> {
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate);
 
+    List<Shipment> findShipmentsByCompanyId(Integer companyId);
+
     @Query("SELECT s FROM Shipment s WHERE s.deliveryStatus = 'CREATED' OR s.deliveryStatus = 'TRANSIT'")
     List<Shipment> findShipmentsNotDelivered();
 

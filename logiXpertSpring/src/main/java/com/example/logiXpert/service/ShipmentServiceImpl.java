@@ -278,6 +278,14 @@ public class ShipmentServiceImpl implements ShipmentService {
         companyRepository.save(company);
     }
 
+    @Override
+    public double calculateCompanyRevenue(Integer companyId) {
+        List<Shipment> shipments = shipmentRepository.findShipmentsByCompanyId(companyId);
+        return shipments.stream()
+                .mapToDouble(Shipment::getPrice)
+                .sum();
+    }
+
     private void setSender(Shipment shipment, ShipmentDto shipmentDto) {
         Optional<Client> sender = clientRepository.findByPhone(shipmentDto.sender().phone());
         if (sender.isPresent()) {
