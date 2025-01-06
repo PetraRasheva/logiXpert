@@ -15,14 +15,6 @@ public interface ShipmentRepository extends JpaRepository<Shipment, Integer> {
     void deleteShipmentById(Integer id);
     Optional<Shipment> findShipmentById(Integer id);
 
-    @Query("SELECT s FROM Shipment s WHERE s.company.id = :companyId AND s.shipmentDate BETWEEN :startDate AND :endDate")
-    List<Shipment> findShipmentsByCompanyAndDateRange(
-            @Param("companyId") Integer companyId,
-            @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate);
-
-    List<Shipment> findShipmentsByCompanyId(Integer companyId);
-
     @Query("SELECT s FROM Shipment s WHERE s.deliveryStatus = 'CREATED' OR s.deliveryStatus = 'TRANSIT'")
     List<Shipment> findShipmentsNotDelivered();
 
@@ -33,4 +25,13 @@ public interface ShipmentRepository extends JpaRepository<Shipment, Integer> {
     List<Shipment> findAllByOwnerId(Integer ownerId);
     List<Shipment> findAllByCourier(Courier courier);
     Optional<Shipment> findShipmentByTrackingNumber(String trackingNum);
+
+    @Query("SELECT SUM(s.profit) FROM Shipment s WHERE s.company.id = :companyId")
+    Double calculateRevenueByCompanyId(@Param("companyId") Integer companyId);
+
+    @Query("SELECT SUM(s.price) FROM Shipment s WHERE s.company.id = :companyId AND s.shipmentDate BETWEEN :startDate AND :endDate")
+    Double calculateRevenueByCompanyAndDateRange(
+            @Param("companyId") Integer companyId,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate);
 }

@@ -3,10 +3,13 @@ package com.example.logiXpert.controller;
 import com.example.logiXpert.dto.CompanyDto;
 import com.example.logiXpert.dto.GetUserDto;
 import com.example.logiXpert.service.CompanyService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -48,5 +51,23 @@ public class CompanyController {
         // get couriers + office employees
         List<GetUserDto> employees = companyService.getAllEmployees();
         return new ResponseEntity<>(employees, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/revenue-by-date-range")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Double> getRevenue(
+            @PathVariable("id") Integer id,
+            @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+            @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end) {
+        double revenue = companyService.calculateRevenueDateRange(id, start, end);
+        return ResponseEntity.ok(revenue);
+    }
+
+    @GetMapping("/{id}/total-revenue")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Double> getTotalRevenue(
+            @PathVariable("id") Integer id) {
+        double revenue = companyService.calculateRevenue(id);
+        return ResponseEntity.ok(revenue);
     }
 }

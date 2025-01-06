@@ -48,14 +48,6 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
-    public double calculateTotalRevenueForPeriod(Integer companyId, LocalDateTime startDate, LocalDateTime endDate) {
-        List<Shipment> shipments = shipmentRepository.findShipmentsByCompanyAndDateRange(companyId, startDate, endDate);
-        return shipments.stream()
-                .mapToDouble(Shipment::getPrice)
-                .sum();
-    }
-
-    @Override
     public List<GetAllShipmentDto> getShipmentsCreatedByEmployee(Integer employeeId) {
         OfficeEmployee employee = officeEmployeeRepository.findById(employeeId)
                 .orElseThrow(() -> new OfficeEmployeeNotFoundException("Office employee with id " + employeeId + " not found"));
@@ -283,14 +275,6 @@ public class ShipmentServiceImpl implements ShipmentService {
         company.setBaseCapital(company.getBaseCapital() + shipment.getPrice());
 
         companyRepository.save(company);
-    }
-
-    @Override
-    public double calculateCompanyRevenue(Integer companyId) {
-        List<Shipment> shipments = shipmentRepository.findShipmentsByCompanyId(companyId);
-        return shipments.stream()
-                .mapToDouble(Shipment::getPrice)
-                .sum();
     }
 
     private void setSender(Shipment shipment, ShipmentDto shipmentDto) {
