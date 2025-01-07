@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 // We use it to retrieve full shipment data from the database - update / find by id
 public record GetShipmentDto(
+        Integer id,
         String trackingNumber,
         double weight,
         double price,
