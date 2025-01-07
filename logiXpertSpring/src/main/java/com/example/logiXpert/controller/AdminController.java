@@ -2,8 +2,6 @@ package com.example.logiXpert.controller;
 
 import com.example.logiXpert.dto.*;
 import com.example.logiXpert.service.AdminService;
-import com.example.logiXpert.service.CourierService;
-import com.example.logiXpert.service.OfficeEmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,12 +23,6 @@ public class AdminController {
         return new ResponseEntity<>(admin, HttpStatus.OK);
     }
 
-//    @PostMapping("/add")
-//    public ResponseEntity<AdminDto> addAdmin(@RequestBody AdminDto admin) {
-//        AdminDto newAdmin = adminService.addAdmin(admin);
-//        return new ResponseEntity<>(newAdmin, HttpStatus.CREATED);
-//    }
-
     @PutMapping("/update")
     public ResponseEntity<GetAdminDto> updateAdmin(@RequestBody AdminDto admin) {
         GetAdminDto updateAdmin = adminService.updateAdmin(admin);
@@ -42,18 +34,6 @@ public class AdminController {
         adminService.deleteAdmin(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-//    @PostMapping("/add-employee")
-//    public ResponseEntity<OfficeEmployeeDto> addOfficeEmployee(@RequestBody RegisterOfficeEmployeeDto registrationDto) {
-//        OfficeEmployeeDto newOfficeEmployee = officeEmployeeService.addOfficeEmployee(registrationDto);
-//        return new ResponseEntity<>(newOfficeEmployee, HttpStatus.CREATED);
-//    }
-//
-//    @PostMapping("/add-courier")
-//    public ResponseEntity<CourierDto> addCourier(@RequestBody RegisterCourierDto registrationDto) {
-//        CourierDto newCourier = courierService.addCourier(registrationDto);
-//        return new ResponseEntity<>(newCourier, HttpStatus.CREATED);
-//    }
 
     @GetMapping("/debug-roles")
     public ResponseEntity<?> debugRoles() {

@@ -161,11 +161,11 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     public List<Shipment> getShipmentsSentByClient(int clientId) {
-        return shipmentRepository.findAllBySenderId(clientId);
+        return shipmentRepository.findNonDeliveredShipmentsByOwnerId(clientId);
     }
 
     public List<Shipment> getShipmentsReceivedByClient(int clientId) {
-        return shipmentRepository.findAllByReceiverId(clientId);
+        return shipmentRepository.findDeliveredShipmentsByOwnerId(clientId);
     }
 
     @Override
@@ -260,7 +260,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     @Override
     public List<GetAllShipmentDto> getUnassignedShipmentsForCourier(Integer courierId) {
-        Courier courier = courierRepository.findById(courierId)
+        courierRepository.findById(courierId)
                 .orElseThrow(() -> new CourierNotFoundException("Courier with ID " + courierId + " not found"));
 
         List<Shipment> unassignedShipments = shipmentRepository.findAllByCourierIsNullAndDeliveryStatus(DeliveryStatus.CREATED);

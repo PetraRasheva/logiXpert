@@ -7,6 +7,7 @@ import com.example.logiXpert.mapper.CompanyMapper;
 import com.example.logiXpert.model.*;
 import com.example.logiXpert.repository.CompanyRepository;
 import com.example.logiXpert.repository.ShipmentRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +53,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    @Transactional
     public void deleteCompany(Integer id) {
         companyRepository.deleteCompanyById(id);
     }

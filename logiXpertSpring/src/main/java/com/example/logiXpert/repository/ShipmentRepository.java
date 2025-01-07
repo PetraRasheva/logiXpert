@@ -20,8 +20,13 @@ public interface ShipmentRepository extends JpaRepository<Shipment, Integer> {
 
     @Query("SELECT s FROM Shipment s WHERE s.courier IS NULL AND s.deliveryStatus = :deliveryStatus")
     List<Shipment> findAllByCourierIsNullAndDeliveryStatus(@Param("deliveryStatus") DeliveryStatus deliveryStatus);
-    List<Shipment> findAllBySenderId(int senderId);
-    List<Shipment> findAllByReceiverId(int receiverId);
+
+    @Query("SELECT s FROM Shipment s WHERE s.owner.id = :ownerId AND s.deliveryStatus = 'DELIVERED'")
+    List<Shipment> findDeliveredShipmentsByOwnerId(@Param("ownerId") Integer ownerId);
+
+    @Query("SELECT s FROM Shipment s WHERE s.owner.id = :ownerId AND s.deliveryStatus != 'DELIVERED'")
+    List<Shipment> findNonDeliveredShipmentsByOwnerId(@Param("ownerId") Integer ownerId);
+
     List<Shipment> findAllByOwnerId(Integer ownerId);
     List<Shipment> findAllByCourier(Courier courier);
     Optional<Shipment> findShipmentByTrackingNumber(String trackingNum);
