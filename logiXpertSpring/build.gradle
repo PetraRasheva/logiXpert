@@ -36,6 +36,10 @@ dependencies {
 	implementation 'javax.servlet:javax.servlet-api:4.0.1'
 	implementation 'com.google.zxing:core:3.5.2'
 	implementation 'com.google.zxing:javase:3.5.2'
+	testImplementation 'com.h2database:h2'
+	testImplementation 'org.mockito:mockito-core:5.5.0'
+	testImplementation 'org.mockito:mockito-junit-jupiter:5.5.0'
+	testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') {

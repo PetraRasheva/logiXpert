@@ -48,6 +48,7 @@ public class OfficeServiceImpl implements OfficeService {
                 .orElseThrow(() -> new OfficeNotFoundException("Office with id " + officeDto.id() + " was not found"));
 
         existingOffice.setName(officeDto.name());
+        existingOffice.setPhone(officeDto.phone());
         existingOffice.setAddress(officeDto.address());
         existingOffice.setCompany(
                 companyRepository.findByName(officeDto.companyName())

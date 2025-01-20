@@ -3,6 +3,7 @@ package com.example.logiXpert.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "clients")
 public class Client extends User {
     public Client() {
     }

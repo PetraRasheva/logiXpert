@@ -272,7 +272,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     private void calculateTotalRevenue(Shipment shipment, Company company) {
         shipment.setCompany(company);
-        company.setBaseCapital(company.getBaseCapital() + shipment.getPrice());
+        company.setBaseCapital(company.getBaseCapital() + shipment.getProfit());
 
         companyRepository.save(company);
     }

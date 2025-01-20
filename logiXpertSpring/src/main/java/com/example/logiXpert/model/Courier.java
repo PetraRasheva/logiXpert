@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name = "couriers")
 public class Courier extends User {
 
     private double salary;

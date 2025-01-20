@@ -86,7 +86,7 @@ public class ShipmentController {
     }
 
     @GetMapping("/client/{clientId}/shipments")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('CLIENT')")
     public ResponseEntity<List<GetAllShipmentDto>> getShipmentsCreatedByClient(@PathVariable("clientId") Integer clientId) {
         List<GetAllShipmentDto> shipments = shipmentService.getShipmentsCreatedByClient(clientId);
         return ResponseEntity.ok(shipments);
