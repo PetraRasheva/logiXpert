@@ -34,7 +34,7 @@ public interface ShipmentRepository extends JpaRepository<Shipment, Integer> {
     @Query("SELECT SUM(s.profit) FROM Shipment s WHERE s.company.id = :companyId")
     Double calculateRevenueByCompanyId(@Param("companyId") Integer companyId);
 
-    @Query("SELECT SUM(s.price) FROM Shipment s WHERE s.company.id = :companyId AND s.shipmentDate BETWEEN :startDate AND :endDate")
+    @Query("SELECT SUM(s.profit) FROM Shipment s WHERE s.company.id = :companyId AND s.shipmentDate BETWEEN :startDate AND :endDate")
     Double calculateRevenueByCompanyAndDateRange(
             @Param("companyId") Integer companyId,
             @Param("startDate") LocalDateTime startDate,
