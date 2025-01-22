@@ -27,17 +27,16 @@ export class CompanyService {
   }
 
   getDateRevenue(companyId: number, startDate: string, endDate: string): Observable<number> {
-    return this.http.get<number>(
-      `${environment.apiUrl}/shipment/revenueByDateRange?companyId=${companyId}&startDate=${startDate}&endDate=${endDate}`, {
-        withCredentials: true,
-      }
+    return this.http.get<number>(`${environment.apiUrl}/company/${companyId}/revenue-by-date-range?startDate=${startDate}&endDate=${endDate}`, {
+         withCredentials: true 
+        }
     );
   }
 
   getTotalRevenue(companyId: number): Observable<number> {
-    return this.http.get<number>(`${environment.apiUrl}/shipment/totalRevenue?companyId=${companyId}`, {
-      withCredentials: true,
-    }
+    return this.http.get<number>(`${environment.apiUrl}/company/${companyId}/total-revenue`, {
+       withCredentials: true
+      }
     );
   }
 

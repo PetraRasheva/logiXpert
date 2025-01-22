@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CompanyService } from '../../services/company.service';
 import { Company } from '../../types/company';
 import { CommonModule } from '@angular/common';
+import { MessageService } from '../../services/message.service';
 
 @Component({
   selector: 'app-company',
@@ -17,8 +18,9 @@ export class CompanyComponent implements OnInit {
   revenue: number | null = null;
   startDate: string | null = null;
   endDate: string | null = null;
+  role: string | null = null;
 
-  constructor(private fb: FormBuilder, private companyService: CompanyService) {
+  constructor(private fb: FormBuilder, private companyService: CompanyService, private messageService: MessageService) {
     this.companyForm = this.fb.group({
       id: [{ value: null, disabled: true }],
       name: ['', Validators.required],
@@ -27,8 +29,22 @@ export class CompanyComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadCompany();
+    const userJson = localStorage.getItem('[user]');
+    if (!userJson) {
+      console.error('User data not found in localStorage');
+      return;
+    }
+  
+    const user = JSON.parse(userJson);
+    const roles = user.roles || [];
+  
+    this.role = roles.includes('ADMIN') ? 'ADMIN' : roles.includes('CLIENT') ? 'CLIENT' : null;
+    console.log('Role:', this.role);
+
+    if (this.role === 'ADMIN') {
+      this.loadCompany();
     this.loadTotalRevenue();
+    }  
   }
 
   loadCompany(): void {
@@ -87,7 +103,7 @@ export class CompanyComponent implements OnInit {
     if (this.companyForm.valid) {
       const updatedCompany: Company = this.companyForm.getRawValue();
       this.companyService.updateCompany(updatedCompany).subscribe(() => {
-        alert('Company updated successfully!');
+        this.messageService.setMessage('Company updated successfully!', 'success');
       });
     }
   }
