@@ -2,6 +2,7 @@ import { Client } from "./client";
 import { Employee } from "./еmployee";
 
 export interface ShipmentDetails {
+    id: number;
     trackingNumber: string;
     weight: number;
     price: number;
@@ -15,4 +16,6 @@ export interface ShipmentDetails {
     owner: Client | Employee;
     courierName: string | null;
     courierId: number | null;
+    ownerId?: number;
+    profit?: number;
   }

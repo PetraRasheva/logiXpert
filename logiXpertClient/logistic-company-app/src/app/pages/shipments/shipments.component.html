@@ -1,4 +1,4 @@
-  <div class="relative shadow-md sm:rounded-lg max-w-screen-md mx-auto max-h-[100] mt-28 mb-32">
+  <div class="relative shadow-md sm:rounded-lg max-w-6xl mx-auto max-h-[100] mt-28 mb-32">
     <div class="sticky top-0 z-10 flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 mx-5 bg-white dark:bg-gray-900">
           <div class="relative">
   
@@ -37,12 +37,12 @@
           </div>
   
           <div class="text-center md:text-left">
-            <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Shipments Table</h2>
+            <h2 class="text-2xl font-normal text-gray-800 dark:text-gray-200">Shipments Table</h2>
           </div>
   
           <div class="bg-gray-100 text-black px-4 py-1 rounded-lg shadow-md flex items-center justify-between w-full sm:w-auto">
-            <span class="font-medium text-lg">Total Shipments:</span>
-            <span class="font-bold text-xl ml-2">{{ filteredShipments.length }}</span>
+            <span class="font-normal text-sm">Total Shipments:</span>
+            <span class="font-normal text-sm ml-2">{{ filteredShipments.length }}</span>
           </div>
       </div>
       
@@ -83,7 +83,7 @@
                   <td class="px-6 py-4">
                       {{ shipment.deliveryStatus }}
                   </td>
-                  <td class="px-6 py-4">
+                  <td *ngIf="role === 'ADMIN'" class="px-6 py-4">
                       <!-- Actions with icons -->
                       <div class="flex items-center space-x-2">
                           <!-- Details Tooltip -->
@@ -113,12 +113,21 @@
                           </button>
                       </div>
                   </td>
+                  <td *ngIf="role === 'CLIENT'" class="px-6 py-4">
+                    <button (click)="openEditShipmentModal(shipment.trackingNumber)" class="hover:opacity-80 relative group">
+                      <img src="assets/images/icons/info.png" alt="Details" class="w-6 h-6">
+                      <div
+                      class="absolute bottom-full left-1/2 transform -translate-x-1/2 translate-y-[-4px] invisible group-hover:visible opacity-0 group-hover:opacity-100 bg-gray-700 text-white text-sm rounded-lg px-2 py-1 whitespace-nowrap z-10 transition-opacity duration-200">
+                      View Details
+                  </div>
+                    </button>
+                  </td>
               </tr>
           </tbody>
       </table>
       </div>
 
-      <!-- ------------------------------------ VIEW PACKAGES MODAL ------------------------------------------------------------ -->
+      <!-- ------------------------------------ VIEW DETAILS MODAL ------------------------------------------------------------ -->
       <div *ngIf="isDetailsModalOpen" @fade id="editShipmentModal" tabindex="-1" aria-hidden="true"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div class="relative w-full max-w-3xl bg-white rounded-lg shadow dark:bg-gray-700">
@@ -146,23 +155,27 @@
               </div>
               <div class="col-span-6 sm:col-span-3">
                 <label for="weight" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Weight</label>
-                <input type="number" formControlName="weight" id="weight"
-                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+                <input type="number" formControlName="weight" id="weight" [readonly]="role === 'CLIENT'"
+                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" 
+                  [ngClass]="{'bg-gray-200': role === 'CLIENT', 'bg-gray-50': role !== 'CLIENT'}" />
               </div>
               <div class="col-span-6 sm:col-span-3">
                 <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
-                <input type="number" formControlName="price" id="price"
-                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+                <input type="number" formControlName="price" id="price" [readonly]="role === 'CLIENT'"
+                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                  [ngClass]="{'bg-gray-200': role === 'CLIENT', 'bg-gray-50': role !== 'CLIENT'}" />
               </div>
               <div class="col-span-6 sm:col-span-3">
                 <label for="source" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Source</label>
-                <input type="text" formControlName="source" id="source"
-                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+                <input type="text" formControlName="source" id="source" [readonly]="role === 'CLIENT'"
+                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                  [ngClass]="{'bg-gray-200': role === 'CLIENT', 'bg-gray-50': role !== 'CLIENT'}" />
               </div>
               <div class="col-span-6 sm:col-span-3">
                 <label for="destination" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Destination</label>
-                <input type="text" formControlName="destination" id="destination"
-                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+                <input type="text" formControlName="destination" id="destination" [readonly]="role === 'CLIENT'"
+                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                  [ngClass]="{'bg-gray-200': role === 'CLIENT', 'bg-gray-50': role !== 'CLIENT'}" />
               </div>
               <div class="col-span-6 sm:col-span-3">
                 <label for="deliveryStatus" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Delivery Status</label>
@@ -176,22 +189,42 @@
               </div>
               <div class="col-span-6 sm:col-span-3">
                 <label for="deliveryDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Delivery Date</label>
-                <input type="text" formControlName="deliveryDate" id="deliveryDate" readonly
+                <input type="text" [value]="selectedShipment?.deliveryDate ?? '- NOT DELIVERED -'" readonly
                   class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
               </div>
-              <div class="col-span-6">
-                <label for="sender" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sender</label>
-                <input type="text" [value]="selectedShipment?.sender?.name + ' (' + selectedShipment?.sender?.email + ')' + ' (' + selectedShipment?.sender?.phone + ')'" readonly
+              <div class="col-span-6 sm:col-span-2">
+                <label for="senderName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sender Name</label>
+                <input type="text" [value]="selectedShipment?.sender?.name" readonly
                   class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
               </div>
-              <div class="col-span-6">
-                <label for="receiver" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Receiver</label>
-                <input type="text" [value]="selectedShipment?.receiver?.name + ' (' + selectedShipment?.receiver?.email + ')' + ' (' + selectedShipment?.receiver?.phone + ')' " readonly
+              <div class="col-span-6 sm:col-span-2">
+                <label for="senderEmail" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sender Email</label>
+                <input type="email" [value]="selectedShipment?.sender?.email" readonly
                   class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+              </div>
+              <div class="col-span-6 sm:col-span-2">
+                <label for="senderPhone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sender Phone</label>
+                <input type="text" [value]="selectedShipment?.sender?.phone" readonly
+                  class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+              </div>
+              <div class="col-span-6 sm:col-span-2">
+                <label for="receiverName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Receiver Name</label>
+                <input type="text" formControlName="receiverName" id="receiverName"
+                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+              </div>
+              <div class="col-span-6 sm:col-span-2">
+                <label for="receiverEmail" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Receiver Email</label>
+                <input type="email" formControlName="receiverEmail" id="receiverEmail"
+                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+              </div>
+              <div class="col-span-6 sm:col-span-2">
+                <label for="receiverPhone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Receiver Phone</label>
+                <input type="text" formControlName="receiverPhone" id="receiverPhone"
+                  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
               </div>
               <div class="col-span-6">
                 <label for="courierName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Courier Name</label>
-                <input type="text" [value]="selectedShipment?.courierName" readonly
+                <input type="text" [value]="selectedShipment?.courierName ?? '- NOT ASSIGNED -'" readonly
                   class="shadow-sm bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
               </div>
             </div>

@@ -34,6 +34,8 @@ export class ShipmentsComponent implements OnInit {
   assignedCourier: Courier | null = null;
   showAllCouriers: boolean = true;
   isDeleteModalOpen: boolean = false;
+  role: string | null = null;
+
 
   constructor(private ShipmentService: ShipmentService, private fb: FormBuilder, private courierService: CourierService, private messageService: MessageService) {
     this.shipmentForm = this.fb.group({
@@ -45,11 +47,33 @@ export class ShipmentsComponent implements OnInit {
       deliveryStatus: [{ value: '', disabled: true }],
       shipmentDate: [{ value: '', disabled: true }],
       deliveryDate: [{ value: '', disabled: true }],
+      receiverName: ['', Validators.required], 
+      receiverEmail: ['', [Validators.required, Validators.email]], 
+      receiverPhone: ['', Validators.required], 
     });
   }
 
   ngOnInit(): void {
-    this.loadAllShipments();
+    const userJson = localStorage.getItem('[user]');
+    if (!userJson) {
+      console.error('User data not found in localStorage');
+      return;
+    }
+  
+    const user = JSON.parse(userJson);
+    const roles = user.roles || [];
+  
+    this.role = roles.includes('ADMIN') ? 'ADMIN' : roles.includes('CLIENT') ? 'CLIENT' : null;
+    console.log('Role:', this.role);
+  
+    if (this.role === 'ADMIN') {
+      this.loadAllShipments();
+    } else if (this.role === 'CLIENT') {
+      const clientId = user.id;
+      if (clientId) {
+        this.loadClientShipments('All shipments', clientId);
+      }
+    }
   }
 
   loadAllShipments(label: string = 'All shipments'): void {
@@ -59,6 +83,14 @@ export class ShipmentsComponent implements OnInit {
       this.selectedOption = label; 
     });
     this.closeDropdown();
+  }
+
+  loadClientShipments(label: string = 'All shipments', clientId: number): void {
+    this.ShipmentService.getAllClientShipments(clientId).subscribe((data) => {
+      this.shipments = data;
+      this.filteredShipments = data;
+      this.selectedOption = label;
+    });
   }
 
   loadCouriers(): void {
@@ -80,6 +112,9 @@ export class ShipmentsComponent implements OnInit {
           deliveryStatus: details.deliveryStatus,
           shipmentDate: details.shipmentDate,
           deliveryDate: details.deliveryDate,
+          receiverName: details.receiver?.name,
+          receiverEmail: details.receiver?.email,
+          receiverPhone: details.receiver?.phone,
         });
         this.isDetailsModalOpen = true;
       },
@@ -91,10 +126,54 @@ export class ShipmentsComponent implements OnInit {
 
   saveShipmentDetails(): void {
     if (this.shipmentForm.valid && this.selectedShipment) {
-      const updatedShipment = { ...this.selectedShipment, ...this.shipmentForm.value };
-      console.log('Updated shipment:', updatedShipment);
-      // TODO: Call service to save updated shipment
-      this.closeDetailsModal();
+      const updatedShipment: Partial<ShipmentDetails> = {
+        id: this.selectedShipment.id,
+        trackingNumber: this.selectedShipment.trackingNumber,
+        weight: this.shipmentForm.value.weight,
+        price: this.shipmentForm.value.price,
+        source: this.shipmentForm.value.source,
+        destination: this.shipmentForm.value.destination,
+        deliveryStatus: this.selectedShipment.deliveryStatus,
+        shipmentDate: new Date(this.selectedShipment.shipmentDate).toISOString().slice(0, 16).replace('T', ' '),
+        deliveryDate: this.selectedShipment.deliveryDate
+          ? new Date(this.selectedShipment.deliveryDate).toISOString().slice(0, 16).replace('T', ' ')
+          : null,
+        sender: this.selectedShipment.sender,
+        receiver: {
+          id: this.selectedShipment.receiver?.id, 
+          name: this.shipmentForm.value.receiverName,
+          email: this.shipmentForm.value.receiverEmail,
+          phone: this.shipmentForm.value.receiverPhone,
+        },
+        ownerId: this.selectedShipment.owner.id,
+        profit: this.selectedShipment.profit,
+      };
+  
+      console.log('Payload for update:', updatedShipment);
+  
+      this.ShipmentService.updateShipment(updatedShipment).subscribe(
+        (updated: ShipmentDetails) => {
+          console.log('Shipment updated successfully:', updated);
+          this.messageService.setMessage('Shipment updated successfully!', 'success');
+
+          if (this.role === 'ADMIN') {
+            this.loadAllShipments();
+          } else if (this.role === 'CLIENT') {
+            const userJson = localStorage.getItem('[user]');
+            const user = userJson ? JSON.parse(userJson) : null;
+            const clientId = user?.id;
+  
+            if (clientId) {
+              this.loadClientShipments('All shipments', clientId);
+            }
+          }
+          this.closeDetailsModal();
+        },
+        (error) => {
+          this.messageService.setMessage('Error updating shipment.', 'error');
+          console.error('Error updating shipment:', error);
+        }
+      );
     }
   }
 
@@ -208,11 +287,19 @@ export class ShipmentsComponent implements OnInit {
     }
   }
 
-  filterNotDelivered(label: string = 'Not delivered'): void {
-    this.ShipmentService.getNotDeliveredShipments().subscribe((data) => {
-      this.filteredShipments = data;
-      this.selectedOption = label; 
-    });
+  filterNotDelivered(label: string = 'Not Delivered'): void {
+    if (this.role === 'ADMIN') {
+      this.filteredShipments = this.shipments.filter(shipment => shipment.deliveryStatus !== 'DELIVERED');
+    } else if (this.role === 'CLIENT') {
+      const clientId = JSON.parse(localStorage.getItem('user') || '{}').id;
+      if (clientId) {
+        this.ShipmentService.getAllClientShipments(clientId).subscribe((data) => {
+          this.shipments = data;
+          this.filteredShipments = data.filter(shipment => shipment.deliveryStatus !== 'DELIVERED');
+          this.selectedOption = label;
+        });
+      }
+    }
     this.closeDropdown();
   }
 
@@ -233,6 +320,7 @@ export class ShipmentsComponent implements OnInit {
 
   closeDetailsModal(): void {
     this.isDetailsModalOpen = false;
+    this.shipmentForm.reset();
     this.selectedShipment = null;
   }
 
