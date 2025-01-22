@@ -44,6 +44,8 @@ export class AdminDashboardComponent implements OnInit{
   selectedCourierName: string = '';
   showHireEmployeeModal: boolean = false;
   formSubmitted: boolean = false;
+  role: string | null = null;
+  dashboardTitle: string = 'Dashboard';
 
   employeeForm: FormGroup;
   showElement = false;
@@ -74,8 +76,25 @@ export class AdminDashboardComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.loadEmployees();
-    this.loadOffices();
+    const userJson = localStorage.getItem('[user]');
+    if (!userJson) {
+      console.error('User data not found in localStorage');
+      return;
+    }
+  
+    const user = JSON.parse(userJson);
+    const roles = user.roles || [];
+  
+    this.role = roles.includes('ADMIN') ? 'ADMIN' : roles.includes('CLIENT') ? 'CLIENT' : null;
+    console.log('Role:', this.role);
+
+    if (this.role === 'ADMIN') {
+      this.dashboardTitle = 'Admin Dashboard';
+      this.loadEmployees();
+      this.loadOffices();
+    }else if (this.role === 'CLIENT') {
+      this.dashboardTitle = 'Client Dashboard';
+    }
   }
 
   setPasswordValidators(required: boolean): void {
