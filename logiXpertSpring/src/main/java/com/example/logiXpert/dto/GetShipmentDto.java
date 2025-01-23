@@ -21,5 +21,6 @@ public record GetShipmentDto(
         ClientDto sender,
         ClientDto receiver,
         OwnerDto owner,
-        String courierName
+        String courierName,
+        double addressFee
 ) {}

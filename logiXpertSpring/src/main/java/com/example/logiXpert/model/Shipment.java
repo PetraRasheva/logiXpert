@@ -38,11 +38,13 @@ public class Shipment extends BaseEntity {
 
     private String source;
     private String destination;
+    private double addressFee;
+
 
     public Shipment() {
     }
 
-    public Shipment(double weight, double price,  Client sender, Client recipient, User owner, String source, String destination, DeliveryStatus deliveryStatus) {
+    public Shipment(double weight, double price,  Client sender, Client recipient, User owner, String source, String destination, DeliveryStatus deliveryStatus, double addressFee) {
         this.weight = weight;
         this.price = price;
         this.sender = sender;
@@ -52,6 +54,7 @@ public class Shipment extends BaseEntity {
         this.shipmentDate = LocalDateTime.now();
         this.source = source;
         this.destination = destination;
+        this.addressFee = addressFee;
     }
 
     @PrePersist
@@ -165,5 +168,13 @@ public class Shipment extends BaseEntity {
 
     public void setDestination(String destination) {
         this.destination = destination;
+    }
+
+    public double getAddressFee() {
+        return addressFee;
+    }
+
+    public void setAddressFee(double addressFee) {
+        this.addressFee = addressFee;
     }
 }
