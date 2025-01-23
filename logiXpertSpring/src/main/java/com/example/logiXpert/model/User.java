@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "\"user\"")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User extends BaseEntity{
     //TODO: should inherit User details when security is implemented

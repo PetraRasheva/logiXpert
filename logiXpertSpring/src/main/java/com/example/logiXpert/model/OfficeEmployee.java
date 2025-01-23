@@ -8,7 +8,6 @@ import lombok.Setter;
 
 
 @Entity
-@Table(name = "office_employees")
 public class OfficeEmployee extends User {
 
     private double salary;
