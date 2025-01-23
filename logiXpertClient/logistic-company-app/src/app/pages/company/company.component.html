@@ -1,60 +1,62 @@
-  <div class="flex justify-center items-start mt-16 gap-8">
-    <div class="bg-white shadow-md rounded-lg p-6 w-4/12 h-auto flex flex-col justify-between">
-      <form [formGroup]="companyForm" (ngSubmit)="updateCompany()">
-        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-          Company Name
-        </label>
-        <input
-          type="text"
-          id="name"
-          formControlName="name"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="Company Name"
-        />
-        <label for="baseCapital" class="block mt-4 mb-2 text-sm font-medium text-gray-900 dark:text-white">
-          Base Capital
-        </label>
-        <input
-          type="number"
-          id="baseCapital"
-          formControlName="baseCapital"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="0.00"
-        />
-        <button
-          type="submit"
-          class="mt-6 w-full text-white bg-btn hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800"
-        >
-          Save
-        </button>
-      </form>
-    </div>
-
-
-    <div class="bg-gray-100 shadow-md rounded-lg p-6 w-4/12 h-auto flex flex-col justify-between">
-      <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-4">Company Revenue</h2>
-      <div class="flex gap-4 mb-6">
-        <input
-          id="start-date"
-          type="date"
-          (change)="updateStartDate($event)"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        />
-        <input
-          id="end-date"
-          type="date"
-          (change)="updateEndDate($event)"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        />
-      </div>
-      <p *ngIf="revenue !== null" class="text-4xl font-semibold text-gray-700 dark:text-blue-400 mb-2">Revenue: {{ revenue | currency }}</p>
-      <p *ngIf="revenue === null" class="text-lg text-gray-700 dark:text-gray-300">No data available</p>
+<div *ngIf="role === 'ADMIN'" class="flex flex-wrap justify-center items-start mt-16 gap-8">
+  <!-- Company Form -->
+  <div class="bg-white shadow-md rounded-lg p-6 w-full sm:w-6/12 lg:w-4/12 h-auto flex flex-col justify-between">
+    <form [formGroup]="companyForm" (ngSubmit)="updateCompany()">
+      <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+        Company Name
+      </label>
+      <input
+        type="text"
+        id="name"
+        formControlName="name"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="Company Name"
+      />
+      <label for="baseCapital" class="block mt-4 mb-2 text-sm font-medium text-gray-900 dark:text-white">
+        Base Capital
+      </label>
+      <input
+        type="number"
+        id="baseCapital"
+        formControlName="baseCapital"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="0.00"
+      />
       <button
-        (click)="resetRevenue()"
-        class="mt-4 w-full text-white bg-red-500 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+        type="submit"
+        class="mt-6 w-full text-white bg-btn hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800"
       >
-        Reset
+        Save
       </button>
-    </div>
+    </form>
   </div>
-  
+
+  <!-- Company Revenue -->
+  <div class="bg-gray-100 shadow-md rounded-lg p-6 w-full sm:w-6/12 lg:w-3/12 h-auto flex flex-col justify-between">
+    <h2 class="text-2xl font-normal text-gray-800 dark:text-white mb-4">Company Revenue</h2>
+    <div class="flex flex-wrap gap-4 mb-6">
+      <input
+        id="start-date"
+        type="date"
+        (change)="updateStartDate($event)"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full sm:w-auto p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      />
+      <input
+        id="end-date"
+        type="date"
+        (change)="updateEndDate($event)"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full sm:w-auto p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      />
+    </div>
+    <p *ngIf="revenue !== null" class="text-lg font-semibold text-gray-700 dark:text-blue-400 mb-2">
+      Revenue: {{ revenue | currency }}
+    </p>
+    <p *ngIf="revenue === null" class="text-lg text-gray-700 dark:text-gray-300">No data available</p>
+    <button
+      (click)="resetRevenue()"
+      class="mt-8 w-full text-white bg-btn hover:bg-blue-800 focus:ring-4 focus:outline-none  focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+    >
+      Reset
+    </button>
+  </div>
+</div>

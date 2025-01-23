@@ -24,6 +24,7 @@ export class OfficeComponent implements OnInit {
   selectedOfficeId: number | null = null; 
   isDeleteModalOpen: boolean = false;
   selectedOffice: Office | null = null;
+  role: string | null = null;
 
   constructor(private officeService: OfficeService, private companyService: CompanyService, private messageService: MessageService, private fb: FormBuilder) {
     this.officeForm = this.fb.group({
@@ -34,9 +35,23 @@ export class OfficeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadOffices();
-  }
+    const userJson = localStorage.getItem('[user]');
+    if (!userJson) {
+      console.error('User data not found in localStorage');
+      return;
+    }
+  
+    const user = JSON.parse(userJson);
+    const roles = user.roles || [];
+  
+    this.role = roles.includes('ADMIN') ? 'ADMIN' : roles.includes('CLIENT') ? 'CLIENT' : null;
+    console.log('Role:', this.role);
 
+    if (this.role === 'ADMIN') {
+     this.loadOffices();
+    }
+  }
+ 
   loadOffices(): void {
     this.companyService.getAllOffices().subscribe((offices) => {
       this.offices = offices;

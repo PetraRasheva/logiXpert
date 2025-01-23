@@ -1,10 +1,10 @@
-<div class="text-center mt-10">
-  <h1 class="text-4xl lg:text-6xl font-medium text-primaryText mb-2 text-center">Admin dashboard</h1>
+<div class="text-center mt-28">
+  <h1 class="text-4xl lg:text-6xl font-medium text-primaryText mb-2 text-center">{{ dashboardTitle }}</h1>
 </div>
 
 <app-company> </app-company>
 
-<div class="relative shadow-md sm:rounded-lg max-w-4xl mx-auto max-h-[100] mt-28">
+<div *ngIf="role === 'ADMIN'" class="relative shadow-md sm:rounded-lg max-w-6xl mx-auto max-h-[100] mt-28">
   <div class="sticky top-0 z-10 flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 mx-5 bg-white dark:bg-gray-900">
         <div class="relative">
 
@@ -60,12 +60,12 @@
         </div>
 
         <div class="text-center md:text-left">
-          <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Employees Table</h2>
+          <h2 class="text-2xl font-normal text-gray-800 dark:text-gray-200">Employees Table</h2>
         </div>
 
         <div class="bg-gray-100 text-black px-4 py-1 rounded-lg shadow-md flex items-center justify-between w-full sm:w-auto">
-          <span class="font-medium text-lg">Total Employees:</span>
-          <span class="font-bold text-xl ml-2">{{ filteredEmployees.length }}</span>
+          <span class="font-normal text-sm">Total Employees:</span>
+          <span class="font-normal text-sm ml-2">{{ filteredEmployees.length }}</span>
         </div>
     </div>
     

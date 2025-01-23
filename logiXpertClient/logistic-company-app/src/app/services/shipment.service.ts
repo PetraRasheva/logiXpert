@@ -30,10 +30,23 @@ export class ShipmentService {
     });
   }
 
+  getAllClientShipments(clientId: number): Observable<Shipment[]> {
+    return this.http.get<Shipment[]>(`${environment.apiUrl}/shipment/client/${clientId}/shipments`, {
+      withCredentials: true,
+    });
+  }
+
   createShipment(shipment: Shipment): Observable<Shipment> {
     return this.http.post<Shipment>(`${environment.apiUrl}/shipment/add`, shipment, {
       withCredentials: true,
     });
+  }
+
+  updateShipment(shipment: Partial<ShipmentDetails>): Observable<ShipmentDetails> {
+    return this.http.put<ShipmentDetails>(`${environment.apiUrl}/shipment/update`, shipment, {
+         withCredentials: true
+        }
+    );
   }
 
   getNotDeliveredShipments(): Observable<Shipment[]> {
