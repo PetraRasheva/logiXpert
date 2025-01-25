@@ -18,6 +18,5 @@ public record ShipmentDto(
         ClientDto receiver,
         Integer ownerId,
         double profit,
-        DeliveryStatus deliveryStatus,
-        double addressFee
+        DeliveryStatus deliveryStatus
 ) {}

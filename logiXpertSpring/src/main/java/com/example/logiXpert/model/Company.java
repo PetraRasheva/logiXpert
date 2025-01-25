@@ -12,6 +12,7 @@ public class Company extends BaseEntity {
 
     private String name;
     private double baseCapital;
+    private double addressFee;
 
     @OneToMany(mappedBy = "company")
     private Set<Office> offices;
@@ -27,9 +28,10 @@ public class Company extends BaseEntity {
 
     public Company() {}
 
-    public Company(String name, double baseCapital) {
+    public Company(String name, double baseCapital, double addressFee) {
         this.name = name;
         this.baseCapital = baseCapital;
+        this.addressFee = addressFee;
         this.offices = new HashSet<>();
         this.couriers = new HashSet<>();
         this.officeEmployees = new HashSet<>();
@@ -82,6 +84,14 @@ public class Company extends BaseEntity {
 
     public void setShipments(Set<Shipment> shipments) {
         this.shipments = shipments;
+    }
+
+    public double getAddressFee() {
+        return addressFee;
+    }
+
+    public void setAddressFee(double addressFee) {
+        this.addressFee = addressFee;
     }
 
     @Override

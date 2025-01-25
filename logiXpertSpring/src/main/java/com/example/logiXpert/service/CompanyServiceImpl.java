@@ -42,6 +42,7 @@ public class CompanyServiceImpl implements CompanyService {
                 .orElseThrow(() -> new CompanyNotFoundException("Company with id " + companyDto.id() + " was not found"));
         company.setName(companyDto.name());
         company.setBaseCapital(companyDto.baseCapital());
+        company.setAddressFee(companyDto.addressFee());
         return companyMapper.toDto(companyRepository.save(company));
     }
 
