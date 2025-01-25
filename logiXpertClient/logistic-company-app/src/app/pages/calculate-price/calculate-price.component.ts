@@ -1,13 +1,17 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common'; 
+import { HttpClient } from '@angular/common/http';
+import { Company } from '../../types/company';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-calculate-price',
   standalone: true,
-  imports: [],
   templateUrl: './calculate-price.component.html',
-  styleUrl: './calculate-price.component.css'
+  styleUrls: ['./calculate-price.component.css'],
+  imports: [CommonModule] 
 })
-export class CalculatePriceComponent implements OnInit{
+export class CalculatePriceComponent implements OnInit {
   weightInput!: HTMLInputElement;
   deliveryPriceOutput!: HTMLElement;
   codAmountInput!: HTMLInputElement;
@@ -15,11 +19,12 @@ export class CalculatePriceComponent implements OnInit{
   fromLocationRadios!: NodeListOf<HTMLInputElement>;
   toLocationRadios!: NodeListOf<HTMLInputElement>;
   boxes!: NodeListOf<HTMLElement>;
+  addressFee!: number;
 
-  constructor(private el: ElementRef) {}
+  constructor(private el: ElementRef, private http: HttpClient) {}
 
   ngOnInit(): void {
-    // Инициализация на елементите
+    this.loadAddressFee();
     this.weightInput = this.el.nativeElement.querySelector('#weight');
     this.deliveryPriceOutput = this.el.nativeElement.querySelector('#deliveryPrice');
     this.codAmountInput = this.el.nativeElement.querySelector('#codAmount');
@@ -28,20 +33,27 @@ export class CalculatePriceComponent implements OnInit{
     this.toLocationRadios = this.el.nativeElement.querySelectorAll('[name="toLocation"]');
     this.boxes = this.el.nativeElement.querySelectorAll('.box');
 
-
-    // Свързване на събития
     this.codAmountInput.addEventListener('input', () => this.updateFinalPrice());
     this.weightInput.addEventListener('input', () => this.updateDeliveryPrice());
     this.fromLocationRadios.forEach(radio => radio.addEventListener('change', () => this.updateDeliveryPrice()));
     this.toLocationRadios.forEach(radio => radio.addEventListener('change', () => this.updateDeliveryPrice()));
     this.weightInput.addEventListener('input', () => this.updateBoxHighlight());
 
-    // Първоначална калкулация
     this.updateDeliveryPrice();
   }
 
+  loadAddressFee(): void {
+    this.http.get<Company>(`${environment.apiUrl}/company/find/1`, { withCredentials: true })
+      .subscribe({
+        next: (company) => {
+          this.addressFee = company.addressFee;
+          this.updateDeliveryPrice();
+        },
+        error: (err) => console.error('Failed to load company data', err)
+      });
+  }
 
-  updateDeliveryPrice(): void{
+  updateDeliveryPrice(): void {
     const weight = Number(this.weightInput.value);
 
     if (isNaN(weight) || weight < 0) {
@@ -51,12 +63,14 @@ export class CalculatePriceComponent implements OnInit{
 
     let deliveryPrice = this.calculateDeliveryPrice(weight);
 
-    if (this.getSelectedValue(this.fromLocationRadios) === 'address') {
-      deliveryPrice += 3.99;
-    }
+    if (this.addressFee !== undefined) {
+      if (this.getSelectedValue(this.fromLocationRadios) === 'address') {
+        deliveryPrice += this.addressFee;
+      }
 
-    if (this.getSelectedValue(this.toLocationRadios) === 'address') {
-      deliveryPrice += 3.99;
+      if (this.getSelectedValue(this.toLocationRadios) === 'address') {
+        deliveryPrice += this.addressFee;
+      }
     }
 
     this.deliveryPriceOutput.textContent = deliveryPrice.toFixed(2);
@@ -92,7 +106,7 @@ export class CalculatePriceComponent implements OnInit{
   }
 
   getSelectedValue(radioGroup: NodeListOf<HTMLInputElement>): string | null {
-    const radios = Array.from(radioGroup); // Преобразуване на NodeList в масив
+    const radios = Array.from(radioGroup);
     for (const radio of radios) {
       if (radio.checked) {
         return radio.value;
@@ -100,7 +114,6 @@ export class CalculatePriceComponent implements OnInit{
     }
     return null;
   }
-
 
   updateBoxHighlight(): void {
     const weight = Number(this.weightInput.value);
@@ -138,7 +151,6 @@ export class CalculatePriceComponent implements OnInit{
     });
   }
 
-
   toggleInput(event: Event, section: string): void {
     const radio = event.target as HTMLInputElement;
     const officeDropdown = document.getElementById(`office-${section}`);
@@ -154,5 +166,4 @@ export class CalculatePriceComponent implements OnInit{
       }
     }
   }
-  
 }

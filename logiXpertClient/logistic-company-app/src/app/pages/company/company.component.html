@@ -12,16 +12,34 @@
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         placeholder="Company Name"
       />
-      <label for="baseCapital" class="block mt-4 mb-2 text-sm font-medium text-gray-900 dark:text-white">
-        Base Capital
-      </label>
-      <input
-        type="number"
-        id="baseCapital"
-        formControlName="baseCapital"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        placeholder="0.00"
-      />
+      <div class="flex gap-4 mt-4">
+        <!-- Base Capital -->
+        <div class="w-1/2">
+          <label for="baseCapital" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Base Capital
+          </label>
+          <input
+            type="number"
+            id="baseCapital"
+            formControlName="baseCapital"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="0.00"
+          />
+        </div>
+        <!-- Address Fee -->
+        <div class="w-1/2">
+          <label for="addressFee" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Address Fee
+          </label>
+          <input
+            type="number"
+            id="addressFee"
+            formControlName="addressFee"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="0.00"
+          />
+        </div>
+      </div>
       <button
         type="submit"
         class="mt-6 w-full text-white bg-btn hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800"

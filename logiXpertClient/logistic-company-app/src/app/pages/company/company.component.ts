@@ -25,6 +25,7 @@ export class CompanyComponent implements OnInit {
       id: [{ value: null, disabled: true }],
       name: ['', Validators.required],
       baseCapital: ['', [Validators.required, Validators.min(0)]],
+      addressFee: ['', [Validators.required, Validators.min(0)]]
     });
   }
 

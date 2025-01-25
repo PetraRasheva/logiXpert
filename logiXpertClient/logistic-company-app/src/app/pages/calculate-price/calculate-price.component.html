@@ -15,8 +15,9 @@
                             <input type="radio" name="fromLocation" value="office" (click)="toggleInput($event, 'sender')">From office
                         </label>
                         <label>
-                            <input type="radio" name="fromLocation" value="address" (click)="toggleInput($event, 'sender')">From address(+ 3.99 BGN)
-                        </label>
+                            <input type="radio" name="fromLocation" value="address" (click)="toggleInput($event, 'sender')">
+                            From address (+ {{ addressFee ? (addressFee | number:'1.2-2') : '...' }} BGN)
+                          </label>
                     </div>
                 
                     <div class="office-dropdown" id="office-sender">
@@ -48,8 +49,9 @@
                             <input type="radio" name="toLocation" value="office" (click)="toggleInput($event, 'recipient')">To office
                         </label>
                         <label>
-                            <input type="radio" name="toLocation" value="address" (click)="toggleInput($event, 'recipient')">To address(+ 3.99 BGN)
-                        </label>
+                            <input type="radio" name="toLocation" value="address" (click)="toggleInput($event, 'recipient')">
+                            To address (+ {{ addressFee ? (addressFee | number:'1.2-2') : '...' }} BGN)
+                          </label>
                     </div>
                 
                     <div class="office-dropdown" id="office-recipient">
