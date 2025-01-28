@@ -278,22 +278,24 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     private void setSender(Shipment shipment, ShipmentDto shipmentDto) {
-        Optional<Client> sender = clientRepository.findByPhone(shipmentDto.sender().phone());
-        if (sender.isPresent()) {
-            shipment.setSender(sender.get());
+        Optional<Client> existingSender = clientRepository.findByPhone(shipmentDto.sender().phone());
+        if (existingSender.isPresent()) {
+            shipment.setSender(existingSender.get());
         } else {
-            clientRepository.save(clientMapper.toEntity(shipmentDto.sender()));
-            shipment.setSender(clientMapper.toEntity(shipmentDto.sender()));
+            Client newSender = clientMapper.toEntity(shipmentDto.sender());
+            Client savedSender = clientRepository.save(newSender);
+            shipment.setSender(savedSender);
         }
     }
 
     private void setReceiver(Shipment shipment, ShipmentDto shipmentDto) {
-        Optional<Client> receiver = clientRepository.findByPhone(shipmentDto.receiver().phone());
-        if (receiver.isPresent()) {
-            shipment.setReceiver(receiver.get());
+        Optional<Client> existingReceiver = clientRepository.findByPhone(shipmentDto.receiver().phone());
+        if (existingReceiver.isPresent()) {
+            shipment.setReceiver(existingReceiver.get());
         } else {
-            clientRepository.save(clientMapper.toEntity(shipmentDto.receiver()));
-            shipment.setReceiver(clientMapper.toEntity(shipmentDto.receiver()));
+            Client newReceiver = clientMapper.toEntity(shipmentDto.receiver());
+            Client savedReceiver = clientRepository.save(newReceiver);
+            shipment.setReceiver(savedReceiver);
         }
     }
 }
