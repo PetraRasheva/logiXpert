@@ -1,121 +1,119 @@
 <h1>Prepare shipment</h1>
 
-    <div class="prepare-shipment-container">
-        <div class="container">
-            <div class="number">1</div>
-            <div class="form-container">
-                <h2>Sender</h2>
-                <form>
-                    <input type="text" id="senderName" placeholder="name" required>
-                    <input type="text" id="senderPhone" placeholder="phone" required>
-                    <input type="email" id="senderEmail" placeholder="e-mail" required>
-                
-                    <div class="option-select">
-                        <label>
-                            <input type="radio" name="fromLocation" value="office" (click)="toggleInput($event, 'sender')">From office
-                        </label>
-                        <label>
-                            <input type="radio" name="fromLocation" value="address" (click)="toggleInput($event, 'sender')">
-                            From address (+ {{ addressFee ? (addressFee | number:'1.2-2') : '...' }} BGN)
-                          </label>
-                    </div>
-                
-                    <div class="office-dropdown" id="office-sender">
-                        <select>
-                            <option value="">Select Office</option>
-                            <option value="office1">Office 1</option>
-                            <option value="office2">Office 2</option>
-                        </select>
-                    </div>
-                
-                    <div class="address-input" id="address-sender">
-                        <input type="text" id="senderAddress" placeholder="enter address">
-                    </div>
-                </form>
-            </div>
+<div class="prepare-shipment-container" [formGroup]="shipmentForm">
+  <div class="container">
+    <div class="number">1</div>
+    <div class="form-container">
+      <h2>Sender</h2>
+      <form>
+        <input type="text" id="senderName" formControlName="senderName" placeholder="name" required>
+        <input type="text" id="senderPhone" formControlName="senderPhone" placeholder="phone" required>
+        <input type="email" id="senderEmail" formControlName="senderEmail" placeholder="e-mail" required>
+      
+        <div class="option-select">
+          <label>
+            <input type="radio" name="fromLocation" value="office" (click)="toggleInput($event, 'sender')">From office
+          </label>
+          <label>
+            <input type="radio" name="fromLocation" value="address" (click)="toggleInput($event, 'sender')">
+            From address (+ {{ addressFee ? (addressFee | number:'1.2-2') : '...' }} BGN)
+          </label>
         </div>
-
-        <div class="container">
-            <div class="number">2</div>
-            <div class="form-container">
-                <h2>Recipient</h2>
-                <form>
-                    <input type="text" id="recipientName" placeholder="name" required>
-                    <input type="text" id="recipientPhone" placeholder="phone" required>
-                    <input type="email"  id="recipientEmail" placeholder="e-mail" required>
-                
-                    <div class="option-select">
-                        <label>
-                            <input type="radio" name="toLocation" value="office" (click)="toggleInput($event, 'recipient')">To office
-                        </label>
-                        <label>
-                            <input type="radio" name="toLocation" value="address" (click)="toggleInput($event, 'recipient')">
-                            To address (+ {{ addressFee ? (addressFee | number:'1.2-2') : '...' }} BGN)
-                          </label>
-                    </div>
-                
-                    <div class="office-dropdown" id="office-recipient">
-                        <select>
-                            <option value="">Select Office</option>
-                            <option value="office1">Office 1</option>
-                            <option value="office2">Office 2</option>
-                        </select>
-                    </div>
-                
-                    <div class="address-input" id="address-recipient">
-                        <input type="text" id="recipientAddress" placeholder="enter address">
-                    </div>
-                </form>
-            </div>
+      
+        <div class="office-dropdown" id="office-sender">
+          <select formControlName="senderOffice">
+            <option value="">Select Office</option>
+            <option *ngFor="let office of offices" [value]="office.id">{{ office.name }}</option>
+          </select>
         </div>
-
-        <div class="container">
-            <div class="number">3</div>
-            <div class="form-container">
-                <h2>Calculate Price</h2>
-            </div>
-             <div class="boxes">
-                <div class="box">
-                    <img src="assets/images/boxes/2.99 BGN.png" alt="">
-                </div>
-
-                <div class="box">
-                    <img src="assets/images/boxes/5.40 BGN.png" alt="">
-                </div>
-
-                <div class="box">
-                    <img src="assets/images/boxes/14.99 BGN.png" alt="">
-                </div>
-
-                <div class="box">
-                    <img src="assets/images/boxes/14.99 BGN +0.60 BGN  for kg.png" alt="">
-                </div>
-             </div>
-             <div class="info-container">
-                <div class="package-info">
-                    <p>Weight:</p>
-                    <input id="weight" type="text" placeholder="" required>
-                    <p>kg</p>
-                </div>
-                <div class="package-info">
-                    <p>COD amount:</p>
-                    <input id="codAmount" type="text" placeholder="" required>
-                    <p>BGN</p>
-                </div>
-                <div class="package-info">
-                    <p>Delivery:</p>
-                    <div id="deliveryPrice">2.99</div>
-                    <p>BGN</p>
-                </div>
-             </div>
-             <div class="final-price-container">
-                <h3>Final price:</h3>
-                <div id="finalPrice">0.00</div>
-                <p>BGN</p>
-             </div>
+      
+        <div class="address-input" id="address-sender">
+          <input type="text" id="senderAddress" formControlName="senderAddress" placeholder="enter address">
         </div>
+      </form>
     </div>
+  </div>
 
-    <div class="btn"> 
-        <button (click)="submitFinalPrice()">Get your parcel label</button>
+  <div class="container">
+    <div class="number">2</div>
+    <div class="form-container">
+      <h2>Recipient</h2>
+      <form>
+        <input type="text" id="recipientName" formControlName="recipientName" placeholder="name" required>
+        <input type="text" id="recipientPhone" formControlName="recipientPhone" placeholder="phone" required>
+        <input type="email" id="recipientEmail" formControlName="recipientEmail" placeholder="e-mail" required>
+      
+        <div class="option-select">
+          <label>
+            <input type="radio" name="toLocation" value="office" (click)="toggleInput($event, 'recipient')">To office
+          </label>
+          <label>
+            <input type="radio" name="toLocation" value="address" (click)="toggleInput($event, 'recipient')">
+            To address (+ {{ addressFee ? (addressFee | number:'1.2-2') : '...' }} BGN)
+          </label>
+        </div>
+      
+        <div class="office-dropdown" id="office-recipient">
+            <select formControlName="recipientOffice">
+              <option value="">Select Office</option>
+              <option *ngFor="let office of offices" [value]="office.id">{{ office.name }}</option>
+            </select>
+          </div>
+          
+          <div class="address-input" id="address-recipient">
+            <input type="text" formControlName="recipientAddress" placeholder="enter address">
+          </div>
+      </form>
     </div>
+  </div>
+
+  <div class="container">
+    <div class="number">3</div>
+    <div class="form-container">
+      <h2>Calculate Price</h2>
+    </div>
+     <div class="boxes">
+        <div class="box">
+            <img src="assets/images/boxes/2.99 BGN.png" alt="">
+        </div>
+
+        <div class="box">
+            <img src="assets/images/boxes/5.40 BGN.png" alt="">
+        </div>
+
+        <div class="box">
+            <img src="assets/images/boxes/14.99 BGN.png" alt="">
+        </div>
+
+        <div class="box">
+            <img src="assets/images/boxes/14.99 BGN +0.60 BGN  for kg.png" alt="">
+        </div>
+     </div>
+     <div class="info-container">
+        <div class="package-info">
+            <p>Weight:</p>
+            <input id="weight" type="text" formControlName="weight" placeholder="" required>
+            <p>kg</p>
+        </div>
+        <div class="package-info">
+            <p>COD amount:</p>
+            <input id="codAmount" type="text" formControlName="codAmount" placeholder="" required>
+            <p>BGN</p>
+        </div>
+        <div class="package-info">
+            <p>Delivery:</p>
+            <div id="deliveryPrice">2.99</div>
+            <p>BGN</p>
+        </div>
+     </div>
+     <div class="final-price-container">
+        <h3>Final price:</h3>
+        <div id="finalPrice">0.00</div>
+        <p>BGN</p>
+     </div>
+  </div>
+</div>
+
+<div class="btn"> 
+  <button (click)="submitFinalPrice()">Get your parcel label</button>
+</div>

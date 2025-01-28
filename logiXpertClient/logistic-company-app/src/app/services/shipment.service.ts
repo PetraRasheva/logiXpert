@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Shipment } from '../types/shipment';
 import { environment } from '../../environments/environment';
 import { ShipmentDetails } from '../types/shipmentDetails';
+import { CreateShipment } from '../types/CreateShipment';
 
 @Injectable({
   providedIn: 'root'
@@ -36,8 +37,8 @@ export class ShipmentService {
     });
   }
 
-  createShipment(shipment: Shipment): Observable<Shipment> {
-    return this.http.post<Shipment>(`${environment.apiUrl}/shipment/add`, shipment, {
+  createShipment(shipment: CreateShipment): Observable<CreateShipment> {
+    return this.http.post<CreateShipment>(`${environment.apiUrl}/shipment/add`, shipment, {
       withCredentials: true,
     });
   }
