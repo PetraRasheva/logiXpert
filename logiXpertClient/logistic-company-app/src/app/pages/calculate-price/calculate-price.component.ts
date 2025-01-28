@@ -3,6 +3,10 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Company } from '../../types/company';
 import { environment } from '../../../environments/environment';
+import { ShipmentService } from '../../services/shipment.service';
+import { Shipment } from '../../types/shipment';
+import { ShipmentDetails } from '../../types/shipmentDetails';
+
 
 @Component({
   selector: 'app-calculate-price',
@@ -21,7 +25,7 @@ export class CalculatePriceComponent implements OnInit {
   boxes!: NodeListOf<HTMLElement>;
   addressFee!: number;
 
-  constructor(private el: ElementRef, private http: HttpClient) {}
+  constructor(private el: ElementRef, private http: HttpClient, private shipmentService: ShipmentService) {}
 
   ngOnInit(): void {
     this.loadAddressFee();
@@ -166,4 +170,76 @@ export class CalculatePriceComponent implements OnInit {
       }
     }
   }
+
+
+  // Метод за изпращане на резултатите към BE
+  submitFinalPrice(): void {
+    const senderName = (document.getElementById('senderName') as HTMLInputElement).value;
+    const senderPhone = (document.getElementById('senderPhone') as HTMLInputElement).value;
+    const senderEmail = (document.getElementById('senderEmail') as HTMLInputElement).value;
+    const senderAddress = (document.getElementById('senderAddress') as HTMLInputElement).value;
+
+    const recipientName = (document.getElementById('recipientName') as HTMLInputElement).value;
+    const recipientPhone = (document.getElementById('recipientPhone') as HTMLInputElement).value;
+    const recipientEmail = (document.getElementById('recipientEmail') as HTMLInputElement).value;
+    const recipientAddress = (document.getElementById('recipientAddress') as HTMLInputElement).value;
+
+    const weight = parseFloat((document.getElementById('weight') as HTMLInputElement).value);
+    const codAmount = parseFloat((document.getElementById('codAmount') as HTMLInputElement).value);
+    const deliveryPrice = parseFloat((document.getElementById('deliveryPrice') as HTMLDivElement).textContent ?? '');
+    const finalPrice = parseFloat((document.getElementById('finalPrice') as HTMLDivElement).textContent ?? '');
+
+    const shipment: ShipmentDetails = {
+      weight: weight,
+      price: finalPrice,
+      shipmentDate: new Date().toISOString().replace('T', ' ').slice(0, 16), // Форматиране "yyyy-MM-dd HH:mm"
+      source: senderAddress,
+      destination: recipientAddress,
+      profit: deliveryPrice,
+      sender: {
+        id: 0,
+        name: senderName,
+        email: senderEmail,
+        phone: senderPhone,
+      },
+      receiver: {
+        id: 0,
+        name: recipientName,
+        email: recipientEmail,
+        phone: recipientPhone,
+      },
+      ownerId: 2,
+      id: 0,
+      trackingNumber: '',
+      deliveryStatus: '',
+      deliveryDate: null,
+      owner: {
+        id: 0,
+        name: recipientName,
+        email: recipientEmail,
+        phone: recipientPhone,
+      },
+      courierName: null,
+      courierId: null
+    };
+    
+    
+    
+    this.shipmentService.createShipment(shipment).subscribe({
+        next: (response: any) => {
+            console.log('Shipment successfully created', response);
+            alert('Shipment successfully created!');
+        },
+        error: (err: any) => {
+            console.error('Error creating shipment', err);
+            alert('Failed to create shipment. Please try again.');
+        },
+    });
+}
+
+
+
+
+  
+  
 }
