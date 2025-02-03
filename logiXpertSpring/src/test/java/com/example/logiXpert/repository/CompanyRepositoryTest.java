@@ -22,40 +22,43 @@ public class CompanyRepositoryTest {
 
     @Test
     void testSaveCompany() {
-        Company company = new Company("Test Company", 10000.0);
+        Company company = new Company("Test Company", 10000.0, 50.0);
         Company savedCompany = companyRepository.save(company);
 
         assertNotNull(savedCompany);
         assertNotNull(savedCompany.getId());
         assertEquals("Test Company", savedCompany.getName());
         assertEquals(10000.0, savedCompany.getBaseCapital());
+        assertEquals(50.0, savedCompany.getAddressFee());
     }
 
     @Test
     void testFindById() {
-        Company company = new Company("Test Company", 10000.0);
+        Company company = new Company("Test Company", 10000.0, 50.0);
         companyRepository.save(company);
 
         Optional<Company> foundCompany = companyRepository.findById(company.getId());
 
         assertTrue(foundCompany.isPresent());
         assertEquals("Test Company", foundCompany.get().getName());
+        assertEquals(50.0, foundCompany.get().getAddressFee());
     }
 
     @Test
     void testFindByName() {
-        Company company = new Company("Unique Company", 50000.0);
+        Company company = new Company("Unique Company", 50000.0, 75.0);
         companyRepository.save(company);
 
         Optional<Company> foundCompany = companyRepository.findByName("Unique Company");
 
         assertTrue(foundCompany.isPresent());
         assertEquals(50000.0, foundCompany.get().getBaseCapital());
+        assertEquals(75.0, foundCompany.get().getAddressFee());
     }
 
     @Test
     void testDeleteCompanyById() {
-        Company company = new Company("Deletable Company", 20000.0);
+        Company company = new Company("Deletable Company", 20000.0, 60.0);
         company = companyRepository.save(company);
 
         companyRepository.deleteCompanyById(company.getId());
@@ -66,8 +69,8 @@ public class CompanyRepositoryTest {
 
     @Test
     void testFindAll() {
-        Company company1 = new Company("Company A", 30000.0);
-        Company company2 = new Company("Company B", 40000.0);
+        Company company1 = new Company("Company A", 30000.0, 40.0);
+        Company company2 = new Company("Company B", 40000.0, 55.0);
         companyRepository.save(company1);
         companyRepository.save(company2);
 
@@ -77,4 +80,3 @@ public class CompanyRepositoryTest {
         assertTrue(companies.iterator().hasNext());
     }
 }
-

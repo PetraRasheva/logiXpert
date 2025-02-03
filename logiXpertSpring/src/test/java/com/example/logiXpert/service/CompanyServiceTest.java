@@ -38,8 +38,8 @@ public class CompanyServiceTest {
 
     @Test
     void testAddCompany() {
-        CompanyDto companyDto = new CompanyDto(1, "Test Company", 10000.0);
-        Company company = new Company("Test Company", 10000.0);
+        CompanyDto companyDto = new CompanyDto(1, "Test Company", 10000.0, 5);
+        Company company = new Company("Test Company", 10000.0, 5);
 
         when(companyMapper.toEntity(companyDto)).thenReturn(company);
         when(companyRepository.save(company)).thenReturn(company);
@@ -54,8 +54,8 @@ public class CompanyServiceTest {
 
     @Test
     void testUpdateCompany() {
-        CompanyDto companyDto = new CompanyDto(1, "Updated Company", 20000.0);
-        Company company = new Company("Test Company", 10000.0);
+        CompanyDto companyDto = new CompanyDto(1, "Updated Company", 20000.0, 50.0);
+        Company company = new Company("Test Company", 10000.0, 50.0);
 
         when(companyRepository.findById(1)).thenReturn(Optional.of(company));
         when(companyRepository.save(company)).thenReturn(company);
@@ -71,8 +71,8 @@ public class CompanyServiceTest {
 
     @Test
     void testGetCompanyById() {
-        Company company = new Company("Test Company", 10000.0);
-        CompanyDto companyDto = new CompanyDto(1, "Test Company", 10000.0);
+        Company company = new Company("Test Company", 10000.0, 50.0);
+        CompanyDto companyDto = new CompanyDto(1, "Test Company", 10000.0, 50.0);
 
         when(companyRepository.findById(1)).thenReturn(Optional.of(company));
         when(companyMapper.toDto(company)).thenReturn(companyDto);

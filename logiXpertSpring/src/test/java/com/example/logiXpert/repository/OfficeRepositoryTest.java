@@ -29,7 +29,7 @@ public class OfficeRepositoryTest {
         officeRepository.deleteAll();
         companyRepository.deleteAll();
 
-        Company company = new Company("Test Company", 10000.0);
+        Company company = new Company("Test Company", 10000.0, 50.0);
         companyRepository.save(company);
 
         office = new Office("Address1", "Office1", "123456");
@@ -57,7 +57,7 @@ public class OfficeRepositoryTest {
 
     @Test
     void testFindByName() {
-        Company company = new Company("Test Company", 10000.0);
+        Company company = new Company("Test Company", 10000.0, 50.0);
         company = companyRepository.save(company);
 
         Office office = new Office("Address1", "Test Office", "123456");
@@ -73,7 +73,7 @@ public class OfficeRepositoryTest {
 
     @Test
     void testDeleteOfficeById() {
-        Company company = new Company("Test Company", 10000.0);
+        Company company = new Company("Test Company", 10000.0, 50.0);
         company = companyRepository.save(company);
 
         Office office = new Office("Address1", "Office1", "123456");
@@ -88,7 +88,7 @@ public class OfficeRepositoryTest {
 
     @Test
     void testExistsById() {
-        Company company = new Company("Test Company", 10000.0);
+        Company company = new Company("Test Company", 10000.0, 50.0);
         company = companyRepository.save(company);
 
         Office office = new Office("Address1", "Office1", "123456");

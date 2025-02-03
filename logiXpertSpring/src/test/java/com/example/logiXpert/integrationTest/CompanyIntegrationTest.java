@@ -127,7 +127,7 @@ public class CompanyIntegrationTest {
     @Test
     @DisplayName("POST /company/add - Add a company with valid ADMIN token")
     void testAddCompanyWithAdminToken() throws Exception {
-        CompanyDto companyDto = new CompanyDto(null, "NewCompany", 20000.0);
+        CompanyDto companyDto = new CompanyDto(null, "NewCompany", 20000.0, 50.0);
 
         mockMvc.perform(post("/company/add")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -161,7 +161,7 @@ public class CompanyIntegrationTest {
         company.setBaseCapital(40000.0);
         company = companyRepository.save(company);
 
-        CompanyDto updatedCompanyDto = new CompanyDto(company.getId(), "UpdatedCompany", 50000.0);
+        CompanyDto updatedCompanyDto = new CompanyDto(company.getId(), "UpdatedCompany", 50000.0, 50.0);
 
         mockMvc.perform(put("/company/update")
                         .contentType(MediaType.APPLICATION_JSON)
