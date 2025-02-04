@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Shipment } from '../types/shipment';
 import { environment } from '../../environments/environment';
 import { ShipmentDetails } from '../types/shipmentDetails';
-import { CreateShipment } from '../types/CreateShipment';
+import { CreateShipment } from '../types/createShipment';
 
 @Injectable({
   providedIn: 'root'

@@ -7,7 +7,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MessageService } from '../../services/message.service';
 import { Office } from '../../types/office';
 import { CompanyService } from '../../services/company.service';
-import { CreateShipment } from '../../types/CreateShipment';
+import { CreateShipment } from '../../types/createShipment';
 
 
 @Component({
